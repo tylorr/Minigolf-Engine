@@ -19,8 +19,6 @@ Thumbs.db
 *.ilk
 *.log
 *.ipch
-*.sdf
-*.opensdf
 [Bb]in
 [Dd]ebug*/
 *.sbr
@@ -29,3 +27,6 @@ obj/
 _ReSharper*/
 [Tt]est[Rr]esult*
 *.sdf
+*.opensdf
+*~
+*.swp

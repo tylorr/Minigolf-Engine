@@ -23,11 +23,16 @@
 #include <ctime>
 
 #include "Utils.h"
+
 #include "filehandling.h"
 #include "level.h"
 #include "tile_render_manager.h"
 
-using namespace glm;
+using glm::vec3;
+using glm::vec4;
+using glm::mat4;
+using glm::value_ptr;
+
 using namespace std;
 
 #define WINDOW_TITLE_PREFIX "Chapter 4"
@@ -63,13 +68,21 @@ clock_t LastTime = 0;
 
 clock_t previous;
 
+bool upPressed = false;
+bool downPressed = false;
+bool rightPressed = false;
+bool leftPressed = false;
+float xAngle = 0;
+float yAngle = 0;
+
 void Initialize(int, char*[]);
 void InitWindow(int, char*[]);
 void ResizeFunction(int, int);
 void RenderFunction(void);
 void TimerFunction(int);
 void IdleFunction(void);
-void SpecialPressed(int Key, int X, int Y);
+void KeyPressed(unsigned char, int, int);
+void SpecialPressed(int, int, int);
 void SpecialReleased(int, int, int);
 
 void SetupShaders(void);
@@ -169,16 +182,20 @@ void InitWindow(int argc, char* argv[])
 	glutIdleFunc(IdleFunction);
 	glutTimerFunc(0, TimerFunction, 0);
 	glutCloseFunc(DestoryShaders);
+	glutKeyboardFunc(KeyPressed);
 	glutSpecialFunc(SpecialPressed);
 	glutSpecialUpFunc(SpecialReleased);
 }
 
-bool upPressed = false;
-bool downPressed = false;
-bool rightPressed = false;
-bool leftPressed = false;
-float xAngle = 0;
-float yAngle = 0;
+void KeyPressed(unsigned char key, int x, int y)
+{
+	switch(key)
+	{
+	case 27:					// Escape key
+		exit(EXIT_SUCCESS);
+		break;
+	}
+}
 
 void SpecialPressed(int Key, int X, int Y)
 {
@@ -225,7 +242,7 @@ void ResizeFunction(int Width, int Height)
 	glViewport(0, 0, CurrentWidth, CurrentHeight);
 	
 	ProjectionMatrix.top() = 
-		perspective(
+		glm::perspective(
 			60.0f,
 			(float)CurrentWidth / CurrentHeight,
 			1.0f,
@@ -233,7 +250,7 @@ void ResizeFunction(int Width, int Height)
 		);
 
 	glUseProgram(ShaderIds[0]);
-	glUniformMatrix4fv(ProjectionMatrixUniformLocation, 1, GL_FALSE, value_ptr(ProjectionMatrix.top()));
+	glUniformMatrix4fv(ProjectionMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(ProjectionMatrix.top()));
 	glUseProgram(0);
 }
 
@@ -269,10 +286,10 @@ void RenderFunction(void)
 	ModelViewMatrix.top() = mat4(1.0f);
 
 	// TODO: Need to make camera class
-	ModelViewMatrix.top() = lookAt(vec3(0, 2, 4), vec3(0, 0, 0), vec3(0, 1, 0));
+	ModelViewMatrix.top() = glm::lookAt(vec3(0, 2, 4), vec3(0, 0, 0), vec3(0, 1, 0));
 
-	ModelViewMatrix.top() = rotate(ModelViewMatrix.top(), xAngle, vec3(1, 0, 0));
-	ModelViewMatrix.top() = rotate(ModelViewMatrix.top(), yAngle, vec3(0, 1, 0));	
+	ModelViewMatrix.top() = glm::rotate(ModelViewMatrix.top(), xAngle, vec3(1, 0, 0));
+	ModelViewMatrix.top() = glm::rotate(ModelViewMatrix.top(), yAngle, vec3(0, 1, 0));	
 
 	glUseProgram(ShaderIds[0]);
 	ExitOnGLError("ERROR: Could not use the shader program");
@@ -283,7 +300,7 @@ void RenderFunction(void)
 	GLfloat Kd[] = { 0.8f, 0.8f, 0.8f }; // Light diffuse reflectivity
 	GLfloat Ld[] = { 0.0f, 1.0f, 0.0f }; // Light diffuse intensity
 
-	glUniform4fv(LightPositionUniform, 1, value_ptr(lightPosition));
+	glUniform4fv(LightPositionUniform, 1, glm::value_ptr(lightPosition));
 	glUniform3fv(KdUniform, 1, Kd);
 	glUniform3fv(LdUniform, 1, Ld);
 	

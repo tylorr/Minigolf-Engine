@@ -3,7 +3,7 @@
 
 #include "glm\glm.hpp"
 
-using namespace glm;
+using glm::vec3;
 
 class Component;
 

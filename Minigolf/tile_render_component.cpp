@@ -2,8 +2,12 @@
 
 #include "tile_render_component.h"
 
+using glm::vec3;
+using glm::mat3;
+using glm::mat4;
+using glm::value_ptr;
+
 using namespace std;
-using namespace glm;
 
 void TileRenderComponent::Receive(int message) {
 }
@@ -31,8 +35,8 @@ void TileRenderComponent::LoadBuffers(const tile &t) {
 	p = t.vertices[2];
 	vec3 p2 = vec3(p.x, p.y, p.z);
 
-	vec3 normal = cross(p2 - p1, p0 - p1);
-	normal = normalize(normal);
+	vec3 normal = glm::cross(p2 - p1, p0 - p1);
+	normal = glm::normalize(normal);
 
 	while (index < N)
 	{
@@ -94,7 +98,7 @@ void TileRenderComponent::DestoryBuffers() {
 void TileRenderComponent::Render(stack<mat4> *ModelViewMatrix, const GLuint &ModelViewMatrixUniformLocation, const GLuint &NormalMatrixUnifromLocation) {
 	ModelViewMatrix->push(ModelViewMatrix->top());
 	
-	mat3 NormalMatrix = inverse(transpose(mat3(ModelViewMatrix->top())));
+	mat3 NormalMatrix = glm::inverse(glm::transpose(mat3(ModelViewMatrix->top())));
 
 	glUniformMatrix3fv(NormalMatrixUnifromLocation, 1, GL_FALSE, value_ptr(NormalMatrix));
 	glUniformMatrix4fv(ModelViewMatrixUniformLocation, 1, GL_FALSE, value_ptr(ModelViewMatrix->top()));

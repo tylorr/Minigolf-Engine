@@ -2,8 +2,10 @@
 
 #include "tee_render_component.h"
 
+using glm::mat4;
+using glm::value_ptr;
+
 using namespace std;
-using namespace glm;
 
 void TeeRenderComponent::Receive(int message) {
 }

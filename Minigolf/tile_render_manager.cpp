@@ -2,7 +2,8 @@
 
 #include "entity.h"
 
-using namespace glm;
+using glm::mat4;
+
 using namespace std;
 
 vector<TileRenderComponent *> TileRenderManager::components;
