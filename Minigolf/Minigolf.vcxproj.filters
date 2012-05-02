@@ -51,6 +51,9 @@
     <ClCompile Include="material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="shader_cache.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils.h">
@@ -80,7 +83,7 @@
     <ClInclude Include="material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="shader.h">
+    <ClInclude Include="shader_cache.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

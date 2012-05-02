@@ -28,6 +28,5 @@ float DegreesToRadians(float degrees);
 float RadiansToDegrees(float radians);
 
 void ExitOnGLError(const char* error_message);
-GLuint LoadShader(const char* filename, GLenum shader_type);
 
 #endif

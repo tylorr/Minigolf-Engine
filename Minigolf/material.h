@@ -1,31 +1,32 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
+#include <string>
+
 #include "Utils.h"
+
+namespace render {
 
 class Material {
 public:
-	Material(char *vertexShaderFile, char *fragmentShaderFile);
-	virtual ~Material();
+	Material(std::string shaderProgramKey);
+	virtual ~Material() { }
 
 	virtual void Initialize();
 	virtual void PreRender() = 0;
 	virtual void PostRender() = 0;
 
-	const GLint GetModelViewUniformLocation() const;
-	const GLint GetProjectUniformLocation() const;
+	const GLint model_view_uniform() const;
+	const GLint projection_uniform() const;
 
 private:
-	char *vertexShaderFile;
-	char *fragmentShaderFile;
+	GLuint shader_program_;
 
-	GLuint shaderProgram; 
-	GLuint vertexShader;
-	GLuint fragmentShader;
-
-	GLint modelViewMatrixUniformLocation;
-	GLint projectionMatrixUniformLocation;
-	GLint normalUniformMatrixLocation;
+	GLint model_view_uniform_;
+	GLint projection_uniform_;
+	GLint normal_uniform_;
 };
+
+}; // namespace render
 
 #endif // MATERIAL_H

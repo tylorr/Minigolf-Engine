@@ -1,42 +1,30 @@
+#include "shader_cache.h"
+
 #include "material.h"
 
-Material::Material(char *vertexShaderFile, char *fragmentShaderFile)
-{
-	this->vertexShaderFile = vertexShaderFile;
-	this->fragmentShaderFile = fragmentShaderFile;
-}
+namespace render {
 
-Material::~Material()
+Material::Material(std::string shaderProgramKey)
 {
-
+	shader_program_ = render::GetShaderProgram(shaderProgramKey);
 }
 
 void Material::Initialize()
 {
-	this->shaderProgram = glCreateProgram();
-	ExitOnGLError("ERROR: Could not create shader program");
-	{
-		this->vertexShader = LoadShader(this->vertexShaderFile, GL_VERTEX_SHADER);
-		this->fragmentShader = LoadShader(this->fragmentShaderFile, GL_FRAGMENT_SHADER);
-		glAttachShader(this->shaderProgram, this->vertexShader);
-		glAttachShader(this->shaderProgram, this->fragmentShader);
-	}
-	glLinkProgram(this->shaderProgram);
-	ExitOnGLError("ERROR: Could not link the shader program");
-
-	this->modelViewMatrixUniformLocation = glGetUniformLocation(this->shaderProgram, "ModelViewMatrix");
-	this->projectionMatrixUniformLocation = glGetUniformLocation(this->shaderProgram, "ProjectionMatrix");
-	this->normalUniformMatrixLocation = glGetUniformLocation(this->shaderProgram, "NormalMatrix");
+	model_view_uniform_ = glGetUniformLocation(shader_program_, "ModelViewMatrix");
+	projection_uniform_ = glGetUniformLocation(shader_program_, "ProjectionMatrix");
+	normal_uniform_ = glGetUniformLocation(shader_program_, "NormalMatrix");
 	ExitOnGLError("ERROR: Could not get shader uniform locations");
-	double p = PI;
 }
 
-const GLint Material::GetModelViewUniformLocation() const
+const GLint Material::model_view_uniform() const
 {
-	return modelViewMatrixUniformLocation;
+	return model_view_uniform_;
 }
 
-const GLint Material::GetProjectUniformLocation() const
+const GLint Material::projection_uniform() const
 {
-	return projectionMatrixUniformLocation;
+	return projection_uniform_;
 }
+
+}; // namespace render

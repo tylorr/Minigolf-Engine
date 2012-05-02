@@ -28,6 +28,8 @@
 #include "level.h"
 #include "tile_render_manager.h"
 
+#include "shader_cache.h"
+
 using glm::vec3;
 using glm::vec4;
 using glm::mat4;
@@ -135,6 +137,8 @@ void Initialize(int argc, char* argv[])
 
 	ModelViewMatrix.push(mat4(1.0f));
 	ProjectionMatrix.push(mat4(1.0f));
+
+	render::AddShader("diffuse", "diffuse.vertex.glsl", "diffuse.fragment.glsl");
 
 	SetupShaders();
 
@@ -351,8 +355,8 @@ void SetupShaders()
 	ShaderIds[0] = glCreateProgram();
 	ExitOnGLError("ERROR: Could not create the shader program");
 	{
-		ShaderIds[1] = LoadShader("diffuse.fragment.glsl", GL_FRAGMENT_SHADER);
-		ShaderIds[2] = LoadShader("diffuse.vertex.glsl", GL_VERTEX_SHADER);
+		ShaderIds[1] = render::LoadShader("diffuse.fragment.glsl", GL_FRAGMENT_SHADER);
+		ShaderIds[2] = render::LoadShader("diffuse.vertex.glsl", GL_VERTEX_SHADER);
 		glAttachShader(ShaderIds[0], ShaderIds[1]);
 		glAttachShader(ShaderIds[0], ShaderIds[2]);
 	}
