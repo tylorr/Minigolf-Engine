@@ -14,7 +14,7 @@
 #include "glm\gtc\matrix_transform.hpp"
 #include "glm\gtc\type_ptr.hpp"
 
-static const double PI = 3.14159265358979323846;
+const double PI = 3.14159265358979323846;
 
 typedef struct Vertex
 {
