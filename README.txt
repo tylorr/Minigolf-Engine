@@ -1,2 +1,0 @@
-Tylor Reynolds
-Nicholas Jones
