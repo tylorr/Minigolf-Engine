@@ -82,5 +82,7 @@
     <None Include="diffuse.vertex.glsl">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="..\README" />
+    <None Include="..\.gitignore" />
   </ItemGroup>
 </Project>

@@ -1,3 +1,10 @@
 CMPS 164: Game Engines Minigolf Engine
 
 Make sure to copy the *.dll files to the Debug folder
+
+Also make sure to specifiy a map file by:
+
+- Right-click project
+- Click Properties
+- Under Configuration Properties click on Debug
+- In the Command Arguments row add the name of the file, i.e. hole.00.db

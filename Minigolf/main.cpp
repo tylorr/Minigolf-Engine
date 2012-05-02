@@ -128,6 +128,11 @@ void Initialize(int argc, char* argv[])
 	//CreateCube();
 	previous = clock();
 
+	if (argv[1] == NULL)
+	{
+		fprintf(stderr, "Missing map file\n");
+		exit(EXIT_FAILURE);
+	}
 	hole h = readData(argv[1]);
 	level = Level::CreateLevel(h);
 }
