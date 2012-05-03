@@ -130,9 +130,9 @@ void Initialize(int argc, char* argv[])
 	glDepthFunc(GL_LESS);
 	ExitOnGLError("ERROR: Could not set OpenGL depth testing options");
 
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
-	glFrontFace(GL_CCW);
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_BACK);
+	//glFrontFace(GL_CCW);
 	ExitOnGLError("ERROR: Could not set OpenGL culling options");
 
 	ModelViewMatrix.push(mat4(1.0f));
