@@ -1,8 +1,8 @@
 #include "shader_cache.h"
 
-namespace render {
+namespace shader_cache {
 
-void InitializeShaderCache() {
+void Initialize() {
 	shader_map = new ShaderMap();
 }
 
@@ -78,7 +78,7 @@ GLuint LoadShader(const char* filename, const GLenum &shader_type) {
 	return shader_id;
 }
 
-void DestroyShaderCache() {
+void Destroy() {
 	GLuint program, vertex, fragment;
 
 	for (ShaderMap::iterator it = shader_map->begin(); it != shader_map->end(); ++it) {

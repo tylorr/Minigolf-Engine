@@ -138,8 +138,8 @@ void Initialize(int argc, char* argv[])
 	ModelViewMatrix.push(mat4(1.0f));
 	ProjectionMatrix.push(mat4(1.0f));
 
-	render::InitializeShaderCache();
-	render::AddShader("diffuse", "diffuse.vertex.glsl", "diffuse.fragment.glsl");
+	shader_cache::Initialize();
+	shader_cache::AddShader("diffuse", "diffuse.vertex.glsl", "diffuse.fragment.glsl");
 
 	SetupShaders();
 
@@ -356,8 +356,8 @@ void SetupShaders()
 	ShaderIds[0] = glCreateProgram();
 	ExitOnGLError("ERROR: Could not create the shader program");
 	{
-		ShaderIds[1] = render::LoadShader("diffuse.fragment.glsl", GL_FRAGMENT_SHADER);
-		ShaderIds[2] = render::LoadShader("diffuse.vertex.glsl", GL_VERTEX_SHADER);
+		ShaderIds[1] = shader_cache::LoadShader("diffuse.fragment.glsl", GL_FRAGMENT_SHADER);
+		ShaderIds[2] = shader_cache::LoadShader("diffuse.vertex.glsl", GL_VERTEX_SHADER);
 		glAttachShader(ShaderIds[0], ShaderIds[1]);
 		glAttachShader(ShaderIds[0], ShaderIds[2]);
 	}
@@ -384,7 +384,7 @@ void DestoryShaders()
 	glDeleteProgram(ShaderIds[0]);
 	ExitOnGLError("ERROR: Could not destroy the shaders");
 
-	render::DestroyShaderCache();
+	shader_cache::Destroy();
 }
 
 /*

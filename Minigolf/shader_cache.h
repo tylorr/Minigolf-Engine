@@ -10,7 +10,7 @@
  * Use these methods to load shaders into a cache of shader programs
  */
 
-namespace render {
+namespace shader_cache {
 
 // stores information about the shader program and shaders
 struct ShaderInfo {
@@ -34,8 +34,8 @@ typedef std::unordered_map<std::string, ShaderInfo> ShaderMap;
 
 static ShaderMap *shader_map;
 
-void InitializeShaderCache();
-void DestroyShaderCache();
+void Initialize();
+void Destroy();
 
 GLuint LoadShader(const char* filename, const GLenum &shader_type);
 

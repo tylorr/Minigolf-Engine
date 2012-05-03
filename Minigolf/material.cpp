@@ -5,7 +5,7 @@
 namespace render {
 
 Material::Material(std::string shaderProgramKey){
-	shader_program_ = render::GetShaderProgram(shaderProgramKey);
+	shader_program_ = shader_cache::GetShaderProgram(shaderProgramKey);
 }
 
 void Material::Initialize() {
