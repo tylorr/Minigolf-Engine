@@ -10,11 +10,11 @@
 using namespace std;
 
 //==========================STRUCTS================================//
-typedef struct{  //stores a point in 3d space
+struct point {  //stores a point in 3d space
 	float x;
 	float y;
 	float z;
-}point;
+};
 
 typedef struct{  //holds info about each tile
 	int id;

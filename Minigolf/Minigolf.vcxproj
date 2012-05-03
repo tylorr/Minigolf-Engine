@@ -81,7 +81,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="entity.cpp" />
-    <ClCompile Include="filehandling.cpp" />
+    <ClCompile Include="file_handling.cpp" />
     <ClCompile Include="level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="material.cpp" />
@@ -97,7 +97,7 @@
     <ClInclude Include="tee_render_component.h" />
     <ClInclude Include="component.h" />
     <ClInclude Include="entity.h" />
-    <ClInclude Include="filehandling.h" />
+    <ClInclude Include="file_handling.h" />
     <ClInclude Include="level.h" />
     <ClInclude Include="tile_render_manager.h" />
     <ClInclude Include="tile_render_component.h" />

@@ -2,12 +2,16 @@
 
 namespace render {
 
+void InitializeShaderCache() {
+	shader_map = new ShaderMap();
+}
+
 void AddShader(const std::string &key, const char *vertex_file, const char *fragment_file) {
 	GLuint program, vertex, fragment;
 	ShaderMap::iterator it;
 
-	it = shader_map.find(key);
-	if (it != shader_map.end()) {
+	it = shader_map->find(key);
+	if (it != shader_map->end()) {
 		fprintf(stderr, "ERROR: shader_cache: the key %s already exists\n", key);
 		return;
 	}
@@ -24,15 +28,14 @@ void AddShader(const std::string &key, const char *vertex_file, const char *frag
 
 	ShaderInfo si(program, vertex, fragment);
 
-	shader_map[key] = si;
+	(*shader_map)[key] = si;
 }
 const GLuint GetShaderProgram(std::string key) {
-	ShaderInfo si = shader_map[key];
+	ShaderInfo si = (*shader_map)[key];
 	return si.program_;
 }
 
-GLuint LoadShader(const char* filename, const GLenum &shader_type)
-{
+GLuint LoadShader(const char* filename, const GLenum &shader_type) {
 	GLuint shader_id = 0;
 	FILE* file;
 	long file_size = -1;
@@ -73,6 +76,25 @@ GLuint LoadShader(const char* filename, const GLenum &shader_type)
 		fprintf(stderr, "ERROR: Could not open file %s\n", filename);
 
 	return shader_id;
+}
+
+void DestroyShaderCache() {
+	GLuint program, vertex, fragment;
+
+	for (ShaderMap::iterator it = shader_map->begin(); it != shader_map->end(); ++it) {
+		program = it->second.program_;
+		vertex = it->second.vertex_;
+		fragment = it->second.fragment_;
+
+		glDetachShader(program, vertex);
+		glDetachShader(program, fragment);
+		glDeleteShader(vertex);
+		glDeleteShader(fragment);
+		glDeleteProgram(program);
+		ExitOnGLError("ERROR: Could not destroy the shaders");
+	}
+
+	delete shader_map;
 }
 
 }; // namespace render

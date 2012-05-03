@@ -12,6 +12,7 @@
 
 namespace render {
 
+// stores information about the shader program and shaders
 struct ShaderInfo {
 	GLuint program_;
 	GLuint vertex_;
@@ -31,9 +32,13 @@ struct ShaderInfo {
 
 typedef std::unordered_map<std::string, ShaderInfo> ShaderMap;
 
-static ShaderMap shader_map;
+static ShaderMap *shader_map;
+
+void InitializeShaderCache();
+void DestroyShaderCache();
 
 GLuint LoadShader(const char* filename, const GLenum &shader_type);
+
 void AddShader(const std::string &key, const char *vertex_file, const char *fragment_file);
 const GLuint GetShaderProgram(std::string key);
 

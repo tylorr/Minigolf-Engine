@@ -24,7 +24,7 @@
 
 #include "Utils.h"
 
-#include "filehandling.h"
+#include "file_handling.h"
 #include "level.h"
 #include "tile_render_manager.h"
 
@@ -138,6 +138,7 @@ void Initialize(int argc, char* argv[])
 	ModelViewMatrix.push(mat4(1.0f));
 	ProjectionMatrix.push(mat4(1.0f));
 
+	render::InitializeShaderCache();
 	render::AddShader("diffuse", "diffuse.vertex.glsl", "diffuse.fragment.glsl");
 
 	SetupShaders();
@@ -196,7 +197,7 @@ void KeyPressed(unsigned char key, int x, int y)
 	switch(key)
 	{
 	case 27:					// Escape key
-		exit(EXIT_SUCCESS);
+		glutLeaveMainLoop();
 		break;
 	}
 }
@@ -382,6 +383,8 @@ void DestoryShaders()
 	glDeleteShader(ShaderIds[2]);
 	glDeleteProgram(ShaderIds[0]);
 	ExitOnGLError("ERROR: Could not destroy the shaders");
+
+	render::DestroyShaderCache();
 }
 
 /*

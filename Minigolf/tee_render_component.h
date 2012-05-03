@@ -5,7 +5,7 @@
 
 #include "component.h"
 #include "Utils.h"
-#include "filehandling.h"
+#include "file_handling.h"
 
 class TeeRenderComponent : public Component {
 public:
