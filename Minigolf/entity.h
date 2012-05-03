@@ -19,11 +19,11 @@ class Component;
 
 class Entity {
 public:
-	vec3 Position;
+	vec3 position_;
 
 	Entity() {
-		Position = vec3(0.0f);
-		componentIndex = 0;
+		position_ = vec3(0.0f);
+		component_index_ = 0;
 	}
 
 	void AddComponent(Component *component);
@@ -31,10 +31,10 @@ public:
 	void Send(int message);
 
 private:
-	static const int MAX_COMPONENTS = 10;
+	static const int kMaxComponents = 10;
 
-	Component *components[MAX_COMPONENTS];
-	unsigned componentIndex;
+	Component *components_[kMaxComponents];
+	unsigned component_index_;
 };
 
 #endif // ENTITY_H

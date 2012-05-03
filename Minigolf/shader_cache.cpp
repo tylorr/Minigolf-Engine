@@ -2,7 +2,7 @@
 
 namespace render {
 
-void AddShader(const std::string &key, const char *vertexFile, const char *fragmentFile) {
+void AddShader(const std::string &key, const char *vertex_file, const char *fragment_file) {
 	GLuint program, vertex, fragment;
 	ShaderMap::iterator it;
 
@@ -15,8 +15,8 @@ void AddShader(const std::string &key, const char *vertexFile, const char *fragm
 	program = glCreateProgram();
 	ExitOnGLError("ERROR: Could not create the shader program");
 	{
-		fragment = LoadShader(fragmentFile, GL_FRAGMENT_SHADER);
-		vertex = LoadShader(vertexFile, GL_VERTEX_SHADER);
+		fragment = LoadShader(fragment_file, GL_FRAGMENT_SHADER);
+		vertex = LoadShader(vertex_file, GL_VERTEX_SHADER);
 		glAttachShader(program, fragment);
 		glAttachShader(program, vertex);
 	}
@@ -28,10 +28,10 @@ void AddShader(const std::string &key, const char *vertexFile, const char *fragm
 }
 const GLuint GetShaderProgram(std::string key) {
 	ShaderInfo si = shader_map[key];
-	return si.program;
+	return si.program_;
 }
 
-GLuint LoadShader(const char* filename, GLenum shader_type)
+GLuint LoadShader(const char* filename, const GLenum &shader_type)
 {
 	GLuint shader_id = 0;
 	FILE* file;

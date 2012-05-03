@@ -3,24 +3,24 @@
 
 void Entity::AddComponent(Component *component)
 {
-	if (this->componentIndex >= Entity::MAX_COMPONENTS)
+	if (component_index_ >= kMaxComponents)
 	{
 		fprintf(stderr, "ERROR: Entity: Max component limit reached");
 		exit(EXIT_FAILURE);
 	}
 
 	component->Entity = this;
-	this->components[this->componentIndex] = component;
-	this->componentIndex++;
+	components_[component_index_] = component;
+	++component_index_;
 };
 
 void Entity::Send(int message)
 {
-	for (int i = 0; i < MAX_COMPONENTS; i++)
+	for (int i = 0; i < kMaxComponents; ++i)
 	{
-		if (components[i] != NULL)
+		if (components_[i] != NULL)
 		{
-			components[i]->Receive(message);
+			components_[i]->Receive(message);
 		}
 	}
 }

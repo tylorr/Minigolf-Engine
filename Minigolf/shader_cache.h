@@ -13,28 +13,28 @@
 namespace render {
 
 struct ShaderInfo {
-	GLuint program;
-	GLuint vertex;
-	GLuint fragment;
+	GLuint program_;
+	GLuint vertex_;
+	GLuint fragment_;
 
 	ShaderInfo() {
-		program = 0;
-		vertex = 0;
-		fragment = 0;
+		program_ = 0;
+		vertex_ = 0;
+		fragment_ = 0;
 	}
 
 	ShaderInfo(const GLuint &program, const GLuint &vertex, const GLuint &fragment) 
-		: program(program),
-		  vertex(vertex),
-		  fragment(fragment) { }
+		: program_(program),
+		  vertex_(vertex),
+		  fragment_(fragment) { }
 };
 
 typedef std::unordered_map<std::string, ShaderInfo> ShaderMap;
 
 static ShaderMap shader_map;
 
-GLuint LoadShader(const char* filename, GLenum shader_type);
-void AddShader(const std::string &key, const char *vertexFile, const char *fragmentFile);
+GLuint LoadShader(const char* filename, const GLenum &shader_type);
+void AddShader(const std::string &key, const char *vertex_file, const char *fragment_file);
 const GLuint GetShaderProgram(std::string key);
 
 }; // namespace render

@@ -15,7 +15,7 @@ void Material::Initialize()
 	projection_uniform_ = glGetUniformLocation(shader_program_, "ProjectionMatrix");
 	normal_uniform_ = glGetUniformLocation(shader_program_, "NormalMatrix");
 	ExitOnGLError("ERROR: Could not get shader uniform locations");
-}
+
 
 const GLint Material::model_view_uniform() const
 {
