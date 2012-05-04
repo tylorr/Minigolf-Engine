@@ -7,7 +7,8 @@
 #include <string>
 #include <vector>
 
-using namespace std;
+using std::vector;
+using std::string;
 
 //==========================STRUCTS================================//
 struct point {  //stores a point in 3d space

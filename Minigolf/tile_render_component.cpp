@@ -1,4 +1,5 @@
 #include "Utils.h"
+#include "mesh.h"
 
 #include "tile_render_component.h"
 
@@ -7,7 +8,7 @@ using glm::mat3;
 using glm::mat4;
 using glm::value_ptr;
 
-using namespace std;
+using std::stack;
 
 void TileRenderComponent::Receive(int message) {
 }

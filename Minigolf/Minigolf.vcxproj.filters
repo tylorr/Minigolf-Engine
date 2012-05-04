@@ -22,6 +22,12 @@
     <Filter Include="Source Files\Components">
       <UniqueIdentifier>{150b55ac-e8aa-470f-b429-71b1002372f9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\render">
+      <UniqueIdentifier>{0feba74e-4482-41bd-8c41-5e34b305b43c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\render">
+      <UniqueIdentifier>{b7729da4-0930-4a19-a3dc-6af7862e03f1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Utils.cpp">
@@ -42,17 +48,17 @@
     <ClCompile Include="tile_render_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="tee_render_component.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="material.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="shader_cache.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="file_handling.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="material.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="shader_cache.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh.cpp">
+      <Filter>Source Files\render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -74,17 +80,17 @@
     <ClInclude Include="tile_render_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="tee_render_component.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="material.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="shader_cache.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="file_handling.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="material.h">
+      <Filter>Header Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="shader_cache.h">
+      <Filter>Header Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh.h">
+      <Filter>Header Files\render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -96,5 +102,8 @@
     </None>
     <None Include="..\README" />
     <None Include="..\.gitignore" />
+    <None Include="hole.00.db" />
+    <None Include="hole.01.db" />
+    <None Include="hole.02.db" />
   </ItemGroup>
 </Project>

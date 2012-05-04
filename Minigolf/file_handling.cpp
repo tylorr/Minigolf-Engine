@@ -2,8 +2,14 @@
 
 #include "file_handling.h"
 
+
+
 hole readData(char* file)
 {
+	using std::ifstream;
+	using std::istringstream;
+	using std::cerr;
+
 	hole h;
 	vector<string> line_data;  //vector to hold all elements in a single line of the input file
 	ifstream fin;  //input stream for file-in.

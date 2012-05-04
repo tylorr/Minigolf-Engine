@@ -4,7 +4,8 @@
 
 using glm::mat4;
 
-using namespace std;
+using std::vector;
+using std::stack;
 
 vector<TileRenderComponent *> TileRenderManager::components;
 

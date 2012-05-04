@@ -35,7 +35,7 @@ using glm::vec4;
 using glm::mat4;
 using glm::value_ptr;
 
-using namespace std;
+using std::stack;
 
 #define WINDOW_TITLE_PREFIX "Chapter 4"
 

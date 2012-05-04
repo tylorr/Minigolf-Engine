@@ -16,13 +16,6 @@
 
 const double PI = 3.14159265358979323846;
 
-typedef struct Vertex
-{
-	float Position[3];
-	float Normal[3];
-	float TexCoord[2];
-} Vertex;
-
 float Cotangent(float angle);
 float DegreesToRadians(float degrees);
 float RadiansToDegrees(float radians);
