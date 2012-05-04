@@ -15,7 +15,7 @@ public:
 	void Initialize(const Tile &t);
 	void LoadBuffers(const Tile &t);
 	void DestoryBuffers();
-	void Render(std::stack<mat4> *ModelViewMatrix, const mat4 &ProjectionMatrix, const GLuint &ModelViewMatrixUniformLocation, const GLuint &ProjectionMatrixUniform, const GLuint &NormalMatrixUnifromLocation);
+	void Render(std::stack<mat4> *ModelViewMatrix, const mat4 &ProjectionMatrix, const GLuint &ModelViewMatrixUniformLocation, const GLuint &MVPUniform, const GLuint &NormalMatrixUnifromLocation);
 
 	virtual void Receive(int message);
 

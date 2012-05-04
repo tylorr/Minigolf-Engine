@@ -21,7 +21,7 @@ Entity *TileRenderManager::CreateTile(const Tile &t) {
 	return e;
 }
 
-void TileRenderManager::Render(stack<mat4> *ModelViewMatrix, const mat4 &ProjectionMatrix, const GLuint &ModelViewMatrixUniformLocation, const GLuint &ProjectionMatrixUniform, const GLuint &NormalMatrixUnifromLocation) {
+void TileRenderManager::Render(stack<mat4> *ModelViewMatrix, const mat4 &ProjectionMatrix, const GLuint &ModelViewMatrixUniformLocation, const GLuint &MVPUniform, const GLuint &NormalMatrixUnifromLocation) {
 	vector<TileRenderComponent *>::iterator it;
 	for (it = components.begin(); it != components.end(); it++) {
 		(*it)->Render(ModelViewMatrix, ProjectionMatrix, ModelViewMatrixUniformLocation, ProjectionMatrixUniform, NormalMatrixUnifromLocation);
