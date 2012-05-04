@@ -11,7 +11,7 @@ class Level {
 public:
 	vector<Entity *> tiles;
 
-	static Level *CreateLevel(const hole &h);
+	static Level *CreateLevel(const Hole &h);
 	
 };
 

@@ -61,7 +61,8 @@ GLuint
 	KsUniform,
 	NsUniform,
 	LdUniform,
-	NormalMatrixUniform;
+	NormalMatrixUniform,
+	MVPUniform;
 
 Level *level;
 
@@ -130,6 +131,7 @@ void Initialize(int argc, char* argv[])
 	glDepthFunc(GL_LESS);
 	ExitOnGLError("ERROR: Could not set OpenGL depth testing options");
 
+	// culling disabled so we can see the bottom of tiles
 	//glEnable(GL_CULL_FACE);
 	//glCullFace(GL_BACK);
 	//glFrontFace(GL_CCW);
@@ -151,7 +153,7 @@ void Initialize(int argc, char* argv[])
 		fprintf(stderr, "Missing map file\n");
 		exit(EXIT_FAILURE);
 	}
-	hole h = readData(argv[1]);
+	Hole h = readData(argv[1]);
 	level = Level::CreateLevel(h);
 }
 
@@ -312,7 +314,7 @@ void RenderFunction(void)
 	// TODO: Find a better way to update and pass around mv and n matrices
 	// WISHLIST: Global storage of mv matrix as well as global glPushMatrix() replica
 	// TODO/WISHLIST: Scene manager
-	TileRenderManager::Render(&ModelViewMatrix, ModelViewMatrixUniformLocation, NormalMatrixUniform);
+	TileRenderManager::Render(&ModelViewMatrix, ProjectionMatrix.top(), ModelViewMatrixUniformLocation, MVPUniform, NormalMatrixUniform);
 
 		
 	glUseProgram(0);
@@ -371,6 +373,7 @@ void SetupShaders()
 	ModelViewMatrixUniformLocation = glGetUniformLocation(ShaderIds[0], "ModelViewMatrix");
 	ProjectionMatrixUniformLocation = glGetUniformLocation(ShaderIds[0], "ProjectionMatrix");
 	NormalMatrixUniform = glGetUniformLocation(ShaderIds[0], "NormalMatrix");
+	MVPUniform = glGetUniformLocation(ShaderIds[0], "MVP");
 
 	ExitOnGLError("ERROR: Could not get shader uniform locations");
 }

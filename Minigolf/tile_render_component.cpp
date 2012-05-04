@@ -5,7 +5,6 @@
 
 using glm::vec3;
 using glm::mat3;
-using glm::mat4;
 using glm::value_ptr;
 
 using std::stack;
@@ -13,11 +12,11 @@ using std::stack;
 void TileRenderComponent::Receive(int message) {
 }
 
-void TileRenderComponent::Initialize(const tile &t) {
+void TileRenderComponent::Initialize(const Tile &t) {
 	LoadBuffers(t);
 }
 
-void TileRenderComponent::LoadBuffers(const tile &t) {
+void TileRenderComponent::LoadBuffers(const Tile &t) {
 	Vertex *VERTICES = new Vertex[t.num_vertices];
 
 	int N = t.num_vertices;
@@ -26,7 +25,7 @@ void TileRenderComponent::LoadBuffers(const tile &t) {
 
 	int index = 0;
 	int tIndex;
-	point p;
+	Point p;
 	int count = 0;
 
 	p = t.vertices[0];
@@ -96,13 +95,16 @@ void TileRenderComponent::DestoryBuffers() {
 	ExitOnGLError("ERROR: Could not destroy the buffer objects");
 }
 
-void TileRenderComponent::Render(stack<mat4> *ModelViewMatrix, const GLuint &ModelViewMatrixUniformLocation, const GLuint &NormalMatrixUnifromLocation) {
+// ProjectionMatrixUniform is actually MVP uniform location, this will be fixed soon
+void TileRenderComponent::Render(stack<mat4> *ModelViewMatrix, const mat4 & ProjectionMatrix, const GLuint &ModelViewMatrixUniformLocation, const GLuint &MVPUniform, const GLuint &NormalMatrixUnifromLocation) {
 	ModelViewMatrix->push(ModelViewMatrix->top());
 	
 	mat3 NormalMatrix = glm::inverse(glm::transpose(mat3(ModelViewMatrix->top())));
+	mat4 mvp = ProjectionMatrix * ModelViewMatrix->top();
 
 	glUniformMatrix3fv(NormalMatrixUnifromLocation, 1, GL_FALSE, value_ptr(NormalMatrix));
 	glUniformMatrix4fv(ModelViewMatrixUniformLocation, 1, GL_FALSE, value_ptr(ModelViewMatrix->top()));
+	glUniformMatrix4fv(MVPUniform, 1, GL_FALSE, value_ptr(mvp));
 	ExitOnGLError("ERROR: Could not set the shader uniforms");
 
 	glBindVertexArray(BufferIds[0]);

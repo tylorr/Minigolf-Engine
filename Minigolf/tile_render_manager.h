@@ -9,15 +9,17 @@
 #include "tile_render_component.h"
 #include "file_handling.h"
 
+using glm::mat4;
+
 class Entity;
 
 class TileRenderManager {
 public:
 	
 
-	static void Render(std::stack<glm::mat4> *ModelViewMatrix, const GLuint &ModelViewMatrixUniformLocation, const GLuint &NormalMatrixUnifromLocation);
+	static void Render(std::stack<mat4> *ModelViewMatrix, const mat4 &ProjectionMatrix, const GLuint &ModelViewMatrixUniformLocation, const GLuint &ProjectionMatrixUniform, const GLuint &NormalMatrixUnifromLocation);
 
-	static Entity *CreateTile(const tile &t);	
+	static Entity *CreateTile(const Tile &t);	
 
 private:
 	static std::vector<TileRenderComponent *> components;

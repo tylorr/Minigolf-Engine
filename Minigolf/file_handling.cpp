@@ -4,13 +4,13 @@
 
 
 
-hole readData(char* file)
+Hole readData(char* file)
 {
 	using std::ifstream;
 	using std::istringstream;
 	using std::cerr;
 
-	hole h;
+	Hole h;
 	vector<string> line_data;  //vector to hold all elements in a single line of the input file
 	ifstream fin;  //input stream for file-in.
 	fin.open(file);
@@ -30,12 +30,12 @@ hole readData(char* file)
 		}
 		if(line_data.at(0) == "tile")
 		{
-			tile t;
+			Tile t;
 			t.id = stringToInt(line_data.at(1));
 			t.num_vertices = stringToInt(line_data.at(2));
 			for(int i = 0; i < t.num_vertices; i++)  //go through all string elements that specify points
 			{
-				point p;
+				Point p;
 				p.x = stringToFloat(line_data.at(3+(i*3)));  //3,4, and 5 are the indices of the first set of point coordinates
 				p.y = stringToFloat(line_data.at(4+(i*3)));
 				p.z = stringToFloat(line_data.at(5+(i*3)));
@@ -50,7 +50,7 @@ hole readData(char* file)
 		}
 		else if(line_data.at(0) == "tee")  //assign values to tee object
 		{
-			point pos;
+			Point pos;
 
 			h.tee.id = stringToInt(line_data.at(1));
 			pos.x = stringToFloat(line_data.at(2));
@@ -61,7 +61,7 @@ hole readData(char* file)
 		}
 		else if(line_data.at(0) == "cup")  //assign values to cup object
 		{
-			point pos;
+			Point pos;
 
 			h.cup.id = stringToInt(line_data.at(1));
 			pos.x = stringToFloat(line_data.at(2));
