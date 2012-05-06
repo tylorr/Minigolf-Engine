@@ -16,13 +16,14 @@ class Component;
 // TODO: Find out better way to store vertices and indices
 // in abstract way
 
+#include "transform.h"
+
 
 class Entity {
 public:
-	vec3 position_;
+	Transform transform_;
 
 	Entity() {
-		position_ = vec3(0.0f);
 		component_index_ = 0;
 	}
 

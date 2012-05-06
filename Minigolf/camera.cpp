@@ -14,7 +14,7 @@ Camera::Camera() {
 Camera::~Camera() {
 }
 
-mat4 Camera::Projection() {
+mat4 Camera::Projection() const {
 	// TODO: Figure out a way to cache this
 
 	using glm::ortho;

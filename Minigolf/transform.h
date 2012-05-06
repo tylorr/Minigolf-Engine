@@ -23,8 +23,10 @@ public:
 	Transform();
 	~Transform();
 
-	mat4 Local();
+	mat4 Local() const;
 	mat4 World();
+
+	virtual void Receive(int message) { }
 
 	// TODO: add translate, rotate, and scale functions
 private:

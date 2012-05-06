@@ -8,6 +8,7 @@ Transform::Transform() {
 	dirty_ = true;
 
 	position_ = vec3(0.0f);
+	rotation_ = quat();
 	scale_ = vec3(1.0f);
 
 	parent_ = NULL;
@@ -16,7 +17,7 @@ Transform::Transform() {
 Transform::~Transform() {
 }
 
-mat4 Transform::Local() {
+mat4 Transform::Local() const {
 	using glm::mat4_cast;
 
 	mat4 result;

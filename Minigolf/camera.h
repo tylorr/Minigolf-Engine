@@ -19,7 +19,7 @@ public:
 	Camera();
 	~Camera();
 
-	mat4 Projection();
+	mat4 Projection() const;
 };
 
 #endif // CAMERA_H

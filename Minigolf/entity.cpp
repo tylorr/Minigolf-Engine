@@ -9,7 +9,7 @@ void Entity::AddComponent(Component *component)
 		exit(EXIT_FAILURE);
 	}
 
-	component->Entity = this;
+	component->entity_ = this;
 	components_[component_index_] = component;
 	++component_index_;
 };

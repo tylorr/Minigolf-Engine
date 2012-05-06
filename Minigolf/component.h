@@ -5,7 +5,7 @@ class Entity;
 
 class Component {
 public:
-	Entity *Entity;
+	Entity *entity_;
 
 	virtual ~Component() { }
 

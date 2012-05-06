@@ -87,6 +87,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="material.cpp" />
     <ClCompile Include="mesh.cpp" />
+    <ClCompile Include="renderer.cpp" />
     <ClCompile Include="shader_cache.cpp" />
     <ClCompile Include="tile_render_component.cpp" />
     <ClCompile Include="tile_render_manager.cpp" />
@@ -97,6 +98,7 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="material.h" />
     <ClInclude Include="mesh.h" />
+    <ClInclude Include="renderer.h" />
     <ClInclude Include="shader_cache.h" />
     <ClInclude Include="component.h" />
     <ClInclude Include="entity.h" />

@@ -3,9 +3,12 @@
 
 #include <string>
 
-#include "Utils.h"
+#include "GL\glew.h"
+#include "GL\freeglut.h"
 
-namespace render {
+#include "glm\glm.hpp"
+
+using glm::mat4;
 
 class Material {
 public:
@@ -16,17 +19,15 @@ public:
 	virtual void PreRender() = 0;
 	virtual void PostRender() = 0;
 
-	const GLint model_view_uniform() const;
-	const GLint projection_uniform() const;
+	void PushMatrices(const mat4 &model_view, const mat4 &projection, const mat4 &mvp, const mat4 &normal);
 
 private:
 	GLuint shader_program_;
 
 	GLint model_view_uniform_;
 	GLint projection_uniform_;
+	GLint mvp_uniform_;
 	GLint normal_uniform_;
 };
-
-}; // namespace render
 
 #endif // MATERIAL_H
