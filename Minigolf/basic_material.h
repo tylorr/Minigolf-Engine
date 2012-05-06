@@ -14,7 +14,7 @@ using glm::vec3;
 class BasicMaterial : public Material {
 public:
 
-	// TODO: move light information into it's own component
+	// TODO: move light information into its own component
 	vec4 light_position_;
 	vec3 Ld_;
 	vec3 Kd_;

@@ -60,9 +60,6 @@
     <ClCompile Include="entity.cpp">
       <Filter>Source Files\core</Filter>
     </ClCompile>
-    <ClCompile Include="file_handling.cpp">
-      <Filter>Source Files\core</Filter>
-    </ClCompile>
     <ClCompile Include="Utils.cpp">
       <Filter>Source Files\core</Filter>
     </ClCompile>
@@ -70,6 +67,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="basic_material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="file_handling.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -101,9 +101,6 @@
     <ClInclude Include="entity.h">
       <Filter>Header Files\core</Filter>
     </ClInclude>
-    <ClInclude Include="file_handling.h">
-      <Filter>Header Files\core</Filter>
-    </ClInclude>
     <ClInclude Include="Utils.h">
       <Filter>Header Files\core</Filter>
     </ClInclude>
@@ -114,6 +111,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="basic_material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="file_handling.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
