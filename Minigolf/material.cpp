@@ -1,9 +1,10 @@
-#include "shader_cache.h"
-
 #include "material.h"
 
-Material::Material(std::string shaderProgramKey){
-	shader_program_ = shader_cache::GetShaderProgram(shaderProgramKey);
+#include "shader_cache.h"
+#include "Utils.h"
+
+Material::Material(const std::string &shader_program_key){
+	shader_program_ = shader_cache::GetShaderProgram(shader_program_key);
 }
 
 void Material::Initialize() {
@@ -13,6 +14,14 @@ void Material::Initialize() {
 	normal_uniform_ = glGetUniformLocation(shader_program_, "NormalMatrix");
 	
 	ExitOnGLError("ERROR: Could not get shader uniform locations");
+}
+
+void Material::PreRender() {
+	glUseProgram(shader_program_);
+}
+
+void Material::PostRender() {
+	glUseProgram(0);
 }
 
 void Material::PushMatrices(const mat4 &model_view, const mat4 &projection, const mat4 &mvp, const mat4 &normal) {

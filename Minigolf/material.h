@@ -12,16 +12,16 @@ using glm::mat4;
 
 class Material {
 public:
-	Material(std::string shaderProgramKey);
+	Material(const std::string &shader_program_key);
 	virtual ~Material() { }
 
 	virtual void Initialize();
 	virtual void PreRender() = 0;
-	virtual void PostRender() = 0;
+	virtual void PostRender();
 
-	void PushMatrices(const mat4 &model_view, const mat4 &projection, const mat4 &mvp, const mat4 &normal);
+	virtual void PushMatrices(const mat4 &model_view, const mat4 &projection, const mat4 &mvp, const mat4 &normal);
 
-private:
+protected:
 	GLuint shader_program_;
 
 	GLint model_view_uniform_;

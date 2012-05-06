@@ -3,8 +3,9 @@
 
 #include <stack>
 
-#include "component.h"
 #include "Utils.h"
+
+#include "component.h"
 #include "file_handling.h"
 
 using glm::mat4;

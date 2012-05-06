@@ -4,7 +4,8 @@
 #include <unordered_map>
 #include <string>
 
-#include "Utils.h"
+#include "GL\glew.h"
+#include "GL\freeglut.h"
 
 /*
  * Use these methods to load shaders into a cache of shader programs
