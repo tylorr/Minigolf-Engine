@@ -28,6 +28,12 @@
     <Filter Include="Source Files\render">
       <UniqueIdentifier>{b7729da4-0930-4a19-a3dc-6af7862e03f1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\core">
+      <UniqueIdentifier>{c1761f61-b491-418a-919c-45d1e06af211}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core">
+      <UniqueIdentifier>{d2af3945-829f-424a-a616-9f3a1585e575}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Utils.cpp">
@@ -60,6 +66,12 @@
     <ClCompile Include="mesh.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
+    <ClCompile Include="transform.cpp">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils.h">
@@ -90,6 +102,12 @@
       <Filter>Header Files\render</Filter>
     </ClInclude>
     <ClInclude Include="mesh.h">
+      <Filter>Header Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="transform.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
       <Filter>Header Files\render</Filter>
     </ClInclude>
   </ItemGroup>

@@ -296,8 +296,8 @@ void RenderFunction(void)
 	ModelViewMatrix.top() = glm::lookAt(vec3(0, 2, 4), vec3(0, 0, 0), vec3(0, 1, 0));
 
 	ModelViewMatrix.top() = glm::rotate(ModelViewMatrix.top(), xAngle, vec3(1, 0, 0));
-	ModelViewMatrix.top() = glm::rotate(ModelViewMatrix.top(), yAngle, vec3(0, 1, 0));	
-
+	ModelViewMatrix.top() = glm::rotate(ModelViewMatrix.top(), yAngle, vec3(0, 1, 0));
+	
 	glUseProgram(ShaderIds[0]);
 	ExitOnGLError("ERROR: Could not use the shader program");
 

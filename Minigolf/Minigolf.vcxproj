@@ -80,6 +80,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="camera.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="file_handling.cpp" />
     <ClCompile Include="level.cpp" />
@@ -89,9 +90,11 @@
     <ClCompile Include="shader_cache.cpp" />
     <ClCompile Include="tile_render_component.cpp" />
     <ClCompile Include="tile_render_manager.cpp" />
+    <ClCompile Include="transform.cpp" />
     <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="camera.h" />
     <ClInclude Include="material.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="shader_cache.h" />
@@ -101,6 +104,7 @@
     <ClInclude Include="level.h" />
     <ClInclude Include="tile_render_manager.h" />
     <ClInclude Include="tile_render_component.h" />
+    <ClInclude Include="transform.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
