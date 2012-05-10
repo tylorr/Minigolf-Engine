@@ -7,26 +7,24 @@
 #include <string>
 #include <vector>
 
+#include "glm\glm.hpp"
+
 using std::vector;
 using std::string;
+using glm::vec3;
 
 //==========================STRUCTS================================//
-struct Point {  //stores a point in 3d space
-	float x;
-	float y;
-	float z;
-};
 
 struct Tile {  //holds info about each tile
 	int id;
 	int num_vertices;
-	vector<Point> vertices;
+	vector<vec3> vertices;
 	vector<int> neighbors;
 };
 
 struct TeeCup {  //holds info about a tee or a cup(same info needed)
 	int id;
-	Point position;
+	vec3 position;
 };
 
 struct Hole {  //holds info about each hole

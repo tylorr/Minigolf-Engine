@@ -17,6 +17,8 @@ public:
 	~Renderer();
 
 	void Render() const;
+
+	virtual void Receive(int message) { }
 };
 
 #endif // RENDERER_H

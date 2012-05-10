@@ -36,6 +36,7 @@ void main()
 	getEyeSpace(eyeNorm, eyePosition);
 
 	LightIntensity = diffuseOnly(eyePosition, eyeNorm);
+	//LightIntensity = Ld; // no lighting
         
 	// Convert position to clip coordinates and pass along
 	gl_Position = MVP * vec4(VertexPosition, 1.0);

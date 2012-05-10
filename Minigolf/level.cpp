@@ -6,7 +6,6 @@
 
 Level *Level::CreateLevel(const Hole &h) {
 	Level *level = new Level();
-
 	vector<Tile>::const_iterator it;
 
 	Entity *tile;

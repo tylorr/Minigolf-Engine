@@ -35,7 +35,7 @@ Hole readData(char* file)
 			t.num_vertices = stringToInt(line_data.at(2));
 			for(int i = 0; i < t.num_vertices; i++)  //go through all string elements that specify points
 			{
-				Point p;
+				vec3 p;
 				p.x = stringToFloat(line_data.at(3+(i*3)));  //3,4, and 5 are the indices of the first set of point coordinates
 				p.y = stringToFloat(line_data.at(4+(i*3)));
 				p.z = stringToFloat(line_data.at(5+(i*3)));
@@ -50,7 +50,7 @@ Hole readData(char* file)
 		}
 		else if(line_data.at(0) == "tee")  //assign values to tee object
 		{
-			Point pos;
+			vec3 pos;
 
 			h.tee.id = stringToInt(line_data.at(1));
 			pos.x = stringToFloat(line_data.at(2));
@@ -61,7 +61,7 @@ Hole readData(char* file)
 		}
 		else if(line_data.at(0) == "cup")  //assign values to cup object
 		{
-			Point pos;
+			vec3 pos;
 
 			h.cup.id = stringToInt(line_data.at(1));
 			pos.x = stringToFloat(line_data.at(2));

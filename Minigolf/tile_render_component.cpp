@@ -25,7 +25,7 @@ void TileRenderComponent::LoadBuffers(const Tile &t) {
 
 	int index = 0;
 	int tIndex;
-	Point p;
+	vec3 p;
 	int count = 0;
 
 	p = t.vertices[0];

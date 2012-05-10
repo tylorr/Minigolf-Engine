@@ -9,16 +9,16 @@ using std::stack;
 vector<TileRenderComponent *> TileRenderManager::components;
 
 Entity *TileRenderManager::CreateTile(const Tile &t) {
-	Entity *e = new Entity();
+	Entity *entity = new Entity();
 
 	TileRenderComponent *comp = new TileRenderComponent();
 	comp->Initialize(t);
 
 	components.push_back(comp);
 
-	e->AddComponent(comp);
+	entity->AddComponent(comp);
 
-	return e;
+	return entity;
 }
 
 void TileRenderManager::Render(stack<mat4> *ModelViewMatrix, const mat4 &ProjectionMatrix, const GLuint &ModelViewMatrixUniformLocation, const GLuint &MVPUniform, const GLuint &NormalMatrixUnifromLocation) {

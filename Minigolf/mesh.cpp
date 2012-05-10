@@ -1,5 +1,6 @@
 #include "mesh.h"
 
+// TODO: Maybe this should go in the constructor
 void Mesh::Initialize(const VertexType &vertex_type, const Vertex *vertices, const GLsizei &vertex_count, const GLuint *indices, const GLsizei &index_count) {
 	const size_t vbo_size = vertex_count * sizeof(Vertex);
 	const size_t ibo_size = index_count * sizeof(unsigned int);
@@ -57,8 +58,8 @@ void Mesh::Draw() const {
 	glBindVertexArray(vertex_array_object_);
 	ExitOnGLError("ERROR: Could not bind the VAO for drawing purposes");
 
-	// note: hard-coded use of GL_TRIANGLES, could be made user-defined
-	glDrawElements(GL_TRIANGLES, index_count_, GL_UNSIGNED_INT, (GLvoid*)0);
+	// note: hard-coded use of GL_TRIANGLE_STRIP, could be made user-defined
+	glDrawElements(GL_TRIANGLE_STRIP, index_count_, GL_UNSIGNED_INT, (GLvoid*)0);
 	ExitOnGLError("ERROR: Could not draw the mesh");
 
 	glBindVertexArray(0);
