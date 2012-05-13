@@ -16,111 +16,135 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{61827fac-0f17-45a5-a67a-24a4bb5db30b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\render">
-      <UniqueIdentifier>{0feba74e-4482-41bd-8c41-5e34b305b43c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\render">
-      <UniqueIdentifier>{b7729da4-0930-4a19-a3dc-6af7862e03f1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\core">
+    <Filter Include="Header Files\engine">
       <UniqueIdentifier>{c1761f61-b491-418a-919c-45d1e06af211}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\core">
+    <Filter Include="Source Files\engine">
       <UniqueIdentifier>{d2af3945-829f-424a-a616-9f3a1585e575}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\game">
+      <UniqueIdentifier>{3b57c74b-9055-487b-86e1-5dff936fd23f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game">
+      <UniqueIdentifier>{545247b0-8967-42cf-b96e-9d765bb344d9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="level.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tile_render_manager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="material.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="shader_cache.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
     <ClCompile Include="transform.cpp">
-      <Filter>Source Files\core</Filter>
-    </ClCompile>
-    <ClCompile Include="camera.cpp">
-      <Filter>Source Files\render</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer.cpp">
-      <Filter>Source Files\render</Filter>
+      <Filter>Source Files\engine</Filter>
     </ClCompile>
     <ClCompile Include="entity.cpp">
-      <Filter>Source Files\core</Filter>
+      <Filter>Source Files\engine</Filter>
     </ClCompile>
     <ClCompile Include="Utils.cpp">
-      <Filter>Source Files\core</Filter>
+      <Filter>Source Files\engine</Filter>
     </ClCompile>
-    <ClCompile Include="tile_render_component.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="entity_manager.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="shader_cache.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="material.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer.cpp">
+      <Filter>Source Files\engine</Filter>
     </ClCompile>
     <ClCompile Include="basic_material.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\game</Filter>
     </ClCompile>
-    <ClCompile Include="file_handling.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="tile_render_manager.cpp">
+      <Filter>Source Files\game</Filter>
     </ClCompile>
     <ClCompile Include="factory.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="file_handling.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="level.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="tile_render_component.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="component_type.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="component_type_manager.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="entity_system.cpp">
+      <Filter>Source Files\engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="level.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="tile_render_manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="material.h">
-      <Filter>Header Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="shader_cache.h">
-      <Filter>Header Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh.h">
-      <Filter>Header Files\render</Filter>
-    </ClInclude>
     <ClInclude Include="transform.h">
-      <Filter>Header Files\core</Filter>
-    </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>Header Files\render</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer.h">
-      <Filter>Header Files\render</Filter>
+      <Filter>Header Files\engine</Filter>
     </ClInclude>
     <ClInclude Include="entity.h">
-      <Filter>Header Files\core</Filter>
+      <Filter>Header Files\engine</Filter>
     </ClInclude>
     <ClInclude Include="Utils.h">
-      <Filter>Header Files\core</Filter>
+      <Filter>Header Files\engine</Filter>
     </ClInclude>
     <ClInclude Include="component.h">
-      <Filter>Header Files\core</Filter>
+      <Filter>Header Files\engine</Filter>
     </ClInclude>
-    <ClInclude Include="tile_render_component.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="entity_manager.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="shader_cache.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="material.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer.h">
+      <Filter>Header Files\engine</Filter>
     </ClInclude>
     <ClInclude Include="basic_material.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\game</Filter>
     </ClInclude>
-    <ClInclude Include="file_handling.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="tile_render_manager.h">
+      <Filter>Header Files\game</Filter>
     </ClInclude>
     <ClInclude Include="factory.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="file_handling.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="level.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="tile_render_component.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="component_type.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="component_type_manager.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="entity_system.h">
+      <Filter>Header Files\engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

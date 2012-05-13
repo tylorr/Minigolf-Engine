@@ -21,6 +21,7 @@
 
 #include <stack>
 #include <ctime>
+#include <boost\shared_ptr.hpp>
 
 #include "Utils.h"
 
@@ -30,12 +31,16 @@
 
 #include "shader_cache.h"
 
+#include "component_type.h"
+#include "entity_manager.h"
+
 using glm::vec3;
 using glm::vec4;
 using glm::mat4;
 using glm::value_ptr;
 
 using std::stack;
+using boost::shared_ptr;
 
 #define WINDOW_TITLE_PREFIX "Chapter 4"
 
@@ -93,6 +98,15 @@ void DestoryShaders(void);
 
 int main(int argc, char* argv[])
 {
+	/*
+	shared_ptr<TileRenderComponent> comp(new TileRenderComponent());
+
+	//EntityManager *manager = new EntityManager();
+	shared_ptr<Entity> entity = EntityManager::Create();
+	EntityManager::AddComponent(entity, comp);
+	EntityManager::AddComponent(entity, comp);
+	*/
+
 	Initialize(argc, argv);
 
 	glutMainLoop();

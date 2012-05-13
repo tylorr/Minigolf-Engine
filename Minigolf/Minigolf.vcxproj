@@ -82,7 +82,11 @@
   <ItemGroup>
     <ClCompile Include="basic_material.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="component_type.cpp" />
+    <ClCompile Include="component_type_manager.cpp" />
     <ClCompile Include="entity.cpp" />
+    <ClCompile Include="entity_manager.cpp" />
+    <ClCompile Include="entity_system.cpp" />
     <ClCompile Include="factory.cpp" />
     <ClCompile Include="file_handling.cpp" />
     <ClCompile Include="level.cpp" />
@@ -99,6 +103,10 @@
   <ItemGroup>
     <ClInclude Include="basic_material.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="component_type.h" />
+    <ClInclude Include="component_type_manager.h" />
+    <ClInclude Include="entity_manager.h" />
+    <ClInclude Include="entity_system.h" />
     <ClInclude Include="factory.h" />
     <ClInclude Include="material.h" />
     <ClInclude Include="mesh.h" />

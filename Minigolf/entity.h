@@ -22,20 +22,53 @@ class Component;
 class Entity {
 public:
 	Transform transform_;
+	unsigned int unique_id_;
+	
+	Entity();
+	Entity(const unsigned int &id);
 
-	Entity() {
-		component_index_ = 0;
+	void Initialize(const unsigned int &id);
+	void Reset();
+
+	unsigned int id() {
+		return id_;
 	}
 
-	void AddComponent(Component *component);
+	long system_bits() {
+		return system_bits_;
+	}
 
-	void Send(int message);
+	long type_bits() {
+		return type_bits_;
+	}
+
+	bool enabled() {
+		return enabled_;
+	}
+
+	void set_enabled(const bool &enabled) {
+		enabled_ = enabled;
+	}
+
+	void AddTypeBit(const long &bit);
+	void RemoveTypeBit(const long &bit);
+	void AddSystemBit(const long &bit);
+	void RemoveSystemBit(const long &bit);
+
+	void AddComponent(Component *component);
 
 private:
 	static const int kMaxComponents = 10;
 
+	bool enabled_;
+
+	unsigned int id_;
+
+	long system_bits_;
+	long type_bits_;
+
 	Component *components_[kMaxComponents];
-	unsigned component_index_;
+	unsigned int component_index_;
 };
 
 #endif // ENTITY_H
