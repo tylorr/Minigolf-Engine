@@ -154,7 +154,6 @@ void Initialize(int argc, char* argv[])
 	ModelViewMatrix.push(mat4(1.0f));
 	ProjectionMatrix.push(mat4(1.0f));
 
-	shader_cache::Initialize();
 	shader_cache::AddShader("diffuse", "diffuse.vertex.glsl", "diffuse.fragment.glsl");
 
 	SetupShaders();
@@ -168,7 +167,7 @@ void Initialize(int argc, char* argv[])
 		exit(EXIT_FAILURE);
 	}
 	Hole h = readData(argv[1]);
-	level = Level::CreateLevel(h);
+	level = Level::Create(h);
 }
 
 void InitWindow(int argc, char* argv[])

@@ -29,16 +29,16 @@ void Renderer::Render() const {
 	using glm::inverse;
 	using glm::transpose;
 
-	mat4 view = camera_->entity_->transform_.World();
+	//mat4 view = camera_->entity_->transform_.World();
 	mat4 projection = camera_->Projection();
-	mat4 model = entity_->transform_.World();
-	mat4 model_view = view * model;
-	mat4 mvp = projection * model_view;
-	mat4 normal = inverse(transpose(model_view));
+	//mat4 model = entity_->transform_.World();
+	//mat4 model_view = view * model;
+	//mat4 mvp = projection * model_view;
+	//mat4 normal = inverse(transpose(model_view));
 
 	material_->PreRender();
 
-	material_->PushMatrices(model_view, projection, mvp, normal);
+	//material_->PushMatrices(model_view, projection, mvp, normal);
 	mesh_->Draw();
 
 	material_->PostRender();

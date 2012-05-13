@@ -68,7 +68,7 @@ Entity *CreateTile(Camera *camera, Material *material, const std::vector<glm::ve
 
 	// build entity
 	entity = new Entity();
-	entity->AddComponent(renderer);
+	//entity->AddComponent(renderer);
 
 	return entity;
 }

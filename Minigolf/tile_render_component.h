@@ -20,8 +20,6 @@ public:
 	void DestoryBuffers();
 	void Render(std::stack<mat4> *ModelViewMatrix, const mat4 &ProjectionMatrix, const GLuint &ModelViewMatrixUniformLocation, const GLuint &MVPUniform, const GLuint &NormalMatrixUnifromLocation);
 
-	virtual void Receive(int message);
-
 private:
 	GLuint BufferIds[3];
 	unsigned vertexCount;

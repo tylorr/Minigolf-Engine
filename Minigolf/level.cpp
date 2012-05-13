@@ -4,7 +4,7 @@
 #include "tile_render_component.h"
 #include "tile_render_manager.h"
 
-Level *Level::CreateLevel(const Hole &h) {
+Level *Level::Create(const Hole &h) {
 	Level *level = new Level();
 	vector<Tile>::const_iterator it;
 

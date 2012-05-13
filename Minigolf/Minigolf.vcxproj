@@ -95,6 +95,7 @@
     <ClCompile Include="mesh.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="shader_cache.cpp" />
+    <ClCompile Include="system_manager.cpp" />
     <ClCompile Include="tile_render_component.cpp" />
     <ClCompile Include="tile_render_manager.cpp" />
     <ClCompile Include="transform.cpp" />
@@ -116,6 +117,7 @@
     <ClInclude Include="entity.h" />
     <ClInclude Include="file_handling.h" />
     <ClInclude Include="level.h" />
+    <ClInclude Include="system_manager.h" />
     <ClInclude Include="tile_render_manager.h" />
     <ClInclude Include="tile_render_component.h" />
     <ClInclude Include="transform.h" />

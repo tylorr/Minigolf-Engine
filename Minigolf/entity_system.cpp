@@ -7,8 +7,7 @@ using std::string;
 using std::vector;
 using boost::shared_ptr;
 
-EntitySystem::EntitySystem(vector<string> types) {
-	int size = types.size();
+EntitySystem::EntitySystem(vector<string> types, const int &layer) {
 	shared_ptr<ComponentType> type;
 	vector<string>::iterator it;
 
@@ -16,6 +15,8 @@ EntitySystem::EntitySystem(vector<string> types) {
 		type = ComponentTypeManager::GetTypeFor(*it);
 		type_bits_ |= type->bit();
 	}
+
+	layer_ = layer;
 }
 
 EntitySystem::~EntitySystem() {
@@ -85,4 +86,8 @@ void EntitySystem::Disable(shared_ptr<Entity> entity) {
 	}
 
 	active_entities_.erase(entity->id());
+}
+
+bool EntitySystem::operator<(const EntitySystem &other) {
+	return layer_ < other.layer_;
 }

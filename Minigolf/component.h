@@ -7,8 +7,6 @@ class Entity;
 
 class Component {
 public:
-	Entity *entity_;
-
 	virtual ~Component() { }
 
 	std::string family_name() {

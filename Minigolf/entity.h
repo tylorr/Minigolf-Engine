@@ -21,7 +21,6 @@ class Component;
 
 class Entity {
 public:
-	Transform transform_;
 	unsigned int unique_id_;
 	
 	Entity();
@@ -29,6 +28,11 @@ public:
 
 	void Initialize(const unsigned int &id);
 	void Reset();
+
+	void AddTypeBit(const long &bit);
+	void RemoveTypeBit(const long &bit);
+	void AddSystemBit(const long &bit);
+	void RemoveSystemBit(const long &bit);
 
 	unsigned int id() {
 		return id_;
@@ -50,25 +54,13 @@ public:
 		enabled_ = enabled;
 	}
 
-	void AddTypeBit(const long &bit);
-	void RemoveTypeBit(const long &bit);
-	void AddSystemBit(const long &bit);
-	void RemoveSystemBit(const long &bit);
-
-	void AddComponent(Component *component);
-
 private:
-	static const int kMaxComponents = 10;
-
 	bool enabled_;
 
 	unsigned int id_;
 
 	long system_bits_;
 	long type_bits_;
-
-	Component *components_[kMaxComponents];
-	unsigned int component_index_;
 };
 
 #endif // ENTITY_H

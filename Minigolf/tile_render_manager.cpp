@@ -16,7 +16,7 @@ Entity *TileRenderManager::CreateTile(const Tile &t) {
 
 	components.push_back(comp);
 
-	entity->AddComponent(comp);
+	//entity->AddComponent(comp);
 
 	return entity;
 }

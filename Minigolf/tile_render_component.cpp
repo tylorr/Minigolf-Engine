@@ -9,9 +9,6 @@ using glm::value_ptr;
 
 using std::stack;
 
-void TileRenderComponent::Receive(int message) {
-}
-
 void TileRenderComponent::Initialize(const Tile &t) {
 	LoadBuffers(t);
 }

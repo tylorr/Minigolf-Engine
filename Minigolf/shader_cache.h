@@ -31,17 +31,12 @@ struct ShaderInfo {
 		  fragment_(fragment) { }
 };
 
-typedef std::unordered_map<std::string, ShaderInfo> ShaderMap;
-
-static ShaderMap *shader_map;
-
-void Initialize();
 void Destroy();
 
 GLuint LoadShader(const char* filename, const GLenum &shader_type);
 
 void AddShader(const std::string &key, const char *vertex_file, const char *fragment_file);
-const GLuint GetShaderProgram(std::string key);
+const GLuint GetShaderProgram(const std::string &key);
 
 }; // namespace render
 
