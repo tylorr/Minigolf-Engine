@@ -4,7 +4,7 @@
 
 #include "Utils.h"
 
-namespace shader_cache {
+namespace ShaderCache {
 
 namespace {
 	typedef std::unordered_map<std::string, ShaderInfo> ShaderMap;

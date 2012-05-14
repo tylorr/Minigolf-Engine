@@ -11,7 +11,7 @@
  * Use these methods to load shaders into a cache of shader programs
  */
 
-namespace shader_cache {
+namespace ShaderCache {
 
 // stores information about the shader program and shaders
 struct ShaderInfo {

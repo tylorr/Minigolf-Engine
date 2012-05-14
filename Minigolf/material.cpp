@@ -4,7 +4,7 @@
 #include "Utils.h"
 
 Material::Material(const std::string &shader_program_key){
-	shader_program_ = shader_cache::GetShaderProgram(shader_program_key);
+	shader_program_ = ShaderCache::GetShaderProgram(shader_program_key);
 }
 
 void Material::Initialize() {

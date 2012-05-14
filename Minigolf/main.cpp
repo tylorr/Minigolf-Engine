@@ -22,8 +22,6 @@
 	THE SOFTWARE.
 */
 
-#include <stack>
-#include <vector>
 #include <ctime>
 
 #include <boost\shared_ptr.hpp>
@@ -31,21 +29,12 @@
 #include "Utils.h"
 #include "file_handling.h"
 #include "level.h"
-#include "tile_render_manager.h"
 #include "shader_cache.h"
 #include "component_type.h"
 #include "entity_manager.h"
 #include "render_system.h"
 #include "system_manager.h"
 #include "factory.h"
-
-using std::stack;
-using std::vector;
-
-using glm::vec3;
-using glm::vec4;
-using glm::mat4;
-using glm::value_ptr;
 
 using boost::shared_ptr;
 
@@ -57,51 +46,27 @@ int CurrentWidth = 800,
 
 unsigned FrameCount = 0;
 
-GLuint
-	ProjectionMatrixUniformLocation,
-	ModelViewMatrixUniformLocation,
-	ShaderIds[3] = { 0 };
-
-stack<mat4> 
-	ProjectionMatrix,
-	ModelViewMatrix;
-
-GLuint
-	LightPositionUniform,
-	KaUniform,
-	KdUniform,
-	KsUniform,
-	NsUniform,
-	LdUniform,
-	NormalMatrixUniform,
-	MVPUniform;
-
-Level *level;
-
-float CubeRotation = 0;
-clock_t LastTime = 0;
-
 clock_t previous;
 
 bool upPressed = false;
 bool downPressed = false;
 bool rightPressed = false;
 bool leftPressed = false;
-float xAngle = 0;
-float yAngle = 0;
 
 void Initialize(int, char*[]);
 void InitWindow(int, char*[]);
+
 void ResizeFunction(int, int);
 void RenderFunction(void);
-void TimerFunction(int);
 void IdleFunction(void);
+
+void TimerFunction(int);
+
 void KeyPressed(unsigned char, int, int);
 void SpecialPressed(int, int, int);
 void SpecialReleased(int, int, int);
 
-void SetupShaders(void);
-void DestoryShaders(void);
+void Destroy(void);
 
 int main(int argc, char* argv[])
 {
@@ -159,22 +124,13 @@ void Initialize(int argc, char* argv[])
 	//--------------------------------------------------------------------------
 	// Setup world
 
-	//ModelViewMatrix.push(mat4(1.0f));
-	//ProjectionMatrix.push(mat4(1.0f));
-
-	shader_cache::AddShader("diffuse", "diffuse.vertex.glsl", "diffuse.fragment.glsl");
+	ShaderCache::AddShader("diffuse", "diffuse.vertex.glsl", "diffuse.fragment.glsl");
 
 	SystemManager::AddSystem(shared_ptr<RenderSystem>(new RenderSystem()));
 
 	Factory::CreateCamera(60.0f, 1.0f, (float)CurrentWidth / CurrentHeight, 1000.0f);
 
-	//SetupShaders();
-
-	//CreateCube();
-
 	Hole h = readData(argv[1]);
-	//level = Level::Create(h);	
-
 	Factory::CreateLevel(h);
 
 	previous = clock();
@@ -211,7 +167,7 @@ void InitWindow(int argc, char* argv[])
 	glutDisplayFunc(RenderFunction);
 	glutIdleFunc(IdleFunction);
 	glutTimerFunc(0, TimerFunction, 0);
-	glutCloseFunc(DestoryShaders);
+	glutCloseFunc(Destroy);
 	glutKeyboardFunc(KeyPressed);
 	glutSpecialFunc(SpecialPressed);
 	glutSpecialUpFunc(SpecialReleased);
@@ -271,6 +227,7 @@ void ResizeFunction(int Width, int Height)
 	CurrentHeight = Height;
 	glViewport(0, 0, CurrentWidth, CurrentHeight);
 	
+	// todo: move this logic into camera controller
 	/*
 	ProjectionMatrix.top() = 
 		glm::perspective(
@@ -279,11 +236,6 @@ void ResizeFunction(int Width, int Height)
 			1.0f,
 			100.0f
 		);
-
-
-	glUseProgram(ShaderIds[0]);
-	glUniformMatrix4fv(ProjectionMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(ProjectionMatrix.top()));
-	glUseProgram(0);
 	*/
 }
 
@@ -293,63 +245,10 @@ void RenderFunction(void)
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	/*
 	clock_t current = clock();
 
 	float delta = float(current - previous) / CLOCKS_PER_SEC;
 	previous = current;
-
-
-	float keyStep = 90.0f * delta;
-
-	if (upPressed) {
-		xAngle -= keyStep;
-	}
-	if (downPressed) {
-		xAngle += keyStep;
-	}
-
-	if (leftPressed) {
-		yAngle -= keyStep;
-	}
-
-	if (rightPressed) {
-		yAngle += keyStep;
-	}
-	*/
-
-	
-
-	/*
-	ModelViewMatrix.top() = mat4(1.0f);
-
-	// TODO: Need to make camera class
-	ModelViewMatrix.top() = glm::lookAt(vec3(0, 2, 4), vec3(0, 0, 0), vec3(0, 1, 0));
-
-	ModelViewMatrix.top() = glm::rotate(ModelViewMatrix.top(), xAngle, vec3(1, 0, 0));
-	ModelViewMatrix.top() = glm::rotate(ModelViewMatrix.top(), yAngle, vec3(0, 1, 0));
-	
-	glUseProgram(ShaderIds[0]);
-	ExitOnGLError("ERROR: Could not use the shader program");
-
-	// TODO: Make light class
-	vec4 lightPosition = vec4(0, 5.0f, 0, 1.0f);
-	lightPosition = ModelViewMatrix.top() * lightPosition; // transform light with geometry
-	GLfloat Kd[] = { 0.8f, 0.8f, 0.8f }; // Light diffuse reflectivity
-	GLfloat Ld[] = { 0.0f, 1.0f, 0.0f }; // Light diffuse intensity
-
-	glUniform4fv(LightPositionUniform, 1, glm::value_ptr(lightPosition));
-	glUniform3fv(KdUniform, 1, Kd);
-	glUniform3fv(LdUniform, 1, Ld);
-	
-	// TODO: Find a better way to update and pass around mv and n matrices
-	// WISHLIST: Global storage of mv matrix as well as global glPushMatrix() replica
-	// TODO/WISHLIST: Scene manager
-	TileRenderManager::Render(&ModelViewMatrix, ProjectionMatrix.top(), ModelViewMatrixUniformLocation, MVPUniform, NormalMatrixUniform);
-
-		
-	glUseProgram(0);
-	*/
 
 	SystemManager::Update();
 
@@ -385,78 +284,7 @@ void TimerFunction(int Value)
 	glutTimerFunc(250, TimerFunction, 1);
 }
 
-
-
-void SetupShaders()
+void Destroy()
 {
-	ShaderIds[0] = glCreateProgram();
-	ExitOnGLError("ERROR: Could not create the shader program");
-	{
-		ShaderIds[1] = shader_cache::LoadShader("diffuse.fragment.glsl", GL_FRAGMENT_SHADER);
-		ShaderIds[2] = shader_cache::LoadShader("diffuse.vertex.glsl", GL_VERTEX_SHADER);
-		glAttachShader(ShaderIds[0], ShaderIds[1]);
-		glAttachShader(ShaderIds[0], ShaderIds[2]);
-	}
-	glLinkProgram(ShaderIds[0]);
-	ExitOnGLError("ERROR: Could not link the shader program");
-
-	LightPositionUniform = glGetUniformLocation(ShaderIds[0], "LightPosition");
-	KdUniform = glGetUniformLocation(ShaderIds[0], "Kd");
-	LdUniform = glGetUniformLocation(ShaderIds[0], "Ld");	
-
-	ModelViewMatrixUniformLocation = glGetUniformLocation(ShaderIds[0], "ModelViewMatrix");
-	ProjectionMatrixUniformLocation = glGetUniformLocation(ShaderIds[0], "ProjectionMatrix");
-	NormalMatrixUniform = glGetUniformLocation(ShaderIds[0], "NormalMatrix");
-	MVPUniform = glGetUniformLocation(ShaderIds[0], "MVP");
-
-	ExitOnGLError("ERROR: Could not get shader uniform locations");
+	ShaderCache::Destroy();
 }
-
-void DestoryShaders()
-{
-	glDetachShader(ShaderIds[0], ShaderIds[1]);
-	glDetachShader(ShaderIds[0], ShaderIds[2]);
-	glDeleteShader(ShaderIds[1]);
-	glDeleteShader(ShaderIds[2]);
-	glDeleteProgram(ShaderIds[0]);
-	ExitOnGLError("ERROR: Could not destroy the shaders");
-
-	shader_cache::Destroy();
-}
-
-/*
-void DrawCube(void)
-{
-	float CubeAngle;
-	clock_t Now = clock();
-
-	if (LastTime == 0)
-		LastTime = Now;
-
-	CubeRotation += 45.0f * ((float)(Now - LastTime) / CLOCKS_PER_SEC);
-	CubeAngle = DegreesToRadians(CubeRotation);
-	LastTime = Now;
-
-	ModelViewMatrix.push(ModelViewMatrix.top());
-
-	//ModelViewMatrix.top() = rotate(ModelViewMatrix.top(), CubeRotation, vec3(0, 1.0f, 0));
-	//ModelViewMatrix.top() = rotate(ModelViewMatrix.top(), CubeRotation, vec3(1.0f, 0, 0));
-
-	glUseProgram(ShaderIds[0]);
-	ExitOnGLError("ERROR: Could not use the shader program");
-
-	glUniformMatrix4fv(ModelViewMatrixUniformLocation, 1, GL_FALSE, value_ptr(ModelViewMatrix.top()));
-	ExitOnGLError("ERROR: Could not set the shader uniforms");
-
-	glBindVertexArray(BufferIds[0]);
-	ExitOnGLError("ERROR: Could not bind the VAO for drawing purposes");
-
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	ExitOnGLError("ERROR: Could not draw the cube");
-
-	glBindVertexArray(0);
-	glUseProgram(0);
-
-	ModelViewMatrix.pop();
-}
-*/

@@ -97,20 +97,17 @@ void RenderSystem::ProcessEntities(const EntityMap &entities) {
 		mvp = projection * model_view;
 		normal = inverse(transpose(model_view));
 
-		/*
-		printf("model view\n");
-		printf("%f %f %f %f\n", model_view[0].x, model_view[0].y, model_view[0].z, model_view[0].w);
-		printf("%f %f %f %f\n", model_view[1].x, model_view[1].y, model_view[1].z, model_view[1].w);
-		printf("%f %f %f %f\n", model_view[2].x, model_view[2].y, model_view[2].z, model_view[2].w);
-		printf("%f %f %f %f\n", model_view[3].x, model_view[3].y, model_view[3].z, model_view[3].w);
-		printf("\n");
-		*/
-
+		// do things like setup colors and lights
+		// and attach shader program
 		mesh->material->PreRender();
 
+		// push matrices up
 		mesh->material->PushMatrices(model_view, projection, mvp, normal);
+
+		// call draw
 		mesh->geometry->Draw();
 
+		// let go of shader program
 		mesh->material->PostRender();
 	}
 }

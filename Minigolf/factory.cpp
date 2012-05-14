@@ -43,6 +43,7 @@ shared_ptr<Entity> CreateCamera(const float &fov, const float &aspect, const flo
 void CreateLevel(const Hole &hole) {
 	vector<Tile>::const_iterator it, ite;
 
+	// todo: Create light entity/component
 	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0, 5.0f, 0, 1.0f), vec3(0.0f, 1.0f, 0.0f), vec3(0.8f, 0.8f, 0.8f)));
 	material->Initialize();
 	// todo: build material

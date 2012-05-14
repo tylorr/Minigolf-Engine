@@ -59,6 +59,7 @@ void Geometry::Draw() const {
 	ExitOnGLError("ERROR: Could not bind the VAO for drawing purposes");
 
 	// note: hard-coded use of GL_TRIANGLE_STRIP, could be made user-defined
+	// todo: make drawing mode user-defined
 	glDrawElements(GL_TRIANGLE_STRIP, index_count_, GL_UNSIGNED_INT, (GLvoid*)0);
 	ExitOnGLError("ERROR: Could not draw the mesh");
 

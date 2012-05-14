@@ -54,9 +54,6 @@
     <ClCompile Include="basic_material.cpp">
       <Filter>Source Files\game</Filter>
     </ClCompile>
-    <ClCompile Include="tile_render_manager.cpp">
-      <Filter>Source Files\game</Filter>
-    </ClCompile>
     <ClCompile Include="factory.cpp">
       <Filter>Source Files\game</Filter>
     </ClCompile>
@@ -90,9 +87,6 @@
     <ClCompile Include="render_system.cpp">
       <Filter>Source Files\game\systems</Filter>
     </ClCompile>
-    <ClCompile Include="tile_render_component.cpp">
-      <Filter>Source Files\game\components</Filter>
-    </ClCompile>
     <ClCompile Include="transform.cpp">
       <Filter>Source Files\game\components</Filter>
     </ClCompile>
@@ -117,9 +111,6 @@
       <Filter>Header Files\engine</Filter>
     </ClInclude>
     <ClInclude Include="basic_material.h">
-      <Filter>Header Files\game</Filter>
-    </ClInclude>
-    <ClInclude Include="tile_render_manager.h">
       <Filter>Header Files\game</Filter>
     </ClInclude>
     <ClInclude Include="factory.h">
@@ -157,9 +148,6 @@
     </ClInclude>
     <ClInclude Include="render_system.h">
       <Filter>Header Files\game\systems</Filter>
-    </ClInclude>
-    <ClInclude Include="tile_render_component.h">
-      <Filter>Header Files\game\components</Filter>
     </ClInclude>
     <ClInclude Include="geometry.h">
       <Filter>Header Files\game</Filter>
