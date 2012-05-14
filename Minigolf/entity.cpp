@@ -1,24 +1,22 @@
 #include "entity.h"
 #include "component.h"
 
-Entity::Entity() {
-	Initialize(0);
+unsigned int Entity::next_unique_id_ = 0;
+
+Entity::Entity() : id_(0) {
+	Reset();
 }
 
-Entity::Entity(const unsigned int &id) {
-	Initialize(id);
-}
-
-void Entity::Initialize(const unsigned int &id) {
-	id_ = id;
-	unique_id_ = 0;
-
+Entity::Entity(const unsigned int &id) : id_(id) {
 	Reset();
 }
 
 void Entity::Reset() {
 	type_bits_ = 0;
 	system_bits_ = 0;
+
+	unique_id_ = next_unique_id_++;
+
 	enabled_ = true;
 }
 

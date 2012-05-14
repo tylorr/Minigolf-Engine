@@ -1,32 +1,11 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#include "glm\glm.hpp"
-
-using glm::vec3;
-
-class Component;
-
-
-// TODO: Entities should have a Transform object describing 
-// translation rotation and scale
-
-// TODO: Entities should have children and parents
-
-// TODO: Find out better way to store vertices and indices
-// in abstract way
-
-#include "transform.h"
-
-
 class Entity {
 public:
-	unsigned int unique_id_;
-	
 	Entity();
 	Entity(const unsigned int &id);
 
-	void Initialize(const unsigned int &id);
 	void Reset();
 
 	void AddTypeBit(const long &bit);
@@ -55,9 +34,12 @@ public:
 	}
 
 private:
+	static unsigned int next_unique_id_;
+
 	bool enabled_;
 
-	unsigned int id_;
+	const unsigned int id_;
+	unsigned int unique_id_;
 
 	long system_bits_;
 	long type_bits_;

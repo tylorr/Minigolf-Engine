@@ -1,4 +1,7 @@
-/*	Copyright (C) 2011 by Eddy Luten
+/*	
+	Permission for use of shader code:
+
+	Copyright (C) 2011 by Eddy Luten
 
 	Permission is hereby granted, free of charge, to any person obtaining a copy
 	of this software and associated documentation files (the "Software"), to deal
@@ -20,26 +23,29 @@
 */
 
 #include <stack>
+#include <vector>
 #include <ctime>
+
 #include <boost\shared_ptr.hpp>
 
 #include "Utils.h"
-
 #include "file_handling.h"
 #include "level.h"
 #include "tile_render_manager.h"
-
 #include "shader_cache.h"
-
 #include "component_type.h"
 #include "entity_manager.h"
+#include "render_system.h"
+#include "system_manager.h"
+
+using std::stack;
+using std::vector;
 
 using glm::vec3;
 using glm::vec4;
 using glm::mat4;
 using glm::value_ptr;
 
-using std::stack;
 using boost::shared_ptr;
 
 #define WINDOW_TITLE_PREFIX "Chapter 4"
@@ -98,14 +104,17 @@ void DestoryShaders(void);
 
 int main(int argc, char* argv[])
 {
-	/*
-	shared_ptr<TileRenderComponent> comp(new TileRenderComponent());
+	using EntityManager::EntityPtr;
 
-	//EntityManager *manager = new EntityManager();
-	shared_ptr<Entity> entity = EntityManager::Create();
+	SystemManager::AddSystem(shared_ptr<RenderSystem>(new RenderSystem()));
+
+	EntityPtr entity = EntityManager::Create();
+
+	shared_ptr<TileRenderComponent> comp(new TileRenderComponent());
+	comp->family_name = "RenderComponent";
 	EntityManager::AddComponent(entity, comp);
-	EntityManager::AddComponent(entity, comp);
-	*/
+
+	SystemManager::Update();
 
 	Initialize(argc, argv);
 

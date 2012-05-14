@@ -10,15 +10,13 @@
 class Entity;
 
 class EntitySystem {
-	typedef boost::unordered_map<unsigned int, boost::shared_ptr<Entity>> EntityMap;
-
 public:
 	int layer_;
 
-	EntitySystem(std::vector<std::string> types, const int &layer = 0);
+	EntitySystem(const int &layer = 0) : layer_(layer), type_bits_(0) { }
 	~EntitySystem();
 
-	virtual void OnChange(boost::shared_ptr<Entity> entity);
+	virtual void OnChange(const boost::shared_ptr<Entity> &entity);
 
 	virtual void Process();
 
@@ -26,16 +24,29 @@ public:
 		system_bit_ = bit;
 	}
 
+	std::string family_name() {
+		return family_name_;
+	}
+
 	bool operator<(const EntitySystem &other);
 
 protected:
-	virtual void Add(boost::shared_ptr<Entity> entity);
-	virtual void Remove(boost::shared_ptr<Entity> entity);
-	virtual void Enable(boost::shared_ptr<Entity> entity);
-	virtual void Disable(boost::shared_ptr<Entity> entity);
+	typedef boost::unordered_map<unsigned int, boost::shared_ptr<Entity>> EntityMap;
 
-	virtual void Begin();
-	virtual void End();
+	std::string family_name_;
+
+	void AddTypeByName(const std::string &family_name);
+	void AddTypeBit(const long &bit);
+
+	virtual bool CheckEntity(const bool &interest, const bool &contains, const boost::shared_ptr<Entity> &entity) { return true; }
+
+	virtual void Add(const boost::shared_ptr<Entity> &entity);
+	virtual void Remove(const boost::shared_ptr<Entity> &entity);
+	virtual void Enable(const boost::shared_ptr<Entity> &entity);
+	virtual void Disable(const boost::shared_ptr<Entity> &entity);
+
+	virtual void Begin() { }
+	virtual void End() { }
 
 	virtual void ProcessEntities(const EntityMap &entities) = 0;
 

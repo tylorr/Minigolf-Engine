@@ -13,7 +13,7 @@ using glm::mat4;
 class TileRenderComponent : public Component {
 public:
 
-	TileRenderComponent() { this->family_name_ = "TileRenderComponent"; }
+	TileRenderComponent() { this->family_name = "TileRenderComponent"; }
 
 	void Initialize(const Tile &t);
 	void LoadBuffers(const Tile &t);

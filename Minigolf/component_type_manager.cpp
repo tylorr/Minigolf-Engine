@@ -9,7 +9,7 @@ using std::string;
 using boost::shared_ptr;
 
 namespace {
-	typedef boost::unordered_map<std::string, boost::shared_ptr<ComponentType>> ComponentTypeMap;
+	typedef boost::unordered_map<string, shared_ptr<ComponentType>> ComponentTypeMap;
 	ComponentTypeMap component_types_;
 };
 

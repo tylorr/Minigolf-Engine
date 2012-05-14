@@ -3,18 +3,11 @@
 
 #include <string>
 
-class Entity;
+struct Component {
+	std::string family_name;
 
-class Component {
-public:
-	virtual ~Component() { }
-
-	std::string family_name() {
-		return family_name_;
-	}
-
-protected:
-	std::string family_name_;
+	Component() : family_name("Component") { }
+	Component(std::string family_name) : family_name(family_name) { }
 };
 
 #endif // COMPONENT_H

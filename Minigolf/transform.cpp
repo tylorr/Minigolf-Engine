@@ -1,5 +1,6 @@
 #include "transform.h"
 
+/*
 using glm::translate;
 using glm::rotate;
 using glm::scale;
@@ -54,3 +55,4 @@ mat4 Transform::World() {
 		return Local();
 	}
 }
+*/

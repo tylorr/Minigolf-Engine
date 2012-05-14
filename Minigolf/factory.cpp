@@ -2,7 +2,7 @@
 #include "GL\freeglut.h"
 
 #include "factory.h"
-#include "renderer.h"
+//#include "renderer.h"
 #include "entity.h"
 #include "camera.h"
 #include "mesh.h"
@@ -10,10 +10,11 @@
 
 namespace Factory {
 
+/*
 Entity *CreateTile(Camera *camera, Material *material, const std::vector<glm::vec3> &vertex_list) {	
 	Entity *entity;
 	Mesh *mesh;
-	Renderer *renderer;
+	//Renderer *renderer;
 	Vertex *vertices;
 	GLuint *indices;
 	vec3 normal;
@@ -64,7 +65,7 @@ Entity *CreateTile(Camera *camera, Material *material, const std::vector<glm::ve
 	mesh->Initialize(POSITION_NORMAL, vertices, N, indices, N);
 
 	// build render component
-	renderer = new Renderer(camera, mesh, material);
+	//renderer = new Renderer(camera, mesh, material);
 
 	// build entity
 	entity = new Entity();
@@ -72,5 +73,6 @@ Entity *CreateTile(Camera *camera, Material *material, const std::vector<glm::ve
 
 	return entity;
 }
+*/
 
 }; // namespace Factory
