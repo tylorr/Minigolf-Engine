@@ -26,7 +26,7 @@ public:
 	boost::shared_ptr<Transform> parent;
 	vector<boost::shared_ptr<Transform>> children;
 
-	Transform() : Component("Transform"), dirty_(true) { }
+	Transform() : Component("Transform"), dirty_(true), scale(1.0f, 1.0f, 1.0f) {  }
 
 	mat4 Local() const;
 	mat4 World();

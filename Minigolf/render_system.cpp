@@ -3,6 +3,7 @@
 
 #include "glm\glm.hpp"
 #include "glm\gtc\matrix_transform.hpp"
+#include "glm\gtx\string_cast.hpp"
 
 #include "render_system.h"
 #include "component_type.h"
@@ -47,6 +48,10 @@ RenderSystem::~RenderSystem() {
 }
 
 bool RenderSystem::CheckEntity(const bool &interest, const bool &contains, const boost::shared_ptr<Entity> &entity) {
+
+	// I think this is the right way about getting one and only one camera object
+	// if you think there is another way let me know
+	// todo: create some sort of camera selector component to allow for multiple cameras
 	if ((camera_bits_ & entity->type_bits()) == camera_bits_) {
 		shared_ptr<Component> component;
 
@@ -62,6 +67,13 @@ bool RenderSystem::CheckEntity(const bool &interest, const bool &contains, const
 }
 
 void RenderSystem::ProcessEntities(const EntityMap &entities) {
+	// todo: check for existance of camera
+	// todo: create component entity mapper like artemis has
+
+	if (entities.empty()) {
+		return;
+	}
+
 	EntityMap::const_iterator it, ite;
 	ComponentPtr component;
 
@@ -70,6 +82,7 @@ void RenderSystem::ProcessEntities(const EntityMap &entities) {
 
 	mat4 model, model_view, mvp, normal;
 	mat4 view = camera_transform_->World();
+	view = glm::lookAt(vec3(0, 2, 4), vec3(0, 0, 0), vec3(0, 1, 0));
 	mat4 projection = camera_->Projection();
 	
 	for (it = entities.begin(), ite = entities.end(); it != ite; ++it) {
@@ -83,6 +96,15 @@ void RenderSystem::ProcessEntities(const EntityMap &entities) {
 		model_view = view * model;
 		mvp = projection * model_view;
 		normal = inverse(transpose(model_view));
+
+		/*
+		printf("model view\n");
+		printf("%f %f %f %f\n", model_view[0].x, model_view[0].y, model_view[0].z, model_view[0].w);
+		printf("%f %f %f %f\n", model_view[1].x, model_view[1].y, model_view[1].z, model_view[1].w);
+		printf("%f %f %f %f\n", model_view[2].x, model_view[2].y, model_view[2].z, model_view[2].w);
+		printf("%f %f %f %f\n", model_view[3].x, model_view[3].y, model_view[3].z, model_view[3].w);
+		printf("\n");
+		*/
 
 		mesh->material->PreRender();
 

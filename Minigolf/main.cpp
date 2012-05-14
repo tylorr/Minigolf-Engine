@@ -37,6 +37,7 @@
 #include "entity_manager.h"
 #include "render_system.h"
 #include "system_manager.h"
+#include "factory.h"
 
 using std::stack;
 using std::vector;
@@ -104,20 +105,6 @@ void DestoryShaders(void);
 
 int main(int argc, char* argv[])
 {
-	/*
-	using EntityManager::EntityPtr;
-
-	SystemManager::AddSystem(shared_ptr<RenderSystem>(new RenderSystem()));
-
-	EntityPtr entity = EntityManager::Create();
-
-	shared_ptr<TileRenderComponent> comp(new TileRenderComponent());
-	comp->family_name = "RenderComponent";
-	EntityManager::AddComponent(entity, comp);
-
-	SystemManager::Update();
-	*/
-
 	Initialize(argc, argv);
 
 	glutMainLoop();
@@ -127,6 +114,13 @@ int main(int argc, char* argv[])
 
 void Initialize(int argc, char* argv[])
 {
+	// check for existing of map file in args list
+	if (argv[1] == NULL)
+	{
+		fprintf(stderr, "Missing map file\n");
+		exit(EXIT_FAILURE);
+	}
+
 	GLenum GlewInitResult;
 
 	InitWindow(argc, argv);
@@ -162,23 +156,28 @@ void Initialize(int argc, char* argv[])
 	//glFrontFace(GL_CCW);
 	ExitOnGLError("ERROR: Could not set OpenGL culling options");
 
-	ModelViewMatrix.push(mat4(1.0f));
-	ProjectionMatrix.push(mat4(1.0f));
+	//--------------------------------------------------------------------------
+	// Setup world
+
+	//ModelViewMatrix.push(mat4(1.0f));
+	//ProjectionMatrix.push(mat4(1.0f));
 
 	shader_cache::AddShader("diffuse", "diffuse.vertex.glsl", "diffuse.fragment.glsl");
 
-	SetupShaders();
+	SystemManager::AddSystem(shared_ptr<RenderSystem>(new RenderSystem()));
+
+	Factory::CreateCamera(60.0f, 1.0f, (float)CurrentWidth / CurrentHeight, 1000.0f);
+
+	//SetupShaders();
 
 	//CreateCube();
-	previous = clock();
 
-	if (argv[1] == NULL)
-	{
-		fprintf(stderr, "Missing map file\n");
-		exit(EXIT_FAILURE);
-	}
 	Hole h = readData(argv[1]);
-	level = Level::Create(h);
+	//level = Level::Create(h);	
+
+	Factory::CreateLevel(h);
+
+	previous = clock();
 }
 
 void InitWindow(int argc, char* argv[])
@@ -272,6 +271,7 @@ void ResizeFunction(int Width, int Height)
 	CurrentHeight = Height;
 	glViewport(0, 0, CurrentWidth, CurrentHeight);
 	
+	/*
 	ProjectionMatrix.top() = 
 		glm::perspective(
 			60.0f,
@@ -280,9 +280,11 @@ void ResizeFunction(int Width, int Height)
 			100.0f
 		);
 
+
 	glUseProgram(ShaderIds[0]);
 	glUniformMatrix4fv(ProjectionMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(ProjectionMatrix.top()));
 	glUseProgram(0);
+	*/
 }
 
 void RenderFunction(void)
@@ -291,6 +293,7 @@ void RenderFunction(void)
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	/*
 	clock_t current = clock();
 
 	float delta = float(current - previous) / CLOCKS_PER_SEC;
@@ -313,7 +316,11 @@ void RenderFunction(void)
 	if (rightPressed) {
 		yAngle += keyStep;
 	}
+	*/
 
+	
+
+	/*
 	ModelViewMatrix.top() = mat4(1.0f);
 
 	// TODO: Need to make camera class
@@ -342,6 +349,9 @@ void RenderFunction(void)
 
 		
 	glUseProgram(0);
+	*/
+
+	SystemManager::Update();
 
 	glutSwapBuffers();
 	glutPostRedisplay();

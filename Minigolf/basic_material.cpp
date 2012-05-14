@@ -29,4 +29,5 @@ void BasicMaterial::PreRender() {
 	glUniform4fv(light_position_uniform_, 1, value_ptr(light_position_));
 	glUniform3fv(Kd_uniform_, 1, value_ptr(Kd_));
 	glUniform3fv(Ld_uniform_, 1, value_ptr(Ld_));
+	ExitOnGLError("ERROR: Upload light");
 }

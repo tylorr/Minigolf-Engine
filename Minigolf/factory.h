@@ -1,14 +1,19 @@
 #ifndef FACTORY_H
 #define FACTORY_H
 
-#include <vector>
+#include <boost\shared_ptr.hpp>
 
-#include "glm\glm.hpp"
+#include "file_handling.h"
+
+class Entity;
+class Material;
 
 namespace Factory {
 
+boost::shared_ptr<Entity> CreateCamera(const float &fov, const float &aspect, const float &near_plane, const float &far_plane);
 
-//Entity *CreateTile(Camera *camera, Material *material, const std::vector<glm::vec3> &vertex_list);
+void CreateLevel(const Hole &hole);
+void CreateTile(const Tile &tile, boost::shared_ptr<Material>);
 
 }; // namespace Factory
 

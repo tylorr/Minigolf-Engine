@@ -32,7 +32,7 @@ void EntitySystem::OnChange(const boost::shared_ptr<Entity> &entity) {
 	bool contains = (system_bit_ & entity->system_bits()) == system_bit_;
 	bool interest = (type_bits_ & entity->type_bits()) == type_bits_;
 
-	if (CheckEntity(interest, contains, entity)) {
+	if (CheckEntity(interest, contains, entity) && type_bits_ > 0) {
 		if (interest && !contains) {
 			Add(entity);
 		} else if (!interest && contains) {

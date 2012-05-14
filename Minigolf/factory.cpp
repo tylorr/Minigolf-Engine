@@ -1,26 +1,67 @@
-#include "GL\glew.h"
-#include "GL\freeglut.h"
+#include <vector>
 
+#include "glm\glm.hpp"
+#include "glm\gtc\matrix_transform.hpp"
+
+#include "Utils.h"
 #include "factory.h"
-//#include "renderer.h"
+#include "entity_manager.h"
 #include "entity.h"
 #include "camera.h"
-#include "mesh.h"
+#include "transform.h"
 #include "material.h"
+#include "basic_material.h"
+#include "geometry.h"
+#include "mesh.h"
 
 namespace Factory {
 
-/*
-Entity *CreateTile(Camera *camera, Material *material, const std::vector<glm::vec3> &vertex_list) {	
-	Entity *entity;
-	Mesh *mesh;
-	//Renderer *renderer;
+using boost::shared_ptr;
+using glm::vec3;
+using glm::vec4;
+using std::vector;
+
+shared_ptr<Entity> CreateCamera(const float &fov, const float &aspect, const float &near_plane, const float &far_plane) {
+	shared_ptr<Entity> entity = EntityManager::Create();
+
+	shared_ptr<Camera> camera(new Camera());
+	camera->orthographic = false;
+	camera->field_of_view = fov;
+	camera->aspect_ratio = aspect;
+	camera->near_plane = near_plane;
+	camera->far_plane = far_plane;
+
+	shared_ptr<Transform> transform(new Transform());
+	transform->position = vec3(0, 0, 4);
+
+	EntityManager::AddComponent(entity, camera);
+	EntityManager::AddComponent(entity, transform);
+
+	return entity;
+}
+
+void CreateLevel(const Hole &hole) {
+	vector<Tile>::const_iterator it, ite;
+
+	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0, 5.0f, 0, 1.0f), vec3(0.0f, 1.0f, 0.0f), vec3(0.8f, 0.8f, 0.8f)));
+	material->Initialize();
+	// todo: build material
+
+	for (it = hole.tiles.begin(), ite = hole.tiles.end(); it != ite; ++it) {
+		CreateTile(*it, material);
+	}
+}
+
+void CreateTile(const Tile &tile, boost::shared_ptr<Material> material) {
 	Vertex *vertices;
 	GLuint *indices;
+
 	vec3 normal;
-	glm::vec3 vertex;
+	vec3 vertex;
 	GLsizei N;
 	int i, index, count, vertex_index;
+
+	vector<vec3> vertex_list = tile.vertices;
 
 	N = vertex_list.size();
 	
@@ -61,18 +102,22 @@ Entity *CreateTile(Camera *camera, Material *material, const std::vector<glm::ve
 	}
 
 	// build the mesh
-	mesh = new Mesh();
-	mesh->Initialize(POSITION_NORMAL, vertices, N, indices, N);
+	shared_ptr<Geometry> geometry(new Geometry());
+	geometry->Initialize(POSITION_NORMAL, vertices, N, indices, N);
 
-	// build render component
-	//renderer = new Renderer(camera, mesh, material);
+	shared_ptr<Mesh> mesh(new Mesh());
+	mesh->geometry = geometry;
+	mesh->material = material;
 
-	// build entity
-	entity = new Entity();
-	//entity->AddComponent(renderer);
+	shared_ptr<Transform> transform(new Transform());
 
-	return entity;
+	shared_ptr<Entity> entity = EntityManager::Create();
+
+	EntityManager::AddComponent(entity, mesh);
+	EntityManager::AddComponent(entity, transform);
+
+	delete [] vertices;
+	delete [] indices;
 }
-*/
 
 }; // namespace Factory
