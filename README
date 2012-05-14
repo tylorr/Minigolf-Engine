@@ -8,3 +8,8 @@ Also make sure to specifiy a map file by:
 - Click Properties
 - Under Configuration Properties click on Debug
 - In the Command Arguments row add the name of the file, i.e. hole.00.db
+
+Requirements:
+
+Boost (Header only) http://www.boost.org/
+Visual Leak Detector http://vld.codeplex.com/
