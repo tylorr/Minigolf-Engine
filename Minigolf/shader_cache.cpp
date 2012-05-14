@@ -7,7 +7,7 @@
 namespace ShaderCache {
 
 namespace {
-	typedef std::unordered_map<std::string, ShaderInfo> ShaderMap;
+	typedef boost::unordered_map<std::string, ShaderInfo> ShaderMap;
 
 	ShaderMap shader_map;
 }; // namespace
@@ -65,22 +65,22 @@ GLuint LoadShader(const char* filename, const GLenum &shader_type) {
 					glShaderSource(shader_id, 1, (const GLchar **)&glsl_source, NULL);
 					glCompileShader(shader_id);
 					ExitOnGLError("Could not compile a shader");
-				}
-				else
+				} else {
 					fprintf(stderr, "ERROR: Could not create a shader.\n");
-			}
-			else
+				}
+			} else {
 				fprintf(stderr, "ERROR: Could not read file %s\n", filename);
+			}
 
-			free(glsl_source);
-		}
-		else
+			delete glsl_source;
+		} else {
 			fprintf(stderr, "ERROR: Could not allocate %i bytes.\n", file_size);
+		}
 
 		fclose(file);
-	}
-	else
+	} else {
 		fprintf(stderr, "ERROR: Could not open file %s\n", filename);
+	}
 
 	return shader_id;
 }
@@ -101,6 +101,8 @@ void Destroy() {
 		glDeleteProgram(program);
 		ExitOnGLError("ERROR: Could not destroy the shaders");
 	}
+
+	shader_map.clear();
 }
 
 }; // namespace render

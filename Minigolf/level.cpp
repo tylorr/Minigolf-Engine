@@ -3,7 +3,8 @@
 #include "component.h"
 
 Level *Level::Create(const Hole &h) {
-	Level *level = new Level();
+	/*
+	//Level *level = new Level();
 	vector<Tile>::const_iterator it;
 
 	Entity *tile;
@@ -12,4 +13,6 @@ Level *Level::Create(const Hole &h) {
 	}
 
 	return level;
+	*/
+	return NULL;
 };

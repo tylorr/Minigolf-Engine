@@ -22,6 +22,7 @@
 	THE SOFTWARE.
 */
 
+#include <vld.h>
 #include <ctime>
 
 #include <boost\shared_ptr.hpp>
@@ -73,13 +74,14 @@ int main(int argc, char* argv[])
 	Initialize(argc, argv);
 
 	glutMainLoop();
-	
+
 	exit(EXIT_SUCCESS);
 }
 
 void Initialize(int argc, char* argv[])
 {
 	// check for existing of map file in args list
+	
 	if (argv[1] == NULL)
 	{
 		fprintf(stderr, "Missing map file\n");
@@ -88,6 +90,7 @@ void Initialize(int argc, char* argv[])
 
 	GLenum GlewInitResult;
 
+	
 	InitWindow(argc, argv);
 	
 	glewExperimental = GL_TRUE;
@@ -120,12 +123,14 @@ void Initialize(int argc, char* argv[])
 	//glCullFace(GL_BACK);
 	//glFrontFace(GL_CCW);
 	ExitOnGLError("ERROR: Could not set OpenGL culling options");
+	
 
 	//--------------------------------------------------------------------------
 	// Setup world
 
 	ShaderCache::AddShader("diffuse", "diffuse.vertex.glsl", "diffuse.fragment.glsl");
 
+	
 	SystemManager::AddSystem(shared_ptr<RenderSystem>(new RenderSystem()));
 
 	Factory::CreateCamera(60.0f, 1.0f, (float)CurrentWidth / CurrentHeight, 1000.0f);
