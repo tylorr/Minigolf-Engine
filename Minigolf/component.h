@@ -6,8 +6,9 @@
 struct Component {
 	std::string family_name;
 
-	Component() : family_name("Component") { }
 	Component(std::string family_name) : family_name(family_name) { }
+
+	virtual ~Component() { }
 };
 
 #endif // COMPONENT_H

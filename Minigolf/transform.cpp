@@ -1,22 +1,8 @@
+#include "glm\gtc\matrix_transform.hpp"
+
 #include "transform.h"
 
-/*
-using glm::translate;
-using glm::rotate;
-using glm::scale;
-
-Transform::Transform() {
-	dirty_ = true;
-
-	position_ = vec3(0.0f);
-	rotation_ = quat();
-	scale_ = vec3(1.0f);
-
-	parent_ = NULL;
-}
-
-Transform::~Transform() {
-}
+using boost::shared_ptr;
 
 mat4 Transform::Local() const {
 	using glm::mat4_cast;
@@ -24,9 +10,9 @@ mat4 Transform::Local() const {
 	mat4 result;
 
 	// combine translation, rotation, and scale into a matrix
-	result = translate(mat4(1.0f), position_);
-	result *= mat4_cast(rotation_);
-	result = scale(result, scale_);
+	result = glm::translate(mat4(1.0f), position);
+	result *= mat4_cast(rotation);
+	result = glm::scale(result, scale);
 
 	return result;
 }
@@ -36,9 +22,9 @@ mat4 Transform::World() {
 	mat4 parent_world;
 
 	// If this is root of tree then world transform equals local transform
-	if (parent_ != NULL) {
+	if (parent != shared_ptr<Transform>()) {
 
-		parent_world = parent_->World();
+		parent_world = parent->World();
 
 		// If the local matrix or the parents world matrix have changed
 		// then update our world matrix
@@ -55,4 +41,3 @@ mat4 Transform::World() {
 		return Local();
 	}
 }
-*/

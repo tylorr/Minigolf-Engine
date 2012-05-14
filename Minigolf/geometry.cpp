@@ -1,7 +1,7 @@
-#include "mesh.h"
+#include "geometry.h"
 
 // TODO: Maybe this should go in the constructor
-void Mesh::Initialize(const VertexType &vertex_type, const Vertex *vertices, const GLsizei &vertex_count, const GLuint *indices, const GLsizei &index_count) {
+void Geometry::Initialize(const VertexType &vertex_type, const Vertex *vertices, const GLsizei &vertex_count, const GLuint *indices, const GLsizei &index_count) {
 	const size_t vbo_size = vertex_count * sizeof(Vertex);
 	const size_t ibo_size = index_count * sizeof(unsigned int);
 	const size_t vertex_size = sizeof(vertices[0]);
@@ -47,14 +47,14 @@ void Mesh::Initialize(const VertexType &vertex_type, const Vertex *vertices, con
 	glBindVertexArray(0);
 }
 
-void Mesh::Destroy() {
+void Geometry::Destroy() {
 	glDeleteBuffers(1, &vertex_buffer_object_);
 	glDeleteBuffers(1, &index_buffer_object_);
 	glDeleteVertexArrays(1, &vertex_array_object_);
 	ExitOnGLError("ERROR: Could not destroy the buffer objects");
 }
 
-void Mesh::Draw() const {
+void Geometry::Draw() const {
 	glBindVertexArray(vertex_array_object_);
 	ExitOnGLError("ERROR: Could not bind the VAO for drawing purposes");
 

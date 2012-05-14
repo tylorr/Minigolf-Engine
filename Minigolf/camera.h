@@ -1,6 +1,8 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include "glm\glm.hpp"
+
 #include "component.h"
 
 struct Camera: public Component {
@@ -12,6 +14,8 @@ struct Camera: public Component {
 	float far_plane;
 
 	Camera() : Component("Camera") { }
+
+	glm::mat4 Projection() const;
 };
 
 #endif // CAMERA_H

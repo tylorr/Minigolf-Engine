@@ -28,6 +28,18 @@
     <Filter Include="Source Files\game">
       <UniqueIdentifier>{545247b0-8967-42cf-b96e-9d765bb344d9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\game\components">
+      <UniqueIdentifier>{f76b9e70-f510-4c45-bdbf-ae2c60f4c057}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\game\systems">
+      <UniqueIdentifier>{df3c4a0d-4bf4-4ab1-8a9a-743c6db3f491}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game\components">
+      <UniqueIdentifier>{a64f1334-ecc3-4ce2-ae94-321f067a7db3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game\systems">
+      <UniqueIdentifier>{147172d7-99df-4cff-bea7-6f43fabdbb7e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="entity.cpp">
@@ -57,9 +69,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files\game</Filter>
     </ClCompile>
-    <ClCompile Include="tile_render_component.cpp">
-      <Filter>Source Files\game</Filter>
-    </ClCompile>
     <ClCompile Include="component_type.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
@@ -72,20 +81,26 @@
     <ClCompile Include="system_manager.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
-    <ClCompile Include="render_system.cpp">
-      <Filter>Source Files\game</Filter>
-    </ClCompile>
     <ClCompile Include="material.cpp">
-      <Filter>Source Files\game</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh.cpp">
-      <Filter>Source Files\game</Filter>
-    </ClCompile>
-    <ClCompile Include="transform.cpp">
       <Filter>Source Files\game</Filter>
     </ClCompile>
     <ClCompile Include="shader_cache.cpp">
       <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="render_system.cpp">
+      <Filter>Source Files\game\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="tile_render_component.cpp">
+      <Filter>Source Files\game\components</Filter>
+    </ClCompile>
+    <ClCompile Include="transform.cpp">
+      <Filter>Source Files\game\components</Filter>
+    </ClCompile>
+    <ClCompile Include="geometry.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>Source Files\game\components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -116,9 +131,6 @@
     <ClInclude Include="level.h">
       <Filter>Header Files\game</Filter>
     </ClInclude>
-    <ClInclude Include="tile_render_component.h">
-      <Filter>Header Files\game</Filter>
-    </ClInclude>
     <ClInclude Include="component_type.h">
       <Filter>Header Files\engine</Filter>
     </ClInclude>
@@ -131,23 +143,29 @@
     <ClInclude Include="system_manager.h">
       <Filter>Header Files\engine</Filter>
     </ClInclude>
-    <ClInclude Include="render_system.h">
-      <Filter>Header Files\game</Filter>
-    </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>Header Files\game</Filter>
-    </ClInclude>
     <ClInclude Include="material.h">
-      <Filter>Header Files\game</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh.h">
-      <Filter>Header Files\game</Filter>
-    </ClInclude>
-    <ClInclude Include="transform.h">
       <Filter>Header Files\game</Filter>
     </ClInclude>
     <ClInclude Include="shader_cache.h">
       <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>Header Files\game\components</Filter>
+    </ClInclude>
+    <ClInclude Include="transform.h">
+      <Filter>Header Files\game\components</Filter>
+    </ClInclude>
+    <ClInclude Include="render_system.h">
+      <Filter>Header Files\game\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="tile_render_component.h">
+      <Filter>Header Files\game\components</Filter>
+    </ClInclude>
+    <ClInclude Include="geometry.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh.h">
+      <Filter>Header Files\game\components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -81,6 +81,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="basic_material.cpp" />
+    <ClCompile Include="camera.cpp" />
     <ClCompile Include="component_type.cpp" />
     <ClCompile Include="component_type_manager.cpp" />
     <ClCompile Include="entity.cpp" />
@@ -91,7 +92,7 @@
     <ClCompile Include="level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="material.cpp" />
-    <ClCompile Include="mesh.cpp" />
+    <ClCompile Include="geometry.cpp" />
     <ClCompile Include="render_system.cpp" />
     <ClCompile Include="shader_cache.cpp" />
     <ClCompile Include="system_manager.cpp" />
@@ -109,6 +110,7 @@
     <ClInclude Include="entity_system.h" />
     <ClInclude Include="factory.h" />
     <ClInclude Include="material.h" />
+    <ClInclude Include="geometry.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="render_system.h" />
     <ClInclude Include="shader_cache.h" />
