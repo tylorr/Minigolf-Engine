@@ -104,6 +104,7 @@ void DestoryShaders(void);
 
 int main(int argc, char* argv[])
 {
+	/*
 	using EntityManager::EntityPtr;
 
 	SystemManager::AddSystem(shared_ptr<RenderSystem>(new RenderSystem()));
@@ -115,6 +116,7 @@ int main(int argc, char* argv[])
 	EntityManager::AddComponent(entity, comp);
 
 	SystemManager::Update();
+	*/
 
 	Initialize(argc, argv);
 
