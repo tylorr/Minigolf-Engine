@@ -27,6 +27,9 @@
 
 #include <boost\shared_ptr.hpp>
 
+#include "glm\glm.hpp"
+#include "glm\gtc\matrix_transform.hpp"
+
 #include "Utils.h"
 #include "file_handling.h"
 #include "level.h"
@@ -36,8 +39,13 @@
 #include "render_system.h"
 #include "system_manager.h"
 #include "factory.h"
+#include "component_type_manager.h"
+#include "transform.h"
 
 using boost::shared_ptr;
+using boost::dynamic_pointer_cast;
+
+using glm::quat;
 
 #define WINDOW_TITLE_PREFIX "Chapter 4"
 
@@ -48,6 +56,8 @@ int CurrentWidth = 800,
 unsigned FrameCount = 0;
 
 clock_t previous;
+
+shared_ptr<Transform> root_transform;
 
 bool upPressed = false;
 bool downPressed = false;
@@ -119,9 +129,9 @@ void Initialize(int argc, char* argv[])
 	ExitOnGLError("ERROR: Could not set OpenGL depth testing options");
 
 	// culling disabled so we can see the bottom of tiles
-	//glEnable(GL_CULL_FACE);
-	//glCullFace(GL_BACK);
-	//glFrontFace(GL_CCW);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glFrontFace(GL_CCW);
 	ExitOnGLError("ERROR: Could not set OpenGL culling options");
 	
 
@@ -136,7 +146,11 @@ void Initialize(int argc, char* argv[])
 	Factory::CreateCamera(60.0f, 1.0f, (float)CurrentWidth / CurrentHeight, 1000.0f);
 
 	Hole h = readData(argv[1]);
-	Factory::CreateLevel(h);
+	shared_ptr<Entity> root = Factory::CreateLevel(h);
+
+	shared_ptr<Component> comp = EntityManager::GetComponent(root, "Transform");
+
+	root_transform = boost::dynamic_pointer_cast<Transform>(comp);
 
 	previous = clock();
 }
@@ -244,6 +258,8 @@ void ResizeFunction(int Width, int Height)
 	*/
 }
 
+float xAngle = 0, yAngle = 0;
+
 void RenderFunction(void)
 {
 	++FrameCount;
@@ -252,8 +268,31 @@ void RenderFunction(void)
 
 	clock_t current = clock();
 
+
 	float delta = float(current - previous) / CLOCKS_PER_SEC;
 	previous = current;
+
+
+	float keyStep = 90.0f * delta;
+
+	if (upPressed) {
+		xAngle -= keyStep;
+	}
+	if (downPressed) {
+		xAngle += keyStep;
+	}
+
+	if (leftPressed) {
+		yAngle -= keyStep;
+	}
+
+	if (rightPressed) {
+		yAngle += keyStep;
+	}
+
+	root_transform->rotation = glm::rotate(glm::quat(), xAngle, glm::vec3(1, 0, 0)); 
+	root_transform->rotation = glm::rotate(root_transform->rotation, yAngle, glm::vec3(0, 1, 0)); 
+
 
 	SystemManager::Update();
 

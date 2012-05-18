@@ -9,6 +9,7 @@
 #include "glm\glm.hpp"
 
 using glm::mat4;
+using glm::mat3;
 
 class Material {
 public:
@@ -19,7 +20,7 @@ public:
 	virtual void PreRender() = 0;
 	virtual void PostRender();
 
-	virtual void PushMatrices(const mat4 &model_view, const mat4 &projection, const mat4 &mvp, const mat4 &normal);
+	virtual void PushMatrices(const mat4 &model_view, const mat4 &projection, const mat4 &mvp, const mat3 &normal);
 
 protected:
 	GLuint shader_program_;

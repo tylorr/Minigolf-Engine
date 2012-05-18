@@ -24,7 +24,7 @@ void Material::PostRender() {
 	glUseProgram(0);
 }
 
-void Material::PushMatrices(const mat4 &model_view, const mat4 &projection, const mat4 &mvp, const mat4 &normal) {
+void Material::PushMatrices(const mat4 &model_view, const mat4 &projection, const mat4 &mvp, const mat3 &normal) {
 	using glm::value_ptr;
 
 	glUniformMatrix4fv(model_view_uniform_, 1, GL_FALSE, value_ptr(model_view));

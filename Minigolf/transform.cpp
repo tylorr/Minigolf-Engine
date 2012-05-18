@@ -33,7 +33,7 @@ mat4 Transform::World() {
 			
 			local = Local();
 			world_ = parent_world * local;
-			dirty_ = false;
+			//dirty_ = false;
 		}
 
 		return world_;

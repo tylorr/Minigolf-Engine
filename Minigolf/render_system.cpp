@@ -14,6 +14,7 @@
 #include "transform.h"
 #include "camera.h"
 #include "entity.h"
+#include "basic_material.h"
 
 using std::string;
 
@@ -23,6 +24,7 @@ using boost::dynamic_pointer_cast;
 using glm::inverse;
 using glm::transpose;
 using glm::mat4;
+using glm::mat3;
 
 using EntityManager::ComponentPtr;
 
@@ -37,16 +39,17 @@ RenderSystem::RenderSystem() : EntitySystem() {
 	AddTypeByName(transform);
 	transform_type_ = ComponentTypeManager::GetTypeFor(transform);
 
-	camera_type_ = ComponentTypeManager::GetTypeFor("Camera");
+	//camera_type_ = ComponentTypeManager::GetTypeFor("Camera");
 
-	camera_bits_ = 0;
-	camera_bits_ |= camera_type_->bit();
-	camera_bits_ |= transform_type_->bit();
+	//camera_bits_ = 0;
+	//camera_bits_ |= camera_type_->bit();
+	//camera_bits_ |= transform_type_->bit();
 }
 
 RenderSystem::~RenderSystem() {
 }
 
+/*
 bool RenderSystem::CheckEntity(const bool &interest, const bool &contains, const boost::shared_ptr<Entity> &entity) {
 
 	// I think this is the right way about getting one and only one camera object
@@ -65,6 +68,7 @@ bool RenderSystem::CheckEntity(const bool &interest, const bool &contains, const
 	}
 	return true;
 }
+*/
 
 void RenderSystem::ProcessEntities(const EntityMap &entities) {
 	// todo: check for existance of camera
@@ -80,10 +84,19 @@ void RenderSystem::ProcessEntities(const EntityMap &entities) {
 	shared_ptr<Mesh> mesh;
 	shared_ptr<Transform> transform;
 
-	mat4 model, model_view, mvp, normal;
-	mat4 view = camera_transform_->World();
-	view = glm::lookAt(vec3(0, 2, 4), vec3(0, 0, 0), vec3(0, 1, 0));
-	mat4 projection = camera_->Projection();
+	// todo: make initialize step so this doesn't have to happen every time
+	shared_ptr<Entity> camera = EntityManager::Find("Camera");
+	shared_ptr<Camera> camera_comp = boost::dynamic_pointer_cast<Camera>(EntityManager::GetComponent(camera, "Camera"));
+	shared_ptr<Transform> camera_transform = boost::dynamic_pointer_cast<Transform>(EntityManager::GetComponent(camera, "Transform"));
+
+	shared_ptr<Entity> root = EntityManager::Find("Root");
+	shared_ptr<Transform> root_transform = boost::dynamic_pointer_cast<Transform>(EntityManager::GetComponent(root, "Transform"));
+
+	mat4 model, model_view, mvp;
+	mat3 normal;
+	mat4 view = camera_transform->World();
+	view = glm::lookAt(vec3(0, 4, 6), vec3(0, 0, 0), vec3(0, 1, 0));
+	mat4 projection = camera_comp->Projection();
 	
 	for (it = entities.begin(), ite = entities.end(); it != ite; ++it) {
 		component = EntityManager::GetComponent(it->second, mesh_type_);
@@ -95,11 +108,21 @@ void RenderSystem::ProcessEntities(const EntityMap &entities) {
 		model = transform->World();
 		model_view = view * model;
 		mvp = projection * model_view;
-		normal = inverse(transpose(model_view));
+		normal = inverse(transpose(mat3(model_view))); // note: always remember that normal_mat needs to be mat3
+
+		shared_ptr<BasicMaterial> material = boost::dynamic_pointer_cast<BasicMaterial>(mesh->material);
+
+		vec4 light_pos = material->light_position_;
+
+		// hack to have light move with world
+		// todo: implement light as entity
+		material->light_position_ = view * root_transform->World() * light_pos;
 
 		// do things like setup colors and lights
 		// and attach shader program
 		mesh->material->PreRender();
+
+		material->light_position_ = light_pos;
 
 		// push matrices up
 		mesh->material->PushMatrices(model_view, projection, mvp, normal);

@@ -21,6 +21,48 @@ using glm::vec3;
 using glm::vec4;
 using std::vector;
 
+namespace {
+	vector<vec3> Square(const float &width, const float &height) {
+		vector<vec3> vertex_list;
+		float hw = width / 2.0f;
+		float hh = height / 2.0f;
+
+		vertex_list.push_back(vec3(hw, 0, -hh));
+		vertex_list.push_back(vec3(-hw, 0, -hh));
+		vertex_list.push_back(vec3(-hw, 0, hh));
+		vertex_list.push_back(vec3(hw, 0, hh));	
+
+		return vertex_list;
+	}
+}; // namespace
+
+shared_ptr<Geometry> Planar(const vector<vec3> &vertex_list);
+
+// returns root entity, used to rotate entire scene
+boost::shared_ptr<Entity> CreateLevel(const Hole &hole) {
+	vector<Tile>::const_iterator it, ite;
+
+	// todo: Create light entity/component
+	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(0.0f, 1.0f, 0.0f), vec3(0.8f, 0.8f, 0.8f)));
+	material->Initialize();
+	// todo: build material
+
+	shared_ptr<Entity> root = EntityManager::Create();
+	shared_ptr<Transform> transform(new Transform());
+	EntityManager::AddComponent(root, transform);
+	EntityManager::Register(root, "Root");
+
+	CreateBall(hole.tee, transform);
+	CreateTee(hole.tee, transform);
+	CreateCup(hole.cup, transform);
+
+	for (it = hole.tiles.begin(), ite = hole.tiles.end(); it != ite; ++it) {
+		CreateTile(*it, transform, material);
+	}
+
+	return root;
+}
+
 shared_ptr<Entity> CreateCamera(const float &fov, const float &aspect, const float &near_plane, const float &far_plane) {
 	shared_ptr<Entity> entity = EntityManager::Create();
 
@@ -32,28 +74,112 @@ shared_ptr<Entity> CreateCamera(const float &fov, const float &aspect, const flo
 	camera->far_plane = far_plane;
 
 	shared_ptr<Transform> transform(new Transform());
-	transform->position = vec3(0, 0, 4);
+	//transform->position = vec3(0, 0, 4);
 
 	EntityManager::AddComponent(entity, camera);
+	EntityManager::AddComponent(entity, transform);
+	EntityManager::Register(entity, "Camera");
+
+	return entity;
+}
+
+boost::shared_ptr<Entity> CreateTile(const Tile &tile, const boost::shared_ptr<Transform> &root, const boost::shared_ptr<Material> &material) {
+	shared_ptr<Geometry> geometry = Planar(tile.vertices);
+
+	// build the mesh
+	shared_ptr<Mesh> mesh(new Mesh());
+	mesh->geometry = geometry;
+	mesh->material = material;
+
+	shared_ptr<Transform> transform(new Transform());
+	transform->parent = root;
+
+	// this causes massive memory leak can't figure out why vector
+	// does not release shared_ptr memory
+	//root->children.push_back(transform);
+
+	shared_ptr<Entity> entity = EntityManager::Create();
+
+	EntityManager::AddComponent(entity, mesh);
 	EntityManager::AddComponent(entity, transform);
 
 	return entity;
 }
 
-void CreateLevel(const Hole &hole) {
-	vector<Tile>::const_iterator it, ite;
+boost::shared_ptr<Entity> CreateBall(const TeeCup &tee, const boost::shared_ptr<Transform> &root) {
+	vector<vec3> vertex_list = Square(0.25f, 0.25f);
 
-	// todo: Create light entity/component
-	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0, 5.0f, 0, 1.0f), vec3(0.0f, 1.0f, 0.0f), vec3(0.8f, 0.8f, 0.8f)));
+	shared_ptr<Geometry> geometry = Planar(vertex_list);
+
+	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(1.0f, 1.0f, 1.0f), vec3(0.8f, 0.8f, 0.8f)));
 	material->Initialize();
-	// todo: build material
 
-	for (it = hole.tiles.begin(), ite = hole.tiles.end(); it != ite; ++it) {
-		CreateTile(*it, material);
-	}
+	shared_ptr<Mesh> mesh(new Mesh());
+	mesh->geometry = geometry;
+	mesh->material = material;
+
+	shared_ptr<Transform> transform(new Transform());
+	transform->position = tee.position;
+	transform->position.y += 0.04f;
+	transform->parent = root;
+
+	shared_ptr<Entity> entity = EntityManager::Create();
+	EntityManager::AddComponent(entity, mesh);
+	EntityManager::AddComponent(entity, transform);
+	EntityManager::Register(entity, "Ball");
+
+	return entity;
 }
 
-void CreateTile(const Tile &tile, boost::shared_ptr<Material> material) {
+boost::shared_ptr<Entity> CreateTee(const TeeCup &tee, const boost::shared_ptr<Transform> &root) {
+	vector<vec3> vertex_list = Square(0.25f, 0.25f);
+
+	shared_ptr<Geometry> geometry = Planar(vertex_list);
+
+	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(0.0f, 0.0f, 1.0f), vec3(0.8f, 0.8f, 0.8f)));
+	material->Initialize();
+
+	shared_ptr<Mesh> mesh(new Mesh());
+	mesh->geometry = geometry;
+	mesh->material = material;
+
+	shared_ptr<Transform> transform(new Transform());
+	transform->position = tee.position;
+	transform->position.y += 0.01f;
+	transform->parent = root;
+
+	shared_ptr<Entity> entity = EntityManager::Create();
+	EntityManager::AddComponent(entity, mesh);
+	EntityManager::AddComponent(entity, transform);
+
+	return entity;
+}
+boost::shared_ptr<Entity> CreateCup(const TeeCup &cup, const boost::shared_ptr<Transform> &root) {
+	vector<vec3> vertex_list = Square(0.5f, 0.5f);
+
+	shared_ptr<Geometry> geometry = Planar(vertex_list);
+
+	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.8f, 0.8f, 0.8f)));
+	material->Initialize();
+
+	shared_ptr<Mesh> mesh(new Mesh());
+	mesh->geometry = geometry;
+	mesh->material = material;
+
+	shared_ptr<Transform> transform(new Transform());
+	transform->position = cup.position;
+	transform->position.y += 0.01f;
+	transform->parent = root;
+
+	shared_ptr<Entity> entity = EntityManager::Create();
+	EntityManager::AddComponent(entity, mesh);
+	EntityManager::AddComponent(entity, transform);
+
+	return entity;
+}
+
+// Return geometry given counter-clockwise set of convex, co-planar points
+shared_ptr<Geometry> Planar(const vector<vec3> &vertex_list) {
 	Vertex *vertices;
 	GLuint *indices;
 
@@ -62,8 +188,6 @@ void CreateTile(const Tile &tile, boost::shared_ptr<Material> material) {
 	GLsizei N;
 	int i, index, count, vertex_index;
 
-	vector<vec3> vertex_list = tile.vertices;
-
 	N = vertex_list.size();
 	
 	vertices = new Vertex[N];
@@ -71,6 +195,8 @@ void CreateTile(const Tile &tile, boost::shared_ptr<Material> material) {
 
 	// create normal using first 3 points
 	normal = glm::normalize(glm::cross(vertex_list[2] - vertex_list[1], vertex_list[0] - vertex_list[1]));
+
+	int blah = 3;
 
 	// build the vertices
 	for (i = 0; i < N; ++i) {
@@ -106,19 +232,10 @@ void CreateTile(const Tile &tile, boost::shared_ptr<Material> material) {
 	shared_ptr<Geometry> geometry(new Geometry());
 	geometry->Initialize(POSITION_NORMAL, vertices, N, indices, N);
 
-	shared_ptr<Mesh> mesh(new Mesh());
-	mesh->geometry = geometry;
-	mesh->material = material;
-
-	shared_ptr<Transform> transform(new Transform());
-
-	shared_ptr<Entity> entity = EntityManager::Create();
-
-	EntityManager::AddComponent(entity, mesh);
-	EntityManager::AddComponent(entity, transform);
-
 	delete [] vertices;
 	delete [] indices;
+
+	return geometry;
 }
 
 }; // namespace Factory

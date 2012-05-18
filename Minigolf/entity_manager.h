@@ -2,6 +2,7 @@
 #define ENTITY_MANAGER_H
 
 #include <deque>
+#include <string>
 
 #include <boost\shared_ptr.hpp>
 
@@ -24,7 +25,11 @@ namespace EntityManager {
 	void RemoveComponent(const EntityPtr &entity, const ComponentPtr &component);
 	void RemoveComponent(const EntityPtr &entity, const boost::shared_ptr<ComponentType> &type);
 
-	ComponentPtr GetComponent(EntityPtr entity, boost::shared_ptr<ComponentType> type);
+	ComponentPtr GetComponent(const EntityPtr &entity, const boost::shared_ptr<ComponentType> &type);
+	ComponentPtr GetComponent(const EntityPtr &entity, const std::string &family_name);
+
+	void Register(const EntityPtr &entity, const std::string &name);
+	EntityPtr Find(const std::string &name);
 
 }; // class EntityManager
 

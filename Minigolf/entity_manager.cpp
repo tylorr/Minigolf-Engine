@@ -1,5 +1,6 @@
-#include "entity_manager.h"
+#include <boost\unordered_map.hpp>
 
+#include "entity_manager.h"
 #include "entity.h"
 #include "component.h"
 #include "component_type.h"
@@ -7,6 +8,8 @@
 #include "system_manager.h"
 
 using boost::shared_ptr;
+using boost::unordered_map;
+using std::string;
 
 namespace EntityManager {
 
@@ -18,6 +21,8 @@ namespace {
 	EntityBag active_entities_;
 	EntityBag inactive_entities_;
 	ComponentByTypeBag components_by_type_;
+
+	unordered_map<string, EntityPtr> entity_names_;
 };
 
 shared_ptr<Entity> Create() {
@@ -118,7 +123,7 @@ void RemoveComponent(const EntityPtr &entity, const shared_ptr<ComponentType> &t
 	SystemManager::Refresh(entity);
 }
 
-ComponentPtr GetComponent(EntityPtr entity, shared_ptr<ComponentType> type) {
+ComponentPtr GetComponent(const EntityPtr &entity, const shared_ptr<ComponentType> &type) {
 	boost::shared_ptr<ComponentBag> bag; 
 	ComponentPtr component;
 	
@@ -132,6 +137,18 @@ ComponentPtr GetComponent(EntityPtr entity, shared_ptr<ComponentType> type) {
 	}
 
 	return component;
+}
+
+ComponentPtr GetComponent(const EntityPtr &entity, const std::string &family_name) {
+	return GetComponent(entity, ComponentTypeManager::GetTypeFor(family_name));
+}
+
+void Register(const EntityPtr &entity, const std::string &name) {
+	entity_names_[name] = entity;
+}
+
+EntityPtr Find(const string &name) {
+	return entity_names_[name];
 }
 
 }; // namespace EntityManager

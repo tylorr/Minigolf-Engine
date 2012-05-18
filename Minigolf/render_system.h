@@ -16,15 +16,15 @@ public:
 
 	virtual void ProcessEntities(const EntityMap &entities);
 
-	virtual bool CheckEntity(const bool &interest, const bool &contains, const boost::shared_ptr<Entity> &entity);
+	//virtual bool CheckEntity(const bool &interest, const bool &contains, const boost::shared_ptr<Entity> &entity);
 
 private:
 	boost::shared_ptr<ComponentType> mesh_type_;
 	boost::shared_ptr<ComponentType> transform_type_;
-	boost::shared_ptr<ComponentType> camera_type_;
+	//boost::shared_ptr<ComponentType> camera_type_;
 
-	boost::shared_ptr<Transform> camera_transform_;
-	boost::shared_ptr<Camera> camera_;
+	//boost::shared_ptr<Transform> camera_transform_;
+	//boost::shared_ptr<Camera> camera_;
 
 	long camera_bits_;
 };
