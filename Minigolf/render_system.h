@@ -3,6 +3,8 @@
 
 #include <boost\shared_ptr.hpp>
 
+#include "glm\glm.hpp"
+
 #include "entity_system.h"
 
 class ComponentType;
@@ -11,7 +13,11 @@ struct Camera;
 
 class RenderSystem : public EntitySystem {
 public:
-	RenderSystem();
+	bool relative_;
+	glm::vec3 reference_;
+	glm::vec3 up_;
+
+	RenderSystem(const bool &relative, const glm::vec3 &reference, const glm::vec3 &up);
 	~RenderSystem();
 
 	virtual void ProcessEntities(const EntityMap &entities);
@@ -21,12 +27,7 @@ public:
 private:
 	boost::shared_ptr<ComponentType> mesh_type_;
 	boost::shared_ptr<ComponentType> transform_type_;
-	//boost::shared_ptr<ComponentType> camera_type_;
-
-	//boost::shared_ptr<Transform> camera_transform_;
-	//boost::shared_ptr<Camera> camera_;
-
-	long camera_bits_;
+	
 };
 
 #endif // RENDERER_H

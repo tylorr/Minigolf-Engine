@@ -48,7 +48,7 @@ protected:
 	virtual void Begin() { }
 	virtual void End() { }
 
-	virtual void ProcessEntities(const EntityMap &entities) = 0;
+	virtual void ProcessEntities(const EntityMap &entities) { }
 
 private:
 	long system_bit_;

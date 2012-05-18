@@ -22,7 +22,7 @@
 	THE SOFTWARE.
 */
 
-#include <vld.h>
+//#include <vld.h>
 #include <ctime>
 
 #include <boost\shared_ptr.hpp>
@@ -41,6 +41,7 @@
 #include "factory.h"
 #include "component_type_manager.h"
 #include "transform.h"
+#include "third_person_camera_system.h"
 
 using boost::shared_ptr;
 using boost::dynamic_pointer_cast;
@@ -74,6 +75,7 @@ void IdleFunction(void);
 void TimerFunction(int);
 
 void KeyPressed(unsigned char, int, int);
+void KeyReleased(unsigned char, int, int);
 void SpecialPressed(int, int, int);
 void SpecialReleased(int, int, int);
 
@@ -88,6 +90,9 @@ int main(int argc, char* argv[])
 	exit(EXIT_SUCCESS);
 }
 
+shared_ptr<Transform> ball_transform;
+shared_ptr<RenderSystem> render_system;
+
 void Initialize(int argc, char* argv[])
 {
 	// check for existing of map file in args list
@@ -99,7 +104,6 @@ void Initialize(int argc, char* argv[])
 	}
 
 	GLenum GlewInitResult;
-
 	
 	InitWindow(argc, argv);
 	
@@ -140,8 +144,12 @@ void Initialize(int argc, char* argv[])
 
 	ShaderCache::AddShader("diffuse", "diffuse.vertex.glsl", "diffuse.fragment.glsl");
 
-	
-	SystemManager::AddSystem(shared_ptr<RenderSystem>(new RenderSystem()));
+	vec3 reference = vec3(0, 3.0f, 3.0f);
+
+	render_system = shared_ptr<RenderSystem>(new RenderSystem(false, reference, vec3(0, 1, 0)));
+	SystemManager::AddSystem(render_system);
+	shared_ptr<ThirdPersonCameraSystem> camera_system(new ThirdPersonCameraSystem());
+	SystemManager::AddSystem(camera_system);
 
 	Factory::CreateCamera(60.0f, 1.0f, (float)CurrentWidth / CurrentHeight, 1000.0f);
 
@@ -151,6 +159,13 @@ void Initialize(int argc, char* argv[])
 	shared_ptr<Component> comp = EntityManager::GetComponent(root, "Transform");
 
 	root_transform = boost::dynamic_pointer_cast<Transform>(comp);
+
+	shared_ptr<Entity> camera = EntityManager::Find("Camera");
+	shared_ptr<Transform> camera_transform = boost::dynamic_pointer_cast<Transform>(EntityManager::GetComponent(camera, "Transform"));
+
+	shared_ptr<Entity> ball = EntityManager::Find("Ball");
+	ball_transform = boost::dynamic_pointer_cast<Transform>(EntityManager::GetComponent(ball, "Transform"));
+	//camera_transform->parent = ball_transform;
 
 	previous = clock();
 }
@@ -188,6 +203,7 @@ void InitWindow(int argc, char* argv[])
 	glutTimerFunc(0, TimerFunction, 0);
 	glutCloseFunc(Destroy);
 	glutKeyboardFunc(KeyPressed);
+	glutKeyboardUpFunc(KeyReleased);
 	glutSpecialFunc(SpecialPressed);
 	glutSpecialUpFunc(SpecialReleased);
 }
@@ -198,6 +214,25 @@ void KeyPressed(unsigned char key, int x, int y)
 	{
 	case 27:					// Escape key
 		glutLeaveMainLoop();
+		break;
+	}
+}
+
+void KeyReleased(unsigned char key, int x, int y) {
+	switch(key)
+	{
+	case '1':
+		render_system->relative_ = false;
+		break;
+	case '2':
+		render_system->relative_ = true;
+		render_system->reference_ = vec3(0, 3.0f, 3.0f);
+		render_system->up_ = vec3(0, 1.0f, 0);
+		break;
+	case '3':
+		render_system->relative_ = true;
+		render_system->reference_ = vec3(0, 3.0f, 0.0f);
+		render_system->up_ = vec3(0, 0.0f, -1.0f);
 		break;
 	}
 }
@@ -273,25 +308,31 @@ void RenderFunction(void)
 	previous = current;
 
 
-	float keyStep = 90.0f * delta;
+	float keyStep = delta;
 
 	if (upPressed) {
-		xAngle -= keyStep;
+		ball_transform->position.z -= keyStep;
+		//xAngle -= keyStep;
 	}
 	if (downPressed) {
-		xAngle += keyStep;
+		ball_transform->position.z += keyStep;
+		//xAngle += keyStep;
 	}
 
 	if (leftPressed) {
-		yAngle -= keyStep;
+		ball_transform->position.x -= keyStep;
+		//yAngle -= keyStep;
 	}
 
 	if (rightPressed) {
-		yAngle += keyStep;
+		ball_transform->position.x += keyStep;
+		//yAngle += keyStep;
 	}
 
-	root_transform->rotation = glm::rotate(glm::quat(), xAngle, glm::vec3(1, 0, 0)); 
-	root_transform->rotation = glm::rotate(root_transform->rotation, yAngle, glm::vec3(0, 1, 0)); 
+	//ball_transform->position.x = xAngle;
+
+	//root_transform->rotation = glm::rotate(glm::quat(), xAngle, glm::vec3(1, 0, 0)); 
+	//root_transform->rotation = glm::rotate(root_transform->rotation, yAngle, glm::vec3(0, 1, 0)); 
 
 
 	SystemManager::Update();

@@ -28,7 +28,11 @@ using glm::mat3;
 
 using EntityManager::ComponentPtr;
 
-RenderSystem::RenderSystem() : EntitySystem() { 
+RenderSystem::RenderSystem(const bool &relative, const glm::vec3 &reference, const glm::vec3 &up) : EntitySystem() { 
+	relative_ = relative;
+	reference_ = reference;
+	up_ = up;
+
 	this->family_name_ = "RenderSystem";
 
 	std::string mesh = "Mesh";
@@ -38,12 +42,6 @@ RenderSystem::RenderSystem() : EntitySystem() {
 	std::string transform = "Transform";
 	AddTypeByName(transform);
 	transform_type_ = ComponentTypeManager::GetTypeFor(transform);
-
-	//camera_type_ = ComponentTypeManager::GetTypeFor("Camera");
-
-	//camera_bits_ = 0;
-	//camera_bits_ |= camera_type_->bit();
-	//camera_bits_ |= transform_type_->bit();
 }
 
 RenderSystem::~RenderSystem() {
@@ -92,10 +90,22 @@ void RenderSystem::ProcessEntities(const EntityMap &entities) {
 	shared_ptr<Entity> root = EntityManager::Find("Root");
 	shared_ptr<Transform> root_transform = boost::dynamic_pointer_cast<Transform>(EntityManager::GetComponent(root, "Transform"));
 
+	shared_ptr<Entity> ball = EntityManager::Find("Ball");
+	shared_ptr<Transform> ball_transform = boost::dynamic_pointer_cast<Transform>(EntityManager::GetComponent(ball, "Transform"));
+
 	mat4 model, model_view, mvp;
 	mat3 normal;
-	mat4 view = camera_transform->World();
-	view = glm::lookAt(vec3(0, 4, 6), vec3(0, 0, 0), vec3(0, 1, 0));
+	mat4 view;
+
+	if (relative_) {
+		mat3 rotation = mat3(glm::mat4_cast(ball_transform->rotation));
+		vec3 transformed = rotation * reference_;
+		vec3 camera_pos = ball_transform->position + vec3(transformed);
+		view = glm::lookAt(camera_pos, ball_transform->position, up_);
+	} else {
+		view = glm::lookAt(vec3(0, 4, 6), vec3(0, 0, 0), vec3(0, 1, 0));
+	}
+
 	mat4 projection = camera_comp->Projection();
 	
 	for (it = entities.begin(), ite = entities.end(); it != ite; ++it) {
@@ -104,6 +114,8 @@ void RenderSystem::ProcessEntities(const EntityMap &entities) {
 
 		component = EntityManager::GetComponent(it->second, transform_type_);
 		transform = dynamic_pointer_cast<Transform>(component);
+
+		
 		
 		model = transform->World();
 		model_view = view * model;
