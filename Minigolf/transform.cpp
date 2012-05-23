@@ -2,21 +2,66 @@
 
 #include "transform.h"
 
-using boost::shared_ptr;
-
-mat4 Transform::Local() const {
-	using glm::mat4_cast;
-
-	mat4 result;
-
-	// combine translation, rotation, and scale into a matrix
-	result = glm::translate(mat4(1.0f), position);
-	result *= mat4_cast(rotation);
-	result = glm::scale(result, scale);
-
-	return result;
+void Transform::set_position(const vec3 &position) {
+	position_ = position;
+	UpdateMatrix();
 }
 
+void Transform::set_scale(const vec3 &scale) {
+	scale_ = scale;
+	UpdateMatrix();
+}
+
+void Transform::set_rotation(const quat &rotation) {
+	rotation_ = rotation;
+	UpdateMatrix();
+}
+
+
+void Transform::UpdateMatrix()  {
+	using glm::mat4_cast;
+
+	// combine translation, rotation, and scale into a matrix
+	world_ = glm::translate(mat4(1.0f), position_);
+	world_ *= mat4_cast(rotation_);
+	world_ = glm::scale(world_, scale_);
+
+	UpdateAxes();
+}
+
+void Transform::UpdateAxes() {
+	using glm::mat3;
+
+	mat3 temp = mat3(world_);
+	right_ = glm::normalize(temp[0]);
+	up_ = glm::normalize(temp[1]);
+	forward_ = glm::normalize(temp[2]);
+}
+
+void Transform::Translate(const vec3 &translation) {
+	Translate(translation.x, translation.y, translation.z);
+}
+
+void Transform::Translate(const float &x, const float &y, const float &z) {
+	position_.x += x;
+	position_.y += y;
+	position_.z += z;
+
+	UpdateMatrix();
+}
+
+void Transform::LookAt(const Transform &target, const vec3 &up) {
+	LookAt(target.position_, up);
+}
+
+void Transform::LookAt(const vec3 &target, const vec3 &up) {
+	rotation_ = glm::quat_cast(glm::lookAt(position_, target, up));
+
+	UpdateMatrix();
+}
+
+
+/*
 mat4 Transform::World() {
 	mat4 local;
 	mat4 parent_world;
@@ -41,3 +86,4 @@ mat4 Transform::World() {
 		return Local();
 	}
 }
+*/

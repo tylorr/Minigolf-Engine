@@ -108,8 +108,8 @@ void RenderSystem::ProcessEntities(const EntityMap &entities) {
 	}
 	*/
 
-	view = glm::mat4_cast(camera_transform->rotation);
-	view = glm::translate(view, -camera_transform->position);
+	view = glm::mat4_cast(camera_transform->rotation());
+	view = glm::translate(view, -camera_transform->position());
 
 	mat4 projection = camera_comp->Projection();
 	
@@ -122,7 +122,7 @@ void RenderSystem::ProcessEntities(const EntityMap &entities) {
 
 		
 		
-		model = transform->World();
+		model = transform->world();
 		model_view = view * model;
 		mvp = projection * model_view;
 		normal = inverse(transpose(mat3(model_view))); // note: always remember that normal_mat needs to be mat3
@@ -133,7 +133,7 @@ void RenderSystem::ProcessEntities(const EntityMap &entities) {
 
 		// hack to have light move with world
 		// todo: implement light as entity
-		material->light_position_ = view * root_transform->World() * light_pos;
+		material->light_position_ = view * root_transform->world() * light_pos;
 
 		// do things like setup colors and lights
 		// and attach shader program

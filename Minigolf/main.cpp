@@ -315,42 +315,27 @@ void RenderFunction(void)
 	float keyStep = delta;
 
 	if (upPressed) {
-		ball_transform->position.z -= keyStep;
-		//xAngle -= keyStep;
+		ball_transform->Translate(0, 0, -keyStep);
 	}
 	if (downPressed) {
-		ball_transform->position.z += keyStep;
-		//xAngle += keyStep;
+		ball_transform->Translate(0, 0, keyStep);
 	}
 
 	if (leftPressed) {
-		ball_transform->position.x -= keyStep;
-		//yAngle -= keyStep;
+		ball_transform->Translate(-keyStep, 0, 0);
 	}
 
 	if (rightPressed) {
-		ball_transform->position.x += keyStep;
-		//yAngle += keyStep;
+		ball_transform->Translate(keyStep, 0, 0);
 	}
 
-	camera_transform->rotation = glm::quat_cast(glm::lookAt(camera_transform->position, ball_transform->position, vec3(0, 1, 0)));
-
-	//ball_transform->position.x = xAngle;
-
-	//root_transform->rotation = glm::rotate(glm::quat(), xAngle, glm::vec3(1, 0, 0)); 
-	//root_transform->rotation = glm::rotate(root_transform->rotation, yAngle, glm::vec3(0, 1, 0)); 
+	camera_transform->LookAt(*ball_transform);
 
 
 	SystemManager::Update();
 
 	glutSwapBuffers();
 	glutPostRedisplay();
-	
-	/*
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glutSwapBuffers();
-	glutPostRedisplay();
-	*/
 }
 
 void IdleFunction(void)

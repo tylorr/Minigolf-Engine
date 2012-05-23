@@ -74,7 +74,7 @@ shared_ptr<Entity> CreateCamera(const float &fov, const float &aspect, const flo
 	camera->far_plane = far_plane;
 
 	shared_ptr<Transform> transform(new Transform());
-	transform->position = vec3(0, 1, 3);
+	transform->set_position(vec3(0, 1, 3));
 
 	EntityManager::AddComponent(entity, camera);
 	EntityManager::AddComponent(entity, transform);
@@ -92,11 +92,6 @@ boost::shared_ptr<Entity> CreateTile(const Tile &tile, const boost::shared_ptr<T
 	mesh->material = material;
 
 	shared_ptr<Transform> transform(new Transform());
-	transform->parent = root;
-
-	// this causes massive memory leak can't figure out why vector
-	// does not release shared_ptr memory
-	//root->children.push_back(transform);
 
 	shared_ptr<Entity> entity = EntityManager::Create();
 
@@ -119,9 +114,8 @@ boost::shared_ptr<Entity> CreateBall(const TeeCup &tee, const boost::shared_ptr<
 	mesh->material = material;
 
 	shared_ptr<Transform> transform(new Transform());
-	transform->position = tee.position;
-	transform->position.y += 0.04f;
-	transform->parent = root;
+	transform->set_position(tee.position);
+	transform->Translate(0, 0.02f, 0);
 
 	shared_ptr<Entity> entity = EntityManager::Create();
 	EntityManager::AddComponent(entity, mesh);
@@ -144,9 +138,8 @@ boost::shared_ptr<Entity> CreateTee(const TeeCup &tee, const boost::shared_ptr<T
 	mesh->material = material;
 
 	shared_ptr<Transform> transform(new Transform());
-	transform->position = tee.position;
-	transform->position.y += 0.01f;
-	transform->parent = root;
+	transform->set_position(tee.position);
+	transform->Translate(0, 0.01f, 0);
 
 	shared_ptr<Entity> entity = EntityManager::Create();
 	EntityManager::AddComponent(entity, mesh);
@@ -167,9 +160,8 @@ boost::shared_ptr<Entity> CreateCup(const TeeCup &cup, const boost::shared_ptr<T
 	mesh->material = material;
 
 	shared_ptr<Transform> transform(new Transform());
-	transform->position = cup.position;
-	transform->position.y += 0.01f;
-	transform->parent = root;
+	transform->set_position(cup.position);
+	transform->Translate(0, 0.01f, 0);
 
 	shared_ptr<Entity> entity = EntityManager::Create();
 	EntityManager::AddComponent(entity, mesh);
