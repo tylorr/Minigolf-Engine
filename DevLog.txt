@@ -1,0 +1,17 @@
+Entire new component engine based on Artemis http://gamadu.com/artemis/ https://github.com/thelinuxlich/artemis_CSharp
+
+The new system involves having components only store data and having
+systems process entities that have specific components.
+
+Rendering now uses a mesh class (geometry + material) to draw objects to screen
+
+Ball, hole and tee now included in scene
+
+Controls:
+
+Arrow keys control ball
+
+Number keys for view:
+1 - Static
+2 - 3rd Person
+3 - Top Down

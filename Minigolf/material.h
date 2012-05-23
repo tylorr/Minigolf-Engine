@@ -16,6 +16,8 @@ public:
 	Material(const std::string &shader_program_key);
 	virtual ~Material() { }
 
+	GLuint shader_program() { return shader_program_; }
+
 	virtual void Initialize();
 	virtual void PreRender() = 0;
 	virtual void PostRender();

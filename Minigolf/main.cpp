@@ -29,6 +29,7 @@
 
 #include "glm\glm.hpp"
 #include "glm\gtc\matrix_transform.hpp"
+#include "glm\gtx\string_cast.hpp"
 
 #include "Utils.h"
 #include "file_handling.h"
@@ -92,6 +93,7 @@ int main(int argc, char* argv[])
 
 shared_ptr<Transform> ball_transform;
 shared_ptr<RenderSystem> render_system;
+shared_ptr<Transform> camera_transform;
 
 void Initialize(int argc, char* argv[])
 {
@@ -142,7 +144,8 @@ void Initialize(int argc, char* argv[])
 	//--------------------------------------------------------------------------
 	// Setup world
 
-	ShaderCache::AddShader("diffuse", "diffuse.vertex.glsl", "diffuse.fragment.glsl");
+	ShaderCache::AddShader("diffuse", "diffuse.vertex.2.1.glsl", "diffuse.fragment.2.1.glsl");
+	//ShaderCache::AddShader("diffuse3", "diffuse.vertex.glsl", "diffuse.fragment.glsl");
 
 	vec3 reference = vec3(0, 3.0f, 3.0f);
 
@@ -151,7 +154,7 @@ void Initialize(int argc, char* argv[])
 	shared_ptr<ThirdPersonCameraSystem> camera_system(new ThirdPersonCameraSystem());
 	SystemManager::AddSystem(camera_system);
 
-	Factory::CreateCamera(60.0f, 1.0f, (float)CurrentWidth / CurrentHeight, 1000.0f);
+	Factory::CreateCamera(60.0f, (float)CurrentWidth / CurrentHeight, 0.1f, 1000.0f);
 
 	Hole h = readData(argv[1]);
 	shared_ptr<Entity> root = Factory::CreateLevel(h);
@@ -161,7 +164,7 @@ void Initialize(int argc, char* argv[])
 	root_transform = boost::dynamic_pointer_cast<Transform>(comp);
 
 	shared_ptr<Entity> camera = EntityManager::Find("Camera");
-	shared_ptr<Transform> camera_transform = boost::dynamic_pointer_cast<Transform>(EntityManager::GetComponent(camera, "Transform"));
+	camera_transform = boost::dynamic_pointer_cast<Transform>(EntityManager::GetComponent(camera, "Transform"));
 
 	shared_ptr<Entity> ball = EntityManager::Find("Ball");
 	ball_transform = boost::dynamic_pointer_cast<Transform>(EntityManager::GetComponent(ball, "Transform"));
@@ -174,9 +177,9 @@ void InitWindow(int argc, char* argv[])
 {
 	glutInit(&argc, argv);
 	
-	glutInitContextVersion(3, 3);
-	glutInitContextFlags(GLUT_FORWARD_COMPATIBLE);
-	glutInitContextProfile(GLUT_CORE_PROFILE);
+	glutInitContextVersion(2, 1);
+	//glutInitContextFlags(GLUT_FORWARD_COMPATIBLE);
+	//glutInitContextProfile(GLUT_CORE_PROFILE);
 
 	glutSetOption(
 		GLUT_ACTION_ON_WINDOW_CLOSE,
@@ -297,6 +300,7 @@ float xAngle = 0, yAngle = 0;
 
 void RenderFunction(void)
 {
+	
 	++FrameCount;
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -329,6 +333,8 @@ void RenderFunction(void)
 		//yAngle += keyStep;
 	}
 
+	camera_transform->rotation = glm::quat_cast(glm::lookAt(camera_transform->position, ball_transform->position, vec3(0, 1, 0)));
+
 	//ball_transform->position.x = xAngle;
 
 	//root_transform->rotation = glm::rotate(glm::quat(), xAngle, glm::vec3(1, 0, 0)); 
@@ -339,6 +345,12 @@ void RenderFunction(void)
 
 	glutSwapBuffers();
 	glutPostRedisplay();
+	
+	/*
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glutSwapBuffers();
+	glutPostRedisplay();
+	*/
 }
 
 void IdleFunction(void)

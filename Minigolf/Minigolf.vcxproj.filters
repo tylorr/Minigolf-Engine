@@ -174,5 +174,11 @@
     <None Include="hole.00.db" />
     <None Include="hole.01.db" />
     <None Include="hole.02.db" />
+    <None Include="diffuse.fragment.2.1.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="diffuse.vertex.2.1.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

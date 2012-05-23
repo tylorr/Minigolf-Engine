@@ -125,7 +125,9 @@
   <ItemGroup>
     <None Include="..\.gitignore" />
     <None Include="..\README" />
+    <None Include="diffuse.fragment.2.1.glsl" />
     <None Include="diffuse.fragment.glsl" />
+    <None Include="diffuse.vertex.2.1.glsl" />
     <None Include="diffuse.vertex.glsl" />
     <None Include="hole.00.db" />
     <None Include="hole.01.db" />

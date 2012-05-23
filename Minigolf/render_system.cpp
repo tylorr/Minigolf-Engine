@@ -97,6 +97,7 @@ void RenderSystem::ProcessEntities(const EntityMap &entities) {
 	mat3 normal;
 	mat4 view;
 
+	/*
 	if (relative_) {
 		mat3 rotation = mat3(glm::mat4_cast(ball_transform->rotation));
 		vec3 transformed = rotation * reference_;
@@ -105,6 +106,10 @@ void RenderSystem::ProcessEntities(const EntityMap &entities) {
 	} else {
 		view = glm::lookAt(vec3(0, 4, 6), vec3(0, 0, 0), vec3(0, 1, 0));
 	}
+	*/
+
+	view = glm::mat4_cast(camera_transform->rotation);
+	view = glm::translate(view, -camera_transform->position);
 
 	mat4 projection = camera_comp->Projection();
 	
