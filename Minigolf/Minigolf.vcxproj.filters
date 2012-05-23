@@ -96,7 +96,7 @@
     <ClCompile Include="camera.cpp">
       <Filter>Source Files\game\components</Filter>
     </ClCompile>
-    <ClCompile Include="third_person_camera_system.cpp">
+    <ClCompile Include="camera_controller.cpp">
       <Filter>Source Files\game\systems</Filter>
     </ClCompile>
   </ItemGroup>
@@ -158,7 +158,7 @@
     <ClInclude Include="mesh.h">
       <Filter>Header Files\game\components</Filter>
     </ClInclude>
-    <ClInclude Include="third_person_camera_system.h">
+    <ClInclude Include="camera_controller.h">
       <Filter>Header Files\game\systems</Filter>
     </ClInclude>
   </ItemGroup>

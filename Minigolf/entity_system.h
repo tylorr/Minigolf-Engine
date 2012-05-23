@@ -18,6 +18,10 @@ public:
 
 	virtual void OnChange(const boost::shared_ptr<Entity> &entity);
 
+	virtual void Init() { }
+
+	virtual void Resolve() { }
+
 	virtual void Process();
 
 	void set_system_bit(const long &bit) {

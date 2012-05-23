@@ -6,6 +6,8 @@
 
 #include <boost\shared_ptr.hpp>
 
+#include "component_type_manager.h"
+
 class Entity;
 struct Component;
 class ComponentType;

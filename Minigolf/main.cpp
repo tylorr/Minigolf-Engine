@@ -42,7 +42,7 @@
 #include "factory.h"
 #include "component_type_manager.h"
 #include "transform.h"
-#include "third_person_camera_system.h"
+#include "camera_controller.h"
 
 using boost::shared_ptr;
 using boost::dynamic_pointer_cast;
@@ -148,13 +148,15 @@ void Initialize(int argc, char* argv[])
 
 	render_system = shared_ptr<RenderSystem>(new RenderSystem(false, reference, vec3(0, 1, 0)));
 	SystemManager::AddSystem(render_system);
-	shared_ptr<ThirdPersonCameraSystem> camera_system(new ThirdPersonCameraSystem());
-	SystemManager::AddSystem(camera_system);
+	shared_ptr<CameraController> controller(new CameraController());
+	SystemManager::AddSystem(controller);
 
 	Factory::CreateCamera(60.0f, (float)CurrentWidth / CurrentHeight, 0.1f, 1000.0f);
 
 	Hole h = readData(argv[1]);
 	Factory::CreateLevel(h);
+
+	controller->Resolve();
 
 	shared_ptr<Entity> camera = EntityManager::Find("Camera");
 	//camera_transform = boost::dynamic_pointer_cast<Transform>(EntityManager::GetComponent(camera, "Transform"));
@@ -323,7 +325,7 @@ void RenderFunction(void)
 		ball_transform->Translate(keyStep, 0, 0);
 	}
 
-	camera_transform->LookAt(*ball_transform);
+	//camera_transform->LookAt(*ball_transform);
 
 	SystemManager::Update();
 
