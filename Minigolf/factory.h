@@ -13,11 +13,11 @@ namespace Factory {
 
 boost::shared_ptr<Entity> CreateCamera(const float &fov, const float &aspect, const float &near_plane, const float &far_plane);
 
-boost::shared_ptr<Entity> CreateLevel(const Hole &hole);
-boost::shared_ptr<Entity> CreateTile(const Tile &tile, const boost::shared_ptr<Transform> &root, const boost::shared_ptr<Material> &material);
-boost::shared_ptr<Entity> CreateBall(const TeeCup &tee, const boost::shared_ptr<Transform> &root);
-boost::shared_ptr<Entity> CreateTee(const TeeCup &tee, const boost::shared_ptr<Transform> &root);
-boost::shared_ptr<Entity> CreateCup(const TeeCup &cup, const boost::shared_ptr<Transform> &root);
+void CreateLevel(const Hole &hole);
+boost::shared_ptr<Entity> CreateTile(const Tile &tile, const boost::shared_ptr<Material> &material);
+boost::shared_ptr<Entity> CreateBall(const TeeCup &tee);
+boost::shared_ptr<Entity> CreateTee(const TeeCup &tee);
+boost::shared_ptr<Entity> CreateCup(const TeeCup &cup);
 
 }; // namespace Factory
 

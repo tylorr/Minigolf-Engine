@@ -139,9 +139,13 @@ ComponentPtr GetComponent(const EntityPtr &entity, const shared_ptr<ComponentTyp
 	return component;
 }
 
+/*
 ComponentPtr GetComponent(const EntityPtr &entity, const std::string &family_name) {
 	return GetComponent(entity, ComponentTypeManager::GetTypeFor(family_name));
 }
+*/
+
+
 
 void Register(const EntityPtr &entity, const std::string &name) {
 	entity_names_[name] = entity;

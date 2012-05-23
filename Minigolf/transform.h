@@ -21,7 +21,7 @@ struct Transform : public Component {
 public:
 	Transform() 
 		: Component("Transform"), 
-		  scale_(1.0f, 1.0f, 1.0f),
+		  scale_(1.0f),
 		  right_(1.0f, 0.0f, 0.0f),
 		  up_(0.0f, 1.0f, 0.0f),
 		  forward_(0.0f, 0.0f, 1.0f) { }
@@ -47,6 +47,9 @@ public:
 	void LookAt(const vec3 &target, const vec3 &up = vec3(0.0f, 1.0f, 0.0f));
 
 	// Todo: implement rotation
+	void Rotate(const vec3 &euler_angles);
+	void Rotate(const float &x, const float &y, const float &z);
+	void Rotate(const vec3 &axis, const float &angle);
 	
 private:
 	vec3 position_;

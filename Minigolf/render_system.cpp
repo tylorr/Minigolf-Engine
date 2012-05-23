@@ -84,14 +84,8 @@ void RenderSystem::ProcessEntities(const EntityMap &entities) {
 
 	// todo: make initialize step so this doesn't have to happen every time
 	shared_ptr<Entity> camera = EntityManager::Find("Camera");
-	shared_ptr<Camera> camera_comp = boost::dynamic_pointer_cast<Camera>(EntityManager::GetComponent(camera, "Camera"));
-	shared_ptr<Transform> camera_transform = boost::dynamic_pointer_cast<Transform>(EntityManager::GetComponent(camera, "Transform"));
-
-	shared_ptr<Entity> root = EntityManager::Find("Root");
-	shared_ptr<Transform> root_transform = boost::dynamic_pointer_cast<Transform>(EntityManager::GetComponent(root, "Transform"));
-
-	shared_ptr<Entity> ball = EntityManager::Find("Ball");
-	shared_ptr<Transform> ball_transform = boost::dynamic_pointer_cast<Transform>(EntityManager::GetComponent(ball, "Transform"));
+	shared_ptr<Camera> camera_comp = EntityManager::GetComponent<Camera>(camera, "Camera"); //boost::dynamic_pointer_cast<Camera>(EntityManager::GetComponent(camera, "Camera"));
+	shared_ptr<Transform> camera_transform = EntityManager::GetComponent<Transform>(camera, "Transform");//boost::dynamic_pointer_cast<Transform>(EntityManager::GetComponent(camera, "Transform"));
 
 	mat4 model, model_view, mvp;
 	mat3 normal;
@@ -133,7 +127,7 @@ void RenderSystem::ProcessEntities(const EntityMap &entities) {
 
 		// hack to have light move with world
 		// todo: implement light as entity
-		material->light_position_ = view * root_transform->world() * light_pos;
+		material->light_position_ = model_view * light_pos;
 
 		// do things like setup colors and lights
 		// and attach shader program

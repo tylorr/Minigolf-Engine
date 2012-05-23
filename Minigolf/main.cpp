@@ -59,7 +59,9 @@ unsigned FrameCount = 0;
 
 clock_t previous;
 
-shared_ptr<Transform> root_transform;
+shared_ptr<Transform> ball_transform;
+shared_ptr<RenderSystem> render_system;
+shared_ptr<Transform> camera_transform;
 
 bool upPressed = false;
 bool downPressed = false;
@@ -90,10 +92,6 @@ int main(int argc, char* argv[])
 
 	exit(EXIT_SUCCESS);
 }
-
-shared_ptr<Transform> ball_transform;
-shared_ptr<RenderSystem> render_system;
-shared_ptr<Transform> camera_transform;
 
 void Initialize(int argc, char* argv[])
 {
@@ -145,7 +143,6 @@ void Initialize(int argc, char* argv[])
 	// Setup world
 
 	ShaderCache::AddShader("diffuse", "diffuse.vertex.2.1.glsl", "diffuse.fragment.2.1.glsl");
-	//ShaderCache::AddShader("diffuse3", "diffuse.vertex.glsl", "diffuse.fragment.glsl");
 
 	vec3 reference = vec3(0, 3.0f, 3.0f);
 
@@ -157,17 +154,14 @@ void Initialize(int argc, char* argv[])
 	Factory::CreateCamera(60.0f, (float)CurrentWidth / CurrentHeight, 0.1f, 1000.0f);
 
 	Hole h = readData(argv[1]);
-	shared_ptr<Entity> root = Factory::CreateLevel(h);
-
-	shared_ptr<Component> comp = EntityManager::GetComponent(root, "Transform");
-
-	root_transform = boost::dynamic_pointer_cast<Transform>(comp);
+	Factory::CreateLevel(h);
 
 	shared_ptr<Entity> camera = EntityManager::Find("Camera");
-	camera_transform = boost::dynamic_pointer_cast<Transform>(EntityManager::GetComponent(camera, "Transform"));
+	//camera_transform = boost::dynamic_pointer_cast<Transform>(EntityManager::GetComponent(camera, "Transform"));
+	camera_transform = EntityManager::GetComponent<Transform>(camera, "Transform");
 
 	shared_ptr<Entity> ball = EntityManager::Find("Ball");
-	ball_transform = boost::dynamic_pointer_cast<Transform>(EntityManager::GetComponent(ball, "Transform"));
+	ball_transform = EntityManager::GetComponent<Transform>(ball, "Transform");//boost::dynamic_pointer_cast<Transform>(EntityManager::GetComponent(ball, "Transform"));
 	//camera_transform->parent = ball_transform;
 
 	previous = clock();
@@ -330,7 +324,6 @@ void RenderFunction(void)
 	}
 
 	camera_transform->LookAt(*ball_transform);
-
 
 	SystemManager::Update();
 

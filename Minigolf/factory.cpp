@@ -39,7 +39,7 @@ namespace {
 shared_ptr<Geometry> Planar(const GLuint &program, const vector<vec3> &vertex_list);
 
 // returns root entity, used to rotate entire scene
-boost::shared_ptr<Entity> CreateLevel(const Hole &hole) {
+void CreateLevel(const Hole &hole) {
 	vector<Tile>::const_iterator it, ite;
 
 	// todo: Create light entity/component
@@ -47,20 +47,13 @@ boost::shared_ptr<Entity> CreateLevel(const Hole &hole) {
 	material->Initialize();
 	// todo: build material
 
-	shared_ptr<Entity> root = EntityManager::Create();
-	shared_ptr<Transform> transform(new Transform());
-	EntityManager::AddComponent(root, transform);
-	EntityManager::Register(root, "Root");
-
-	CreateBall(hole.tee, transform);
-	CreateTee(hole.tee, transform);
-	CreateCup(hole.cup, transform);
+	CreateBall(hole.tee);
+	CreateTee(hole.tee);
+	CreateCup(hole.cup);
 
 	for (it = hole.tiles.begin(), ite = hole.tiles.end(); it != ite; ++it) {
-		CreateTile(*it, transform, material);
+		CreateTile(*it, material);
 	}
-
-	return root;
 }
 
 shared_ptr<Entity> CreateCamera(const float &fov, const float &aspect, const float &near_plane, const float &far_plane) {
@@ -83,7 +76,7 @@ shared_ptr<Entity> CreateCamera(const float &fov, const float &aspect, const flo
 	return entity;
 }
 
-boost::shared_ptr<Entity> CreateTile(const Tile &tile, const boost::shared_ptr<Transform> &root, const boost::shared_ptr<Material> &material) {
+boost::shared_ptr<Entity> CreateTile(const Tile &tile, const boost::shared_ptr<Material> &material) {
 	shared_ptr<Geometry> geometry = Planar(material->shader_program(), tile.vertices);
 
 	// build the mesh
@@ -101,7 +94,7 @@ boost::shared_ptr<Entity> CreateTile(const Tile &tile, const boost::shared_ptr<T
 	return entity;
 }
 
-boost::shared_ptr<Entity> CreateBall(const TeeCup &tee, const boost::shared_ptr<Transform> &root) {
+boost::shared_ptr<Entity> CreateBall(const TeeCup &tee) {
 	vector<vec3> vertex_list = Square(0.25f, 0.25f);
 
 	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(1.0f, 1.0f, 1.0f), vec3(0.8f, 0.8f, 0.8f)));
@@ -125,7 +118,7 @@ boost::shared_ptr<Entity> CreateBall(const TeeCup &tee, const boost::shared_ptr<
 	return entity;
 }
 
-boost::shared_ptr<Entity> CreateTee(const TeeCup &tee, const boost::shared_ptr<Transform> &root) {
+boost::shared_ptr<Entity> CreateTee(const TeeCup &tee) {
 	vector<vec3> vertex_list = Square(0.25f, 0.25f);
 
 	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(0.0f, 0.0f, 1.0f), vec3(0.8f, 0.8f, 0.8f)));
@@ -147,7 +140,8 @@ boost::shared_ptr<Entity> CreateTee(const TeeCup &tee, const boost::shared_ptr<T
 
 	return entity;
 }
-boost::shared_ptr<Entity> CreateCup(const TeeCup &cup, const boost::shared_ptr<Transform> &root) {
+
+boost::shared_ptr<Entity> CreateCup(const TeeCup &cup) {
 	vector<vec3> vertex_list = Square(0.5f, 0.5f);
 
 	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.8f, 0.8f, 0.8f)));

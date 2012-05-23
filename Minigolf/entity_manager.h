@@ -28,6 +28,11 @@ namespace EntityManager {
 	ComponentPtr GetComponent(const EntityPtr &entity, const boost::shared_ptr<ComponentType> &type);
 	ComponentPtr GetComponent(const EntityPtr &entity, const std::string &family_name);
 
+	template <typename T>
+	boost::shared_ptr<T> GetComponent(const EntityPtr &entity, const std::string &family_name) {
+		return boost::dynamic_pointer_cast<T>(GetComponent(entity, ComponentTypeManager::GetTypeFor(family_name)));
+	}
+
 	void Register(const EntityPtr &entity, const std::string &name);
 	EntityPtr Find(const std::string &name);
 

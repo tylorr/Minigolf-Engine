@@ -19,14 +19,13 @@ void Transform::set_rotation(const quat &rotation) {
 
 
 void Transform::UpdateMatrix()  {
-	using glm::mat4_cast;
-
 	// combine translation, rotation, and scale into a matrix
 	world_ = glm::translate(mat4(1.0f), position_);
-	world_ *= mat4_cast(rotation_);
-	world_ = glm::scale(world_, scale_);
+	world_ *= glm::mat4_cast(rotation_);
 
-	UpdateAxes();
+	UpdateAxes(); // figure out if this should go before or after the scaling
+
+	world_ = glm::scale(world_, scale_);
 }
 
 void Transform::UpdateAxes() {
@@ -56,6 +55,22 @@ void Transform::LookAt(const Transform &target, const vec3 &up) {
 
 void Transform::LookAt(const vec3 &target, const vec3 &up) {
 	rotation_ = glm::quat_cast(glm::lookAt(position_, target, up));
+
+	UpdateMatrix();
+}
+
+void Transform::Rotate(const vec3 &euler_angles) {
+	Rotate(forward_, euler_angles.z);
+	Rotate(right_, euler_angles.x);
+	Rotate(up_, euler_angles.y);
+}
+
+void Transform::Rotate(const float &x, const float &y, const float &z) {
+	Rotate(vec3(x, y, z));
+}
+
+void Transform::Rotate(const vec3 &axis, const float &angle) {
+	rotation_ = glm::rotate(rotation_, angle, axis);
 
 	UpdateMatrix();
 }
