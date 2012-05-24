@@ -1,5 +1,8 @@
 #include <algorithm>
 
+#include "GL\glew.h"
+#include "GL\freeglut.h"
+
 #include <boost\unordered_map.hpp>
 
 #include "input.h"
@@ -36,9 +39,45 @@ void KeyReleased(unsigned char key, int x, int y) {
 }
 
 void SpecialPressed(int Key, int X, int Y) {
+	string k;
+	switch(Key) {
+	case GLUT_KEY_LEFT:
+		k = "left";
+		break;
+	case GLUT_KEY_RIGHT:
+		k = "right";
+		break;
+	case GLUT_KEY_UP:
+		k = "up";
+		break;
+	case GLUT_KEY_DOWN:
+		k = "down";
+		break;
+	}
+
+	keyPrevious[k] = keys[k];
+	keys[k] = true;
 }
 
 void SpecialReleased(int Key, int X, int Y) {
+	string k;
+	switch(Key) {
+	case GLUT_KEY_LEFT:
+		k = "left";
+		break;
+	case GLUT_KEY_RIGHT:
+		k = "right";
+		break;
+	case GLUT_KEY_UP:
+		k = "up";
+		break;
+	case GLUT_KEY_DOWN:
+		k = "down";
+		break;
+	}
+
+	keyPrevious[k] = keys[k];
+	keys[k] = false;
 }
 
 bool GetKey(std::string key) {

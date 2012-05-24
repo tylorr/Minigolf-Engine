@@ -232,11 +232,8 @@ void RenderFunction(void)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	clock_t current = clock();
-
-
 	float delta = float(current - previous) / CLOCKS_PER_SEC;
 	previous = current;
-
 
 	float keyStep = delta;
 	
