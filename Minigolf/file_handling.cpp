@@ -1,4 +1,5 @@
 #include <cassert>
+#include <boost/algorithm/string/trim.hpp>
 
 #include "file_handling.h"
 
@@ -18,7 +19,6 @@ Hole readData(char* file)
 	while (fin) //while file has lines left
 	{
 		string s;  //string to store entire line
-
 		if (!getline( fin, s )) break;  //if there are no more unread lines, break loop
 
 		istringstream ss( s );  //creates input stream from string s
@@ -26,6 +26,7 @@ Hole readData(char* file)
 		{
 			string t;
 			if (!getline( ss, t, ' ' )) break;  //get elements in line separated by whitespace
+			boost::trim(t);
 			line_data.push_back( t );  //push each element in the line onto vector
 		}
 		if(line_data.at(0) == "tile")
