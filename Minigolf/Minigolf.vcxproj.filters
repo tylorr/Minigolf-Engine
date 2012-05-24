@@ -60,9 +60,6 @@
     <ClCompile Include="file_handling.cpp">
       <Filter>Source Files\game</Filter>
     </ClCompile>
-    <ClCompile Include="level.cpp">
-      <Filter>Source Files\game</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files\game</Filter>
     </ClCompile>
@@ -105,6 +102,9 @@
     <ClCompile Include="time.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
+    <ClCompile Include="ball_motor.cpp">
+      <Filter>Source Files\game\systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="entity.h">
@@ -126,9 +126,6 @@
       <Filter>Header Files\game</Filter>
     </ClInclude>
     <ClInclude Include="file_handling.h">
-      <Filter>Header Files\game</Filter>
-    </ClInclude>
-    <ClInclude Include="level.h">
       <Filter>Header Files\game</Filter>
     </ClInclude>
     <ClInclude Include="component_type.h">
@@ -172,6 +169,9 @@
     </ClInclude>
     <ClInclude Include="time.h">
       <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="ball_motor.h">
+      <Filter>Header Files\game\systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
