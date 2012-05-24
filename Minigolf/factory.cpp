@@ -16,8 +16,7 @@
 #include "geometry.h"
 #include "mesh.h"
 #include "volume.h"
-#include "neighbors.h"
-#include "walls.h"
+#include "tile_component.h"
 
 namespace Factory {
 
@@ -57,7 +56,7 @@ void CreateLevel(const Hole &hole) {
 
 	CreateBall(hole.tee);
 	CreateTee(hole.tee);
-	CreateCup(hole.cup);
+	shared_ptr<Entity> cup = CreateCup(hole.cup);
 
 	unordered_map<int, shared_ptr<Entity>> tiles;
 
@@ -66,17 +65,33 @@ void CreateLevel(const Hole &hole) {
 		tiles[it->id] = CreateTile(*it, material);
 	}
 
-	// build the neighbor set
-	shared_ptr<Neighbors> neighbors;
+	// build the tile_component
+	shared_ptr<Entity> wall;
+	shared_ptr<TileComponent> tile_comp;
 	for (it = hole.tiles.begin(), ite = hole.tiles.end(); it != ite; ++it) {
-		neighbors = shared_ptr<Neighbors>(new Neighbors());
+
+		tile_comp = shared_ptr<TileComponent>(new TileComponent());
 		for (size_t i = 0; i < it->neighbors.size(); ++i) {
-			if (it->neighbors[i] != 0) {
-				neighbors->neighbors.push_back(tiles[it->neighbors[i]]);
+			int id = it->neighbors[i];
+
+			// does it have an empty edge here?
+			if (id == 0) {
+				// build wall
+				size_t j = (i + 1) % it->vertices.size();
+				wall = CreateWall(GetNormal(it->vertices), it->vertices[i], it->vertices[j]);
+				tile_comp->walls.push_back(wall);
+			} else {
+				// attach neighbor
+				tile_comp->neighbors.push_back(tiles[id]);
 			}
 		}
 
-		EntityManager::AddComponent(tiles[it->id], neighbors);
+		if (hole.cup.id == it->id) {
+			tile_comp->has_cup = true;
+			tile_comp->cup = cup;
+		}
+
+		EntityManager::AddComponent(tiles[it->id], tile_comp);
 	}
 }
 
@@ -102,18 +117,6 @@ shared_ptr<Entity> CreateCamera(const float &fov, const float &aspect, const flo
 
 boost::shared_ptr<Entity> CreateTile(const Tile &tile, const boost::shared_ptr<Material> &material) {
 	vec3 normal = GetNormal(tile.vertices);
-
-	// building tile walls
-	shared_ptr<Entity> wall;
-	shared_ptr<Walls> walls(new Walls());
-	for (size_t i = 0; i < tile.neighbors.size(); ++i) {
-		if (tile.neighbors[i] == 0) {
-			size_t j = (i + 1) % tile.vertices.size();
-			wall = CreateWall(normal, tile.vertices[i], tile.vertices[j]);
-			walls->walls.push_back(wall);
-		}
-	}
-
 	shared_ptr<Geometry> geometry = Planar(material->shader_program(), normal, tile.vertices);
 
 	// build the mesh
@@ -127,7 +130,6 @@ boost::shared_ptr<Entity> CreateTile(const Tile &tile, const boost::shared_ptr<M
 
 	EntityManager::AddComponent(entity, mesh);
 	EntityManager::AddComponent(entity, transform);
-	EntityManager::AddComponent(entity, walls);
 
 	return entity;
 }

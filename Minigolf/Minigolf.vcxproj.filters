@@ -176,10 +176,7 @@
     <ClInclude Include="volume.h">
       <Filter>Header Files\game\components</Filter>
     </ClInclude>
-    <ClInclude Include="neighbors.h">
-      <Filter>Header Files\game\components</Filter>
-    </ClInclude>
-    <ClInclude Include="walls.h">
+    <ClInclude Include="tile_component.h">
       <Filter>Header Files\game\components</Filter>
     </ClInclude>
   </ItemGroup>
