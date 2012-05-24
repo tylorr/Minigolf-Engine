@@ -11,7 +11,6 @@
 #include "entity.h"
 #include "camera.h"
 #include "transform.h"
-#include "material.h"
 #include "basic_material.h"
 #include "geometry.h"
 #include "mesh.h"
@@ -61,12 +60,12 @@ void CreateLevel(const Hole &hole) {
 
 	unordered_map<int, shared_ptr<Entity>> tiles;
 
-	// building tiles and their walls
+	// building tiles
 	for (it = hole.tiles.begin(), ite = hole.tiles.end(); it != ite; ++it) {
 		tiles[it->id] = CreateTile(*it, material);
 	}
 
-	// build the tile_component
+	// bind the tile_component to tile i.e. neighbors, walls, cup
 	shared_ptr<Entity> wall;
 	shared_ptr<TileComponent> tile_comp;
 	for (it = hole.tiles.begin(), ite = hole.tiles.end(); it != ite; ++it) {
@@ -91,7 +90,6 @@ void CreateLevel(const Hole &hole) {
 			tile_comp->has_cup = true;
 			tile_comp->cup = cup;
 		}
-
 		EntityManager::AddComponent(tiles[it->id], tile_comp);
 	}
 
@@ -112,7 +110,6 @@ shared_ptr<Entity> CreateCamera(const float &fov, const float &aspect, const flo
 	camera->far_plane = far_plane;
 
 	shared_ptr<Transform> transform(new Transform());
-	transform->set_position(vec3(0, 1, 3));
 
 	EntityManager::AddComponent(entity, camera);
 	EntityManager::AddComponent(entity, transform);
@@ -122,8 +119,7 @@ shared_ptr<Entity> CreateCamera(const float &fov, const float &aspect, const flo
 }
 
 boost::shared_ptr<Entity> CreateTile(const Tile &tile, const boost::shared_ptr<Material> &material) {
-	vec3 normal = GetNormal(tile.vertices);
-	shared_ptr<Geometry> geometry = Planar(material->shader_program(), normal, tile.vertices);
+	shared_ptr<Geometry> geometry = Planar(material->shader_program(), tile.vertices);
 
 	// build the mesh
 	shared_ptr<Mesh> mesh(new Mesh());
@@ -132,7 +128,7 @@ boost::shared_ptr<Entity> CreateTile(const Tile &tile, const boost::shared_ptr<M
 
 	shared_ptr<Volume> volume(new Volume());
 	volume->vertices = tile.vertices;
-	volume->normal = normal;
+	volume->normal = GetNormal(tile.vertices);
 
 	shared_ptr<Transform> transform(new Transform());
 
@@ -164,7 +160,7 @@ boost::shared_ptr<Entity> CreateWall(const vec3 &tile_normal, const vec3 &p1, co
 	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(1.0f, 0.0f, 0.0f), vec3(0.8f, 0.8f, 0.8f)));
 	material->Initialize();
 
-	shared_ptr<Geometry> geometry = Planar(material->shader_program(), tile_normal, vertex_list);
+	shared_ptr<Geometry> geometry = Planar(material->shader_program(), vertex_list);
 
 	shared_ptr<Volume> volume(new Volume());
 
@@ -198,7 +194,7 @@ boost::shared_ptr<Entity> CreateBall(const TeeCup &tee) {
 	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(1.0f, 1.0f, 1.0f), vec3(0.8f, 0.8f, 0.8f)));
 	material->Initialize();
 
-	shared_ptr<Geometry> geometry = Planar(material->shader_program(), GetNormal(vertex_list), vertex_list);
+	shared_ptr<Geometry> geometry = Planar(material->shader_program(), vertex_list);
 
 	shared_ptr<Mesh> mesh(new Mesh());
 	mesh->geometry = geometry;
@@ -222,7 +218,7 @@ boost::shared_ptr<Entity> CreateTee(const TeeCup &tee) {
 	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(0.0f, 0.0f, 1.0f), vec3(0.8f, 0.8f, 0.8f)));
 	material->Initialize();
 
-	shared_ptr<Geometry> geometry = Planar(material->shader_program(), GetNormal(vertex_list), vertex_list);
+	shared_ptr<Geometry> geometry = Planar(material->shader_program(), vertex_list);
 
 	shared_ptr<Mesh> mesh(new Mesh());
 	mesh->geometry = geometry;
@@ -245,7 +241,7 @@ boost::shared_ptr<Entity> CreateCup(const TeeCup &cup) {
 	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.8f, 0.8f, 0.8f)));
 	material->Initialize();
 
-	shared_ptr<Geometry> geometry = Planar(material->shader_program(), GetNormal(vertex_list), vertex_list);
+	shared_ptr<Geometry> geometry = Planar(material->shader_program(), vertex_list);
 
 	shared_ptr<Mesh> mesh(new Mesh());
 	mesh->geometry = geometry;
@@ -263,7 +259,7 @@ boost::shared_ptr<Entity> CreateCup(const TeeCup &cup) {
 }
 
 // Return geometry given counter-clockwise set of convex, co-planar points
-shared_ptr<Geometry> Planar(const GLuint &program, const vec3 &normal, const vector<vec3> &vertex_list) {
+shared_ptr<Geometry> Planar(const GLuint &program, const vector<vec3> &vertex_list) {
 	Vertex *vertices;
 	GLuint *indices;
 
@@ -275,6 +271,8 @@ shared_ptr<Geometry> Planar(const GLuint &program, const vec3 &normal, const vec
 	
 	vertices = new Vertex[N];
 	indices = new GLuint[N];
+
+	vec3 normal = GetNormal(vertex_list);
 
 	// build the vertices
 	for (i = 0; i < N; ++i) {
