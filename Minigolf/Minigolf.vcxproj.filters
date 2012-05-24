@@ -167,6 +167,9 @@
     <ClInclude Include="input.h">
       <Filter>Header Files\engine</Filter>
     </ClInclude>
+    <ClInclude Include="time.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="diffuse.fragment.glsl">

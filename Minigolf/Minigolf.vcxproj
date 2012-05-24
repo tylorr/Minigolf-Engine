@@ -121,6 +121,7 @@
     <ClInclude Include="file_handling.h" />
     <ClInclude Include="level.h" />
     <ClInclude Include="system_manager.h" />
+    <ClInclude Include="time.h" />
     <ClInclude Include="transform.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>

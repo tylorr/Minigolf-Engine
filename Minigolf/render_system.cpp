@@ -108,8 +108,7 @@ void RenderSystem::ProcessEntities(const EntityMap &entities) {
 	mat4 projection = camera_comp->Projection();
 	
 	for (it = entities.begin(), ite = entities.end(); it != ite; ++it) {
-		component = EntityManager::GetComponent(it->second, mesh_type_);
-		mesh = dynamic_pointer_cast<Mesh>(component);
+		mesh = EntityManager::GetComponent<Mesh>(it->second, "Mesh");
 
 		component = EntityManager::GetComponent(it->second, transform_type_);
 		transform = dynamic_pointer_cast<Transform>(component);

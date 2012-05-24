@@ -197,16 +197,6 @@ void InitWindow(int argc, char* argv[])
 	glutSpecialUpFunc(Input::SpecialReleased);
 }
 
-void KeyPressed(unsigned char key, int x, int y)
-{
-	switch(key)
-	{
-	case 27:					// Escape key
-		glutLeaveMainLoop();
-		break;
-	}
-}
-
 void ResizeFunction(int Width, int Height)
 {
 	CurrentWidth = Width;
@@ -253,7 +243,6 @@ void RenderFunction(void)
 		ball_transform->Translate(keyStep, 0, 0);
 	}
 	
-
 	SystemManager::Update();
 
 	glutSwapBuffers();

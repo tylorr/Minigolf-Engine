@@ -10,6 +10,7 @@ using glm::mat3;
 using glm::vec3;
 
 CameraController::CameraController() : EntitySystem() {
+	this->family_name_ = "CameraController";
 }
 
 CameraController::~CameraController() {
