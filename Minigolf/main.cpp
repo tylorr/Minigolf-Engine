@@ -44,6 +44,7 @@
 #include "transform.h"
 #include "camera_controller.h"
 #include "input.h"
+#include "time.h"
 
 using boost::shared_ptr;
 using boost::dynamic_pointer_cast;
@@ -165,7 +166,7 @@ void InitWindow(int argc, char* argv[])
 	glutInit(&argc, argv);
 	
 	glutInitContextVersion(2, 1);
-	glutInitContextProfile(GLUT_CORE_PROFILE);
+	//glutInitContextProfile(GLUT_CORE_PROFILE);
 
 	glutSetOption(
 		GLUT_ACTION_ON_WINDOW_CLOSE,
@@ -217,16 +218,14 @@ void ResizeFunction(int Width, int Height)
 
 void RenderFunction(void)
 {
+	Time::Update();
+
 	++FrameCount;
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	clock_t current = clock();
-	float delta = float(current - previous) / CLOCKS_PER_SEC;
-	previous = current;
+	float keyStep = Time::GetDeltaTime();
 
-	float keyStep = delta;
-	
 	if (Input::GetKey("w")) {
 		ball_transform->Translate(0, 0, -keyStep);
 	}

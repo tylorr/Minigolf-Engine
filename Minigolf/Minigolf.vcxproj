@@ -98,6 +98,7 @@
     <ClCompile Include="render_system.cpp" />
     <ClCompile Include="shader_cache.cpp" />
     <ClCompile Include="system_manager.cpp" />
+    <ClCompile Include="time.cpp" />
     <ClCompile Include="transform.cpp" />
     <ClCompile Include="Utils.cpp" />
   </ItemGroup>
