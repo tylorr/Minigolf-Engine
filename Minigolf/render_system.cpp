@@ -28,11 +28,7 @@ using glm::mat3;
 
 using EntityManager::ComponentPtr;
 
-RenderSystem::RenderSystem(const bool &relative, const glm::vec3 &reference, const glm::vec3 &up) : EntitySystem("RenderSystem") { 
-	relative_ = relative;
-	reference_ = reference;
-	up_ = up;
-
+RenderSystem::RenderSystem() : EntitySystem("RenderSystem") {
 	std::string mesh = "Mesh";
 	AddTypeByName(mesh);
 	mesh_type_ = ComponentTypeManager::GetTypeFor(mesh);
@@ -44,27 +40,6 @@ RenderSystem::RenderSystem(const bool &relative, const glm::vec3 &reference, con
 
 RenderSystem::~RenderSystem() {
 }
-
-/*
-bool RenderSystem::CheckEntity(const bool &interest, const bool &contains, const boost::shared_ptr<Entity> &entity) {
-
-	// I think this is the right way about getting one and only one camera object
-	// if you think there is another way let me know
-	// todo: create some sort of camera selector component to allow for multiple cameras
-	if ((camera_bits_ & entity->type_bits()) == camera_bits_) {
-		shared_ptr<Component> component;
-
-		component = EntityManager::GetComponent(entity, transform_type_);
-		camera_transform_ = dynamic_pointer_cast<Transform>(component);
-
-		component = EntityManager::GetComponent(entity, camera_type_);
-		camera_ = dynamic_pointer_cast<Camera>(component);
-
-		return false;
-	}
-	return true;
-}
-*/
 
 void RenderSystem::ProcessEntities(const EntityMap &entities) {
 	// todo: check for existance of camera
@@ -89,17 +64,6 @@ void RenderSystem::ProcessEntities(const EntityMap &entities) {
 	mat3 normal;
 	mat4 view;
 
-	/*
-	if (relative_) {
-		mat3 rotation = mat3(glm::mat4_cast(ball_transform->rotation));
-		vec3 transformed = rotation * reference_;
-		vec3 camera_pos = ball_transform->position + vec3(transformed);
-		view = glm::lookAt(camera_pos, ball_transform->position, up_);
-	} else {
-		view = glm::lookAt(vec3(0, 4, 6), vec3(0, 0, 0), vec3(0, 1, 0));
-	}
-	*/
-
 	view = glm::mat4_cast(camera_transform->rotation());
 	view = glm::translate(view, -camera_transform->position());
 
@@ -111,8 +75,6 @@ void RenderSystem::ProcessEntities(const EntityMap &entities) {
 		component = EntityManager::GetComponent(it->second, transform_type_);
 		transform = dynamic_pointer_cast<Transform>(component);
 
-		
-		
 		model = transform->world();
 		model_view = view * model;
 		mvp = projection * model_view;
@@ -142,35 +104,3 @@ void RenderSystem::ProcessEntities(const EntityMap &entities) {
 		mesh->material->PostRender();
 	}
 }
-
-/*
-void Renderer::Render() const {
-	// get camera view matrix
-	// get camera projection matrix (p)
-	// get entity model matrix
-	// calculate mv (view * model)
-	// calculate mvp (p * mv)
-	// calculate normal matrix (inverse(transpose(mv)))
-	// attach + push material to gpu
-	// push matrices to gpu
-	// draw mesh
-	// release material
-
-	using glm::inverse;
-	using glm::transpose;
-
-	//mat4 view = camera_->entity_->transform_.World();
-	mat4 projection = camera_->Projection();
-	//mat4 model = entity_->transform_.World();
-	//mat4 model_view = view * model;
-	//mat4 mvp = projection * model_view;
-	//mat4 normal = inverse(transpose(model_view));
-
-	material_->PreRender();
-
-	//material_->PushMatrices(model_view, projection, mvp, normal);
-	mesh_->Draw();
-
-	material_->PostRender();
-}
-*/

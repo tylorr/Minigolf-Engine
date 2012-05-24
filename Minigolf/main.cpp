@@ -57,8 +57,10 @@ int CurrentWidth = 800,
 
 unsigned FrameCount = 0;
 
-void Initialize(int, char*[]);
+void InitOpenGL(int, char*[]);
 void InitWindow(int, char*[]);
+
+void Initialize(int, char*[]);
 
 void ResizeFunction(int, int);
 void RenderFunction(void);
@@ -70,6 +72,7 @@ void Destroy(void);
 
 int main(int argc, char* argv[])
 {
+	InitOpenGL(argc, argv);
 	Initialize(argc, argv);
 
 	glutMainLoop();
@@ -77,16 +80,7 @@ int main(int argc, char* argv[])
 	exit(EXIT_SUCCESS);
 }
 
-void Initialize(int argc, char* argv[])
-{
-	// check for existing of map file in args list
-	
-	if (argv[1] == NULL)
-	{
-		fprintf(stderr, "Missing map file\n");
-		exit(EXIT_FAILURE);
-	}
-
+void InitOpenGL(int argc, char* argv[]) {
 	GLenum GlewInitResult;
 	
 	InitWindow(argc, argv);
@@ -121,16 +115,20 @@ void Initialize(int argc, char* argv[])
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
 	ExitOnGLError("ERROR: Could not set OpenGL culling options");
-	
+}
 
-	//--------------------------------------------------------------------------
-	// Setup world
+void Initialize(int argc, char* argv[])
+{
+	// check for existing of map file in args list
+	if (argv[1] == NULL)
+	{
+		fprintf(stderr, "Missing map file\n");
+		exit(EXIT_FAILURE);
+	}
 
 	ShaderCache::AddShader("diffuse", "diffuse.vertex.2.1.glsl", "diffuse.fragment.2.1.glsl");
 
-	vec3 reference = vec3(0, 3.0f, 3.0f);
-
-	shared_ptr<RenderSystem> render_system = shared_ptr<RenderSystem>(new RenderSystem(false, reference, vec3(0, 1, 0)));
+	shared_ptr<RenderSystem> render_system = shared_ptr<RenderSystem>(new RenderSystem());
 	SystemManager::AddSystem(render_system);
 
 	shared_ptr<CameraController> controller(new CameraController());
@@ -144,8 +142,8 @@ void Initialize(int argc, char* argv[])
 	Hole h = readData(argv[1]);
 	Factory::CreateLevel(h);
 
-	controller->Resolve();
-	motor->Resolve();
+	SystemManager::Init();
+	SystemManager::Resolve();
 }
 
 void InitWindow(int argc, char* argv[])
@@ -205,11 +203,10 @@ void ResizeFunction(int Width, int Height)
 
 void RenderFunction(void)
 {
-	Time::Update();
-
 	++FrameCount;
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	Time::Update();
 		
 	SystemManager::Update();
 
