@@ -7,6 +7,7 @@
 
 class Entity;
 class Material;
+class Geometry;
 struct Transform;
 
 namespace Factory {
@@ -18,6 +19,9 @@ boost::shared_ptr<Entity> CreateTile(const Tile &tile, const boost::shared_ptr<M
 boost::shared_ptr<Entity> CreateBall(const TeeCup &tee);
 boost::shared_ptr<Entity> CreateTee(const TeeCup &tee);
 boost::shared_ptr<Entity> CreateCup(const TeeCup &cup);
+
+boost::shared_ptr<Geometry> Planar(const GLuint &program, const vector<vec3> &vertex_list);
+boost::shared_ptr<Geometry> Cube(const GLuint &program);
 
 }; // namespace Factory
 

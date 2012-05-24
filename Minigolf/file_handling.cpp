@@ -5,7 +5,7 @@
 
 
 
-vector<Hole> readData(char* file)
+Hole readData(char* file)
 {
 	using std::ifstream;
 	using std::istringstream;

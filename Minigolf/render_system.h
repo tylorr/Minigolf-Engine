@@ -1,13 +1,13 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-	#include <boost\shared_ptr.hpp>
+#include <boost\shared_ptr.hpp>
 
-	#include "glm\glm.hpp"
+#include "glm\glm.hpp"
 
-	#include "entity_system.h"
+#include "entity_system.h"
 
-	class ComponentType;
+class ComponentType;
 struct Transform;
 struct Camera;
 
@@ -17,7 +17,7 @@ public:
 	glm::vec3 reference_;
 	glm::vec3 up_;
 
-	RenderSystem(const bool &relative, const glm::vec3 &reference, const glm::vec3 &up);
+	RenderSystem();
 	~RenderSystem();
 
 	virtual void ProcessEntities(const EntityMap &entities);

@@ -36,8 +36,6 @@ namespace {
 	}
 }; // namespace
 
-shared_ptr<Geometry> Planar(const GLuint &program, const vector<vec3> &vertex_list);
-
 // returns root entity, used to rotate entire scene
 void CreateLevel(const Hole &hole) {
 	vector<Tile>::const_iterator it, ite;
@@ -181,8 +179,6 @@ shared_ptr<Geometry> Planar(const GLuint &program, const vector<vec3> &vertex_li
 
 	// create normal using first 3 points
 	normal = glm::normalize(glm::cross(vertex_list[2] - vertex_list[1], vertex_list[0] - vertex_list[1]));
-
-	int blah = 3;
 
 	// build the vertices
 	for (i = 0; i < N; ++i) {
