@@ -1,5 +1,7 @@
 #include <vector>
 
+#include <boost\unordered_map.hpp>
+
 #include "glm\glm.hpp"
 #include "glm\gtc\matrix_transform.hpp"
 
@@ -13,6 +15,8 @@
 #include "basic_material.h"
 #include "geometry.h"
 #include "mesh.h"
+#include "volume.h"
+#include "neighbors.h"
 
 namespace Factory {
 
@@ -20,6 +24,7 @@ using boost::shared_ptr;
 using glm::vec3;
 using glm::vec4;
 using std::vector;
+using boost::unordered_map;
 
 namespace {
 	vector<vec3> Square(const float &width, const float &height) {
@@ -33,6 +38,10 @@ namespace {
 		vertex_list.push_back(vec3(hw, 0, hh));	
 
 		return vertex_list;
+	}
+
+	vec3 GetNormal(const vector<vec3> &vertex_list) {
+		return glm::normalize(glm::cross(vertex_list[2] - vertex_list[1], vertex_list[0] - vertex_list[1]));
 	}
 }; // namespace
 
@@ -49,8 +58,23 @@ void CreateLevel(const Hole &hole) {
 	CreateTee(hole.tee);
 	CreateCup(hole.cup);
 
+	unordered_map<int, shared_ptr<Entity>> tiles;
+
 	for (it = hole.tiles.begin(), ite = hole.tiles.end(); it != ite; ++it) {
-		CreateTile(*it, material);
+		tiles[it->id] = CreateTile(*it, material);
+	}
+
+	shared_ptr<Neighbors> neighbors;
+
+	for (it = hole.tiles.begin(), ite = hole.tiles.end(); it != ite; ++it) {
+		neighbors = shared_ptr<Neighbors>(new Neighbors());
+		for (size_t i = 0; i < it->neighbors.size(); ++i) {
+			if (it->neighbors[i] != 0) {
+				neighbors->neighbors.push_back(tiles[it->neighbors[i]]);
+			}
+		}
+
+		EntityManager::AddComponent(tiles[it->id], neighbors);
 	}
 }
 
@@ -75,7 +99,18 @@ shared_ptr<Entity> CreateCamera(const float &fov, const float &aspect, const flo
 }
 
 boost::shared_ptr<Entity> CreateTile(const Tile &tile, const boost::shared_ptr<Material> &material) {
-	shared_ptr<Geometry> geometry = Planar(material->shader_program(), tile.vertices);
+	vec3 normal = GetNormal(tile.vertices);
+
+	//CreateWall(normal, tile.vertices[0], tile.vertices[1]);
+
+	for (size_t i = 0; i < tile.neighbors.size(); ++i) {
+		if (tile.neighbors[i] == 0) {
+			size_t j = (i + 1) % tile.vertices.size();
+			CreateWall(normal, tile.vertices[i], tile.vertices[j]);
+		}
+	}
+
+	shared_ptr<Geometry> geometry = Planar(material->shader_program(), normal, tile.vertices);
 
 	// build the mesh
 	shared_ptr<Mesh> mesh(new Mesh());
@@ -92,13 +127,60 @@ boost::shared_ptr<Entity> CreateTile(const Tile &tile, const boost::shared_ptr<M
 	return entity;
 }
 
+boost::shared_ptr<Entity> CreateWall(const vec3 &tile_normal, const vec3 &p1, const vec3 &p2) {
+	float width = 0.25f;
+	float height = 0.5f;
+
+	vec3 forward = glm::normalize(p2 - p1);
+	vec3 left = glm::normalize(glm::cross(tile_normal, forward));
+
+	vec3 p3 = p2 - (left * width);
+	vec3 p4 = p1 - (left * width);
+
+	vector<vec3> vertex_list;
+	vertex_list.push_back(p4);
+	vertex_list.push_back(p3);
+	vertex_list.push_back(p2);
+	vertex_list.push_back(p1);
+
+	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(1.0f, 0.0f, 0.0f), vec3(0.8f, 0.8f, 0.8f)));
+	material->Initialize();
+
+	shared_ptr<Geometry> geometry = Planar(material->shader_program(), tile_normal, vertex_list);
+
+	shared_ptr<Volume> volume(new Volume());
+
+	vec3 h3 = p2 + (tile_normal * height);
+	vec3 h4 = p1 + (tile_normal * height);
+
+	volume->vertices.push_back(h4);	
+	volume->vertices.push_back(h3);
+	volume->vertices.push_back(p2);
+	volume->vertices.push_back(p1);
+
+	volume->normal = left;
+
+	shared_ptr<Mesh> mesh(new Mesh());
+	mesh->geometry = geometry;
+	mesh->material = material;
+
+	shared_ptr<Transform> transform(new Transform());
+
+	shared_ptr<Entity> entity = EntityManager::Create();
+	EntityManager::AddComponent(entity, mesh);
+	EntityManager::AddComponent(entity, transform);
+	EntityManager::AddComponent(entity, volume);
+
+	return entity;
+}
+
 boost::shared_ptr<Entity> CreateBall(const TeeCup &tee) {
 	vector<vec3> vertex_list = Square(0.25f, 0.25f);
 
 	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(1.0f, 1.0f, 1.0f), vec3(0.8f, 0.8f, 0.8f)));
 	material->Initialize();
 
-	shared_ptr<Geometry> geometry = Planar(material->shader_program(), vertex_list);
+	shared_ptr<Geometry> geometry = Planar(material->shader_program(), GetNormal(vertex_list), vertex_list);
 
 	shared_ptr<Mesh> mesh(new Mesh());
 	mesh->geometry = geometry;
@@ -122,7 +204,7 @@ boost::shared_ptr<Entity> CreateTee(const TeeCup &tee) {
 	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(0.0f, 0.0f, 1.0f), vec3(0.8f, 0.8f, 0.8f)));
 	material->Initialize();
 
-	shared_ptr<Geometry> geometry = Planar(material->shader_program(), vertex_list);
+	shared_ptr<Geometry> geometry = Planar(material->shader_program(), GetNormal(vertex_list), vertex_list);
 
 	shared_ptr<Mesh> mesh(new Mesh());
 	mesh->geometry = geometry;
@@ -145,7 +227,7 @@ boost::shared_ptr<Entity> CreateCup(const TeeCup &cup) {
 	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.8f, 0.8f, 0.8f)));
 	material->Initialize();
 
-	shared_ptr<Geometry> geometry = Planar(material->shader_program(), vertex_list);
+	shared_ptr<Geometry> geometry = Planar(material->shader_program(), GetNormal(vertex_list), vertex_list);
 
 	shared_ptr<Mesh> mesh(new Mesh());
 	mesh->geometry = geometry;
@@ -163,11 +245,10 @@ boost::shared_ptr<Entity> CreateCup(const TeeCup &cup) {
 }
 
 // Return geometry given counter-clockwise set of convex, co-planar points
-shared_ptr<Geometry> Planar(const GLuint &program, const vector<vec3> &vertex_list) {
+shared_ptr<Geometry> Planar(const GLuint &program, const vec3 &normal, const vector<vec3> &vertex_list) {
 	Vertex *vertices;
 	GLuint *indices;
 
-	vec3 normal;
 	vec3 vertex;
 	GLsizei N;
 	int i, index, count, vertex_index;
@@ -176,9 +257,6 @@ shared_ptr<Geometry> Planar(const GLuint &program, const vector<vec3> &vertex_li
 	
 	vertices = new Vertex[N];
 	indices = new GLuint[N];
-
-	// create normal using first 3 points
-	normal = glm::normalize(glm::cross(vertex_list[2] - vertex_list[1], vertex_list[0] - vertex_list[1]));
 
 	// build the vertices
 	for (i = 0; i < N; ++i) {
