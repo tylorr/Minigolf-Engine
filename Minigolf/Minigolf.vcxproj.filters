@@ -99,11 +99,11 @@
     <ClCompile Include="input.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
-    <ClCompile Include="ball_motor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="time.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ball_motor.cpp">
+      <Filter>Source Files\game\systems</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -167,9 +167,6 @@
     <ClInclude Include="input.h">
       <Filter>Header Files\engine</Filter>
     </ClInclude>
-    <ClInclude Include="ball_motor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="time.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -178,6 +175,9 @@
     </ClInclude>
     <ClInclude Include="tile_component.h">
       <Filter>Header Files\game\components</Filter>
+    </ClInclude>
+    <ClInclude Include="ball_motor.h">
+      <Filter>Header Files\game\systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

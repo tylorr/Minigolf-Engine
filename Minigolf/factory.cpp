@@ -17,6 +17,7 @@
 #include "mesh.h"
 #include "volume.h"
 #include "tile_component.h"
+#include "ball_component.h"
 
 namespace Factory {
 
@@ -54,7 +55,7 @@ void CreateLevel(const Hole &hole) {
 	material->Initialize();
 	// todo: build material
 
-	CreateBall(hole.tee);
+	shared_ptr<Entity> ball = CreateBall(hole.tee);
 	CreateTee(hole.tee);
 	shared_ptr<Entity> cup = CreateCup(hole.cup);
 
@@ -93,6 +94,11 @@ void CreateLevel(const Hole &hole) {
 
 		EntityManager::AddComponent(tiles[it->id], tile_comp);
 	}
+
+	// Attach starting tile to ball
+	shared_ptr<BallComponent> ball_comp(new BallComponent());
+	ball_comp->current_tile = tiles[hole.tee.id];
+	EntityManager::AddComponent(ball, ball_comp);
 }
 
 shared_ptr<Entity> CreateCamera(const float &fov, const float &aspect, const float &near_plane, const float &far_plane) {
