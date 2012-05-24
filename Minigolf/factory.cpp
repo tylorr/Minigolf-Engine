@@ -216,7 +216,7 @@ shared_ptr<Geometry> Planar(const GLuint &program, const vector<vec3> &vertex_li
 
 	// build the mesh
 	shared_ptr<Geometry> geometry(new Geometry());
-	geometry->Initialize(program, POSITION_NORMAL, vertices, N, indices, N);
+	geometry->Initialize(program, GL_TRIANGLE_STRIP, POSITION_NORMAL, vertices, N, indices, N);
 
 	delete [] vertices;
 	delete [] indices;

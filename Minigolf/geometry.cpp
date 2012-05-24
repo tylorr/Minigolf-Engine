@@ -1,8 +1,13 @@
 #include "geometry.h"
 
+Geometry::~Geometry() {
+	Destroy();
+}
+
 // TODO: Maybe this should go in the constructor
-void Geometry::Initialize(const GLuint &program, const VertexType &vertex_type, const Vertex *vertices, const GLsizei &vertex_count, const GLuint *indices, const GLsizei &index_count) {
-	
+void Geometry::Initialize(const GLuint &program, const GLenum &draw_mode, const VertexType &vertex_type, const Vertex *vertices, const GLsizei &vertex_count, const GLuint *indices, const GLsizei &index_count) {
+	draw_mode_ = draw_mode;
+
 	const size_t vbo_size = vertex_count * sizeof(Vertex);
 	const size_t ibo_size = index_count * sizeof(unsigned int);
 
@@ -89,7 +94,7 @@ void Geometry::Draw() const {
 	}
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer_object_);
-	glDrawElements(GL_TRIANGLE_STRIP, index_count_, GL_UNSIGNED_INT, (GLvoid*)0);
+	glDrawElements(draw_mode_, index_count_, GL_UNSIGNED_INT, (GLvoid*)0);
 	ExitOnGLError("ERROR: Could not draw the mesh");
 
 	switch(vertex_type_) {

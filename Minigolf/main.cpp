@@ -27,8 +27,6 @@
 #include <boost\shared_ptr.hpp>
 
 #include "glm\glm.hpp"
-#include "glm\gtc\matrix_transform.hpp"
-#include "glm\gtx\string_cast.hpp"
 
 #include "Utils.h"
 #include "file_handling.h"
@@ -45,11 +43,8 @@
 #include "ball_motor.h"
 
 using boost::shared_ptr;
-using boost::dynamic_pointer_cast;
 
-using glm::quat;
-
-#define WINDOW_TITLE_PREFIX "Chapter 4"
+#define WINDOW_TITLE_PREFIX "Minigolf"
 
 int CurrentWidth = 800,
 	CurrentHeight = 600,
@@ -59,15 +54,12 @@ unsigned FrameCount = 0;
 
 void InitOpenGL(int, char*[]);
 void InitWindow(int, char*[]);
-
 void Initialize(int, char*[]);
 
 void ResizeFunction(int, int);
 void RenderFunction(void);
 void IdleFunction(void);
-
 void TimerFunction(int);
-
 void Destroy(void);
 
 int main(int argc, char* argv[])
