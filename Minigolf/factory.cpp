@@ -17,6 +17,7 @@
 #include "mesh.h"
 #include "volume.h"
 #include "neighbors.h"
+#include "walls.h"
 
 namespace Factory {
 
@@ -60,12 +61,13 @@ void CreateLevel(const Hole &hole) {
 
 	unordered_map<int, shared_ptr<Entity>> tiles;
 
+	// building tiles and their walls
 	for (it = hole.tiles.begin(), ite = hole.tiles.end(); it != ite; ++it) {
 		tiles[it->id] = CreateTile(*it, material);
 	}
 
+	// build the neighbor set
 	shared_ptr<Neighbors> neighbors;
-
 	for (it = hole.tiles.begin(), ite = hole.tiles.end(); it != ite; ++it) {
 		neighbors = shared_ptr<Neighbors>(new Neighbors());
 		for (size_t i = 0; i < it->neighbors.size(); ++i) {
@@ -101,12 +103,14 @@ shared_ptr<Entity> CreateCamera(const float &fov, const float &aspect, const flo
 boost::shared_ptr<Entity> CreateTile(const Tile &tile, const boost::shared_ptr<Material> &material) {
 	vec3 normal = GetNormal(tile.vertices);
 
-	//CreateWall(normal, tile.vertices[0], tile.vertices[1]);
-
+	// building tile walls
+	shared_ptr<Entity> wall;
+	shared_ptr<Walls> walls(new Walls());
 	for (size_t i = 0; i < tile.neighbors.size(); ++i) {
 		if (tile.neighbors[i] == 0) {
 			size_t j = (i + 1) % tile.vertices.size();
-			CreateWall(normal, tile.vertices[i], tile.vertices[j]);
+			wall = CreateWall(normal, tile.vertices[i], tile.vertices[j]);
+			walls->walls.push_back(wall);
 		}
 	}
 
@@ -123,6 +127,7 @@ boost::shared_ptr<Entity> CreateTile(const Tile &tile, const boost::shared_ptr<M
 
 	EntityManager::AddComponent(entity, mesh);
 	EntityManager::AddComponent(entity, transform);
+	EntityManager::AddComponent(entity, walls);
 
 	return entity;
 }

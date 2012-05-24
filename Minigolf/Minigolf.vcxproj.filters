@@ -179,6 +179,9 @@
     <ClInclude Include="neighbors.h">
       <Filter>Header Files\game\components</Filter>
     </ClInclude>
+    <ClInclude Include="walls.h">
+      <Filter>Header Files\game\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="diffuse.fragment.glsl">

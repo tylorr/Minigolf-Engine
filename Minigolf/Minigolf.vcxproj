@@ -130,6 +130,7 @@
     <ClInclude Include="transform.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="volume.h" />
+    <ClInclude Include="walls.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.gitignore" />
