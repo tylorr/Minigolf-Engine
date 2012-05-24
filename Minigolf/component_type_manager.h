@@ -7,8 +7,19 @@
 
 class ComponentType;
 
+/*
+	remarks:	ComponentTypeManager stores the relation of from Component
+				family_names to ComponentTypes
+*/
 namespace ComponentTypeManager {
 
+	/*
+		input:		A string representing the family_name of a Component. A new 
+					family_name - ComponentType relation is created if one does 
+					not exist
+
+		output:		A ComponentType that represents the family_name
+	*/
 	boost::shared_ptr<ComponentType> GetTypeFor(const std::string &family_name);
 
 }; // namespace ComponentTypeManager

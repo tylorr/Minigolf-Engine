@@ -28,12 +28,10 @@ using glm::mat3;
 
 using EntityManager::ComponentPtr;
 
-RenderSystem::RenderSystem(const bool &relative, const glm::vec3 &reference, const glm::vec3 &up) : EntitySystem() { 
+RenderSystem::RenderSystem(const bool &relative, const glm::vec3 &reference, const glm::vec3 &up) : EntitySystem("RenderSystem") { 
 	relative_ = relative;
 	reference_ = reference;
 	up_ = up;
-
-	this->family_name_ = "RenderSystem";
 
 	std::string mesh = "Mesh";
 	AddTypeByName(mesh);

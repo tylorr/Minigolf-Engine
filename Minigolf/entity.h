@@ -1,6 +1,14 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+/*
+	remarks:	Entity stores information about what EntitySystems it belongs
+				to and what Components it has in the form of bits in a bit
+				string. Entities have both an id and a unique_id. The id is 
+				used to map id to active Entity in EntityManager but because
+				of object resuse, this id is not always unique. Unique_id is 
+				used to represent the uniqueness of new Entities.
+*/
 class Entity {
 public:
 	Entity();
@@ -29,6 +37,10 @@ public:
 		return enabled_;
 	}
 
+	/*
+		remarks:	Enabling/disabling an Entity is not fully implemented yet,
+					leave Entities enabled.
+	*/
 	void set_enabled(const bool &enabled) {
 		enabled_ = enabled;
 	}
