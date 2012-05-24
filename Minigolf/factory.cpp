@@ -124,12 +124,17 @@ boost::shared_ptr<Entity> CreateTile(const Tile &tile, const boost::shared_ptr<M
 	mesh->geometry = geometry;
 	mesh->material = material;
 
+	shared_ptr<Volume> volume(new Volume());
+	volume->vertices = tile.vertices;
+	volume->normal = normal;
+
 	shared_ptr<Transform> transform(new Transform());
 
 	shared_ptr<Entity> entity = EntityManager::Create();
 
 	EntityManager::AddComponent(entity, mesh);
 	EntityManager::AddComponent(entity, transform);
+	EntityManager::AddComponent(entity, volume);
 
 	return entity;
 }
