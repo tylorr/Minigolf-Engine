@@ -14,12 +14,15 @@ struct Vertex
 
 class Geometry {
 public:
-	void Initialize(const GLuint &program, const VertexType &vertex_type, const Vertex *vertices, const GLsizei &vertex_count, const GLuint *indices, const GLsizei &index_count);
+	~Geometry();
+
+	void Initialize(const GLuint &program, const GLenum &draw_mode, const VertexType &vertex_type, const Vertex *vertices, const GLsizei &vertex_count, const GLuint *indices, const GLsizei &index_count);
 	void Destroy();
 
 	void Draw() const;
 private:
 	VertexType vertex_type_;
+	GLenum draw_mode_;
 	GLsizei index_count_;
 
 	GLuint vertex_array_object_;

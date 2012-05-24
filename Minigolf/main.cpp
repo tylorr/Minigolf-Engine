@@ -23,19 +23,14 @@
 */
 
 //#include <vld.h>
-#include <ctime>
 
 #include <boost\shared_ptr.hpp>
 
 #include "glm\glm.hpp"
-#include "glm\gtc\matrix_transform.hpp"
-#include "glm\gtx\string_cast.hpp"
 
 #include "Utils.h"
 #include "file_handling.h"
-#include "level.h"
 #include "shader_cache.h"
-#include "component_type.h"
 #include "entity_manager.h"
 #include "render_system.h"
 #include "system_manager.h"
@@ -44,13 +39,12 @@
 #include "transform.h"
 #include "camera_controller.h"
 #include "input.h"
+#include "time.h"
+#include "ball_motor.h"
 
 using boost::shared_ptr;
-using boost::dynamic_pointer_cast;
 
-using glm::quat;
-
-#define WINDOW_TITLE_PREFIX "Chapter 4"
+#define WINDOW_TITLE_PREFIX "Minigolf"
 
 int CurrentWidth = 800,
 	CurrentHeight = 600,
@@ -58,25 +52,19 @@ int CurrentWidth = 800,
 
 unsigned FrameCount = 0;
 
-clock_t previous;
-
-shared_ptr<Transform> ball_transform;
-shared_ptr<RenderSystem> render_system;
-shared_ptr<Transform> camera_transform;
-
-void Initialize(int, char*[]);
+void InitOpenGL(int, char*[]);
 void InitWindow(int, char*[]);
+void Initialize(int, char*[]);
 
 void ResizeFunction(int, int);
 void RenderFunction(void);
 void IdleFunction(void);
-
 void TimerFunction(int);
-
 void Destroy(void);
 
 int main(int argc, char* argv[])
 {
+	InitOpenGL(argc, argv);
 	Initialize(argc, argv);
 
 	glutMainLoop();
@@ -84,16 +72,7 @@ int main(int argc, char* argv[])
 	exit(EXIT_SUCCESS);
 }
 
-void Initialize(int argc, char* argv[])
-{
-	// check for existing of map file in args list
-	
-	if (argv[1] == NULL)
-	{
-		fprintf(stderr, "Missing map file\n");
-		exit(EXIT_FAILURE);
-	}
-
+void InitOpenGL(int argc, char* argv[]) {
 	GLenum GlewInitResult;
 	
 	InitWindow(argc, argv);
@@ -128,36 +107,35 @@ void Initialize(int argc, char* argv[])
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
 	ExitOnGLError("ERROR: Could not set OpenGL culling options");
-	
+}
 
-	//--------------------------------------------------------------------------
-	// Setup world
+void Initialize(int argc, char* argv[])
+{
+	// check for existing of map file in args list
+	if (argv[1] == NULL)
+	{
+		fprintf(stderr, "Missing map file\n");
+		exit(EXIT_FAILURE);
+	}
 
 	ShaderCache::AddShader("diffuse", "diffuse.vertex.2.1.glsl", "diffuse.fragment.2.1.glsl");
 
-	vec3 reference = vec3(0, 3.0f, 3.0f);
-
-	render_system = shared_ptr<RenderSystem>(new RenderSystem(false, reference, vec3(0, 1, 0)));
+	shared_ptr<RenderSystem> render_system = shared_ptr<RenderSystem>(new RenderSystem());
 	SystemManager::AddSystem(render_system);
+
 	shared_ptr<CameraController> controller(new CameraController());
 	SystemManager::AddSystem(controller);
+
+	shared_ptr<BallMotor> motor(new BallMotor());
+	SystemManager::AddSystem(motor);
 
 	Factory::CreateCamera(60.0f, (float)CurrentWidth / CurrentHeight, 0.1f, 1000.0f);
 
 	Hole h = readData(argv[1]);
 	Factory::CreateLevel(h);
 
-	controller->Resolve();
-
-	shared_ptr<Entity> camera = EntityManager::Find("Camera");
-	//camera_transform = boost::dynamic_pointer_cast<Transform>(EntityManager::GetComponent(camera, "Transform"));
-	camera_transform = EntityManager::GetComponent<Transform>(camera, "Transform");
-
-	shared_ptr<Entity> ball = EntityManager::Find("Ball");
-	ball_transform = EntityManager::GetComponent<Transform>(ball, "Transform");//boost::dynamic_pointer_cast<Transform>(EntityManager::GetComponent(ball, "Transform"));
-	//camera_transform->parent = ball_transform;
-
-	previous = clock();
+	SystemManager::Init();
+	SystemManager::Resolve();
 }
 
 void InitWindow(int argc, char* argv[])
@@ -165,7 +143,6 @@ void InitWindow(int argc, char* argv[])
 	glutInit(&argc, argv);
 	
 	glutInitContextVersion(2, 1);
-	glutInitContextProfile(GLUT_CORE_PROFILE);
 
 	glutSetOption(
 		GLUT_ACTION_ON_WINDOW_CLOSE,
@@ -197,21 +174,12 @@ void InitWindow(int argc, char* argv[])
 	glutSpecialUpFunc(Input::SpecialReleased);
 }
 
-void KeyPressed(unsigned char key, int x, int y)
-{
-	switch(key)
-	{
-	case 27:					// Escape key
-		glutLeaveMainLoop();
-		break;
-	}
-}
-
 void ResizeFunction(int Width, int Height)
 {
+	
 	CurrentWidth = Width;
 	CurrentHeight = Height;
-	glViewport(0, 0, CurrentWidth, CurrentHeight);
+	//glViewport(0, 0, CurrentWidth, CurrentHeight);
 	
 	// todo: move this logic into camera controller
 	/*
@@ -228,32 +196,10 @@ void ResizeFunction(int Width, int Height)
 void RenderFunction(void)
 {
 	++FrameCount;
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	clock_t current = clock();
-	float delta = float(current - previous) / CLOCKS_PER_SEC;
-	previous = current;
-
-	float keyStep = delta;
-	
-	if (Input::GetKey("w")) {
-		ball_transform->Translate(0, 0, -keyStep);
-	}
-
-	if (Input::GetKey("s")) {
-		ball_transform->Translate(0, 0, keyStep);
-	}
-
-	if (Input::GetKey("a")) {
-		ball_transform->Translate(-keyStep, 0, 0);
-	}
-
-	if (Input::GetKey("d")) {
-		ball_transform->Translate(keyStep, 0, 0);
-	}
-	
-
+	Time::Update();
+		
 	SystemManager::Update();
 
 	glutSwapBuffers();

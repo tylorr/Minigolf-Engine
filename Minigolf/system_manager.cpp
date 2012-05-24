@@ -61,6 +61,22 @@ void Refresh(const boost::shared_ptr<Entity> &entity) {
 	}
 }
 
+void Init() {
+	SystemList::iterator it;
+
+	for(it = systems_.begin(); it != systems_.end(); ++it) {
+		(*it)->Init();
+	}
+}
+
+void Resolve() {
+	SystemList::iterator it;
+
+	for(it = systems_.begin(); it != systems_.end(); ++it) {
+		(*it)->Resolve();
+	}
+}
+
 void Update() {
 	SystemList::iterator it;
 

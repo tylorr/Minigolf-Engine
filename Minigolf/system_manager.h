@@ -13,6 +13,9 @@ namespace SystemManager {
 	long GetBitFor(const std::string &family_name);
 
 	void Refresh(const boost::shared_ptr<Entity> &entity);
+
+	void Init();
+	void Resolve();
 	void Update();
 }; // namespace SystemManager
 

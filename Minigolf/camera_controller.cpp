@@ -8,22 +8,26 @@
 
 using glm::mat3;
 using glm::vec3;
+using boost::shared_ptr;
 
-CameraController::CameraController() : EntitySystem() {
+CameraController::CameraController() : EntitySystem("CameraController") {
 }
 
 CameraController::~CameraController() {
 }
 
 void CameraController::Resolve() {
-	camera_transform_ = EntityManager::GetComponent<Transform>(EntityManager::Find("Camera"), "Transform");
-	ball_transform_ = EntityManager::GetComponent<Transform>(EntityManager::Find("Ball"), "Transform");
+	camera_ = EntityManager::Find("Camera");
+	ball_ = EntityManager::Find("Ball");
 }
 
 void CameraController::Process() {
-	mat3 rotation = mat3(glm::mat4_cast(ball_transform_->rotation()));
+	shared_ptr<Transform> ball_transform = EntityManager::GetComponent<Transform>(ball_, "Transform");
+	shared_ptr<Transform> camera_transform = EntityManager::GetComponent<Transform>(camera_, "Transform");
+
+	mat3 rotation = mat3(glm::mat4_cast(ball_transform->rotation()));
 	vec3 transformed = rotation * vec3(0, 3, 3);
-	camera_transform_->set_position(ball_transform_->position() + vec3(transformed));
-	camera_transform_->LookAt(*ball_transform_);
+	camera_transform->set_position(ball_transform->position() + vec3(transformed));
+	camera_transform->LookAt(*ball_transform);
 }
 

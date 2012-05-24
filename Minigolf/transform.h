@@ -6,7 +6,6 @@
 #include <boost\shared_ptr.hpp>
 
 #include "glm\glm.hpp"
-
 #include "glm\gtc\quaternion.hpp"
 
 #include "component.h"

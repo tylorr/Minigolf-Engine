@@ -6,19 +6,19 @@
 #include "entity_system.h"
 
 class Entity;
-struct Transform;
 
 class CameraController : public EntitySystem {
 public:
 	CameraController();
 	~CameraController();
 
-	virtual void Process();
 	virtual void Resolve();
+	virtual void Process();
+	
 
 private:
-	boost::shared_ptr<Transform> camera_transform_;
-	boost::shared_ptr<Transform> ball_transform_;
+	boost::shared_ptr<Entity> camera_;
+	boost::shared_ptr<Entity> ball_;
 };
 
 #endif // CAMERA_CONTROLLER_H

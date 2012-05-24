@@ -13,7 +13,7 @@ class EntitySystem {
 public:
 	int layer_;
 
-	EntitySystem(const int &layer = 0) : layer_(layer), type_bits_(0) { }
+	EntitySystem(const std::string &family_name, const int &layer = 0) : family_name_(family_name), layer_(layer), type_bits_(0) { }
 	~EntitySystem();
 
 	virtual void OnChange(const boost::shared_ptr<Entity> &entity);
@@ -37,7 +37,7 @@ public:
 protected:
 	typedef boost::unordered_map<unsigned int, boost::shared_ptr<Entity>> EntityMap;
 
-	std::string family_name_;
+	
 
 	void AddTypeByName(const std::string &family_name);
 	void AddTypeBit(const long &bit);
@@ -55,6 +55,8 @@ protected:
 	virtual void ProcessEntities(const EntityMap &entities) { }
 
 private:
+	std::string family_name_;
+
 	long system_bit_;
 	long type_bits_;
 
