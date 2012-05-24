@@ -43,6 +43,7 @@
 #include "component_type_manager.h"
 #include "transform.h"
 #include "camera_controller.h"
+#include "input.h"
 
 using boost::shared_ptr;
 using boost::dynamic_pointer_cast;
@@ -63,11 +64,6 @@ shared_ptr<Transform> ball_transform;
 shared_ptr<RenderSystem> render_system;
 shared_ptr<Transform> camera_transform;
 
-bool upPressed = false;
-bool downPressed = false;
-bool rightPressed = false;
-bool leftPressed = false;
-
 void Initialize(int, char*[]);
 void InitWindow(int, char*[]);
 
@@ -76,11 +72,6 @@ void RenderFunction(void);
 void IdleFunction(void);
 
 void TimerFunction(int);
-
-void KeyPressed(unsigned char, int, int);
-void KeyReleased(unsigned char, int, int);
-void SpecialPressed(int, int, int);
-void SpecialReleased(int, int, int);
 
 void Destroy(void);
 
@@ -174,8 +165,7 @@ void InitWindow(int argc, char* argv[])
 	glutInit(&argc, argv);
 	
 	glutInitContextVersion(2, 1);
-	//glutInitContextFlags(GLUT_FORWARD_COMPATIBLE);
-	//glutInitContextProfile(GLUT_CORE_PROFILE);
+	glutInitContextProfile(GLUT_CORE_PROFILE);
 
 	glutSetOption(
 		GLUT_ACTION_ON_WINDOW_CLOSE,
@@ -201,10 +191,10 @@ void InitWindow(int argc, char* argv[])
 	glutIdleFunc(IdleFunction);
 	glutTimerFunc(0, TimerFunction, 0);
 	glutCloseFunc(Destroy);
-	glutKeyboardFunc(KeyPressed);
-	glutKeyboardUpFunc(KeyReleased);
-	glutSpecialFunc(SpecialPressed);
-	glutSpecialUpFunc(SpecialReleased);
+	glutKeyboardFunc(Input::KeyPressed);
+	glutKeyboardUpFunc(Input::KeyReleased);
+	glutSpecialFunc(Input::SpecialPressed);
+	glutSpecialUpFunc(Input::SpecialReleased);
 }
 
 void KeyPressed(unsigned char key, int x, int y)
@@ -213,63 +203,6 @@ void KeyPressed(unsigned char key, int x, int y)
 	{
 	case 27:					// Escape key
 		glutLeaveMainLoop();
-		break;
-	}
-}
-
-void KeyReleased(unsigned char key, int x, int y) {
-	switch(key)
-	{
-	case '1':
-		render_system->relative_ = false;
-		break;
-	case '2':
-		render_system->relative_ = true;
-		render_system->reference_ = vec3(0, 3.0f, 3.0f);
-		render_system->up_ = vec3(0, 1.0f, 0);
-		break;
-	case '3':
-		render_system->relative_ = true;
-		render_system->reference_ = vec3(0, 3.0f, 0.0f);
-		render_system->up_ = vec3(0, 0.0f, -1.0f);
-		break;
-	}
-}
-
-void SpecialPressed(int Key, int X, int Y)
-{
-	switch (Key)
-	{
-	case GLUT_KEY_UP:
-		upPressed = true;
-		break;
-	case GLUT_KEY_DOWN:
-		downPressed = true;
-		break;
-	case GLUT_KEY_RIGHT:
-		rightPressed = true;
-		break;
-	case GLUT_KEY_LEFT:
-		leftPressed = true;
-		break;
-	}
-}
-
-void SpecialReleased(int Key, int X, int Y)
-{
-	switch (Key)
-	{
-	case GLUT_KEY_UP:
-		upPressed = false;
-		break;
-	case GLUT_KEY_DOWN:
-		downPressed = false;
-		break;
-	case GLUT_KEY_RIGHT:
-		rightPressed = false;
-		break;
-	case GLUT_KEY_LEFT:
-		leftPressed = false;
 		break;
 	}
 }
@@ -292,11 +225,8 @@ void ResizeFunction(int Width, int Height)
 	*/
 }
 
-float xAngle = 0, yAngle = 0;
-
 void RenderFunction(void)
 {
-	
 	++FrameCount;
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -309,23 +239,23 @@ void RenderFunction(void)
 
 
 	float keyStep = delta;
-
-	if (upPressed) {
+	
+	if (Input::GetKey("w")) {
 		ball_transform->Translate(0, 0, -keyStep);
 	}
-	if (downPressed) {
+
+	if (Input::GetKey("s")) {
 		ball_transform->Translate(0, 0, keyStep);
 	}
 
-	if (leftPressed) {
+	if (Input::GetKey("a")) {
 		ball_transform->Translate(-keyStep, 0, 0);
 	}
 
-	if (rightPressed) {
+	if (Input::GetKey("d")) {
 		ball_transform->Translate(keyStep, 0, 0);
 	}
-
-	//camera_transform->LookAt(*ball_transform);
+	
 
 	SystemManager::Update();
 
