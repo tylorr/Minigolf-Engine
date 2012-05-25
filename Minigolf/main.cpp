@@ -63,7 +63,6 @@ void TimerFunction(int);
 void Destroy(void);
 
 int main(int argc, char* argv[]) {
-
 	InitOpenGL(argc, argv);
 	Initialize(argc, argv);
 
