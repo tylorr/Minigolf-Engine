@@ -106,6 +106,7 @@
     <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ball_component.h" />
     <ClInclude Include="ball_motor.h" />
     <ClInclude Include="basic_material.h" />
     <ClInclude Include="camera.h" />
@@ -126,9 +127,11 @@
     <ClInclude Include="entity.h" />
     <ClInclude Include="file_handling.h" />
     <ClInclude Include="system_manager.h" />
+    <ClInclude Include="tile_component.h" />
     <ClInclude Include="time.h" />
     <ClInclude Include="transform.h" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="volume.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.gitignore" />

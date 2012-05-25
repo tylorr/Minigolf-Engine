@@ -40,6 +40,6 @@ struct Hole {  //holds info about each hole
 //==========================FUNCTIONS================================//
 float stringToFloat(string s);  //converts a string to float
 int stringToInt(string s);  //converts a string to int
-vector<Hole> readData(char* file);
+Hole readData(char* file);
 
 #endif // FILE_HANDLING_H

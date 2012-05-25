@@ -1,5 +1,7 @@
 #include <vector>
 
+#include <boost\unordered_map.hpp>
+
 #include "glm\glm.hpp"
 #include "glm\gtc\matrix_transform.hpp"
 
@@ -9,10 +11,12 @@
 #include "entity.h"
 #include "camera.h"
 #include "transform.h"
-#include "material.h"
 #include "basic_material.h"
 #include "geometry.h"
 #include "mesh.h"
+#include "volume.h"
+#include "tile_component.h"
+#include "ball_component.h"
 
 namespace Factory {
 
@@ -20,6 +24,7 @@ using boost::shared_ptr;
 using glm::vec3;
 using glm::vec4;
 using std::vector;
+using boost::unordered_map;
 
 namespace {
 	vector<vec3> Square(const float &width, const float &height) {
@@ -34,9 +39,11 @@ namespace {
 
 		return vertex_list;
 	}
-}; // namespace
 
-shared_ptr<Geometry> Planar(const GLuint &program, const vector<vec3> &vertex_list);
+	vec3 GetNormal(const vector<vec3> &vertex_list) {
+		return glm::normalize(glm::cross(vertex_list[2] - vertex_list[1], vertex_list[0] - vertex_list[1]));
+	}
+}; // namespace
 
 // returns root entity, used to rotate entire scene
 void CreateLevel(const Hole &hole) {
@@ -47,13 +54,49 @@ void CreateLevel(const Hole &hole) {
 	material->Initialize();
 	// todo: build material
 
-	CreateBall(hole.tee);
+	shared_ptr<Entity> ball = CreateBall(hole.tee);
 	CreateTee(hole.tee);
-	CreateCup(hole.cup);
+	shared_ptr<Entity> cup = CreateCup(hole.cup);
 
+	unordered_map<int, shared_ptr<Entity>> tiles;
+
+	// building tiles
 	for (it = hole.tiles.begin(), ite = hole.tiles.end(); it != ite; ++it) {
-		CreateTile(*it, material);
+		tiles[it->id] = CreateTile(*it, material);
 	}
+
+	// bind the tile_component to tile i.e. neighbors, walls, cup
+	shared_ptr<Entity> wall;
+	shared_ptr<TileComponent> tile_comp;
+	for (it = hole.tiles.begin(), ite = hole.tiles.end(); it != ite; ++it) {
+
+		tile_comp = shared_ptr<TileComponent>(new TileComponent());
+		for (size_t i = 0; i < it->neighbors.size(); ++i) {
+			int id = it->neighbors[i];
+
+			// does it have an empty edge here?
+			if (id == 0) {
+				// build wall
+				size_t j = (i + 1) % it->vertices.size();
+				wall = CreateWall(GetNormal(it->vertices), it->vertices[i], it->vertices[j]);
+				tile_comp->walls.push_back(wall);
+			} else {
+				// attach neighbor
+				tile_comp->neighbors.push_back(tiles[id]);
+			}
+		}
+
+		if (hole.cup.id == it->id) {
+			tile_comp->has_cup = true;
+			tile_comp->cup = cup;
+		}
+		EntityManager::AddComponent(tiles[it->id], tile_comp);
+	}
+
+	// Attach starting tile to ball
+	shared_ptr<BallComponent> ball_comp(new BallComponent());
+	ball_comp->current_tile = tiles[hole.tee.id];
+	EntityManager::AddComponent(ball, ball_comp);
 }
 
 shared_ptr<Entity> CreateCamera(const float &fov, const float &aspect, const float &near_plane, const float &far_plane) {
@@ -67,7 +110,6 @@ shared_ptr<Entity> CreateCamera(const float &fov, const float &aspect, const flo
 	camera->far_plane = far_plane;
 
 	shared_ptr<Transform> transform(new Transform());
-	transform->set_position(vec3(0, 1, 3));
 
 	EntityManager::AddComponent(entity, camera);
 	EntityManager::AddComponent(entity, transform);
@@ -84,12 +126,64 @@ boost::shared_ptr<Entity> CreateTile(const Tile &tile, const boost::shared_ptr<M
 	mesh->geometry = geometry;
 	mesh->material = material;
 
+	shared_ptr<Volume> volume(new Volume());
+	volume->vertices = tile.vertices;
+	volume->normal = GetNormal(tile.vertices);
+
 	shared_ptr<Transform> transform(new Transform());
 
 	shared_ptr<Entity> entity = EntityManager::Create();
 
 	EntityManager::AddComponent(entity, mesh);
 	EntityManager::AddComponent(entity, transform);
+	EntityManager::AddComponent(entity, volume);
+
+	return entity;
+}
+
+boost::shared_ptr<Entity> CreateWall(const vec3 &tile_normal, const vec3 &p1, const vec3 &p2) {
+	float width = 0.25f;
+	float height = 0.5f;
+
+	vec3 forward = glm::normalize(p2 - p1);
+	vec3 left = glm::normalize(glm::cross(tile_normal, forward));
+
+	vec3 p3 = p2 - (left * width);
+	vec3 p4 = p1 - (left * width);
+
+	vector<vec3> vertex_list;
+	vertex_list.push_back(p4);
+	vertex_list.push_back(p3);
+	vertex_list.push_back(p2);
+	vertex_list.push_back(p1);
+
+	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(1.0f, 0.0f, 0.0f), vec3(0.8f, 0.8f, 0.8f)));
+	material->Initialize();
+
+	shared_ptr<Geometry> geometry = Planar(material->shader_program(), vertex_list);
+
+	shared_ptr<Volume> volume(new Volume());
+
+	vec3 h3 = p2 + (tile_normal * height);
+	vec3 h4 = p1 + (tile_normal * height);
+
+	volume->vertices.push_back(h4);	
+	volume->vertices.push_back(h3);
+	volume->vertices.push_back(p2);
+	volume->vertices.push_back(p1);
+
+	volume->normal = left;
+
+	shared_ptr<Mesh> mesh(new Mesh());
+	mesh->geometry = geometry;
+	mesh->material = material;
+
+	shared_ptr<Transform> transform(new Transform());
+
+	shared_ptr<Entity> entity = EntityManager::Create();
+	EntityManager::AddComponent(entity, mesh);
+	EntityManager::AddComponent(entity, transform);
+	EntityManager::AddComponent(entity, volume);
 
 	return entity;
 }
@@ -169,7 +263,6 @@ shared_ptr<Geometry> Planar(const GLuint &program, const vector<vec3> &vertex_li
 	Vertex *vertices;
 	GLuint *indices;
 
-	vec3 normal;
 	vec3 vertex;
 	GLsizei N;
 	int i, index, count, vertex_index;
@@ -179,10 +272,7 @@ shared_ptr<Geometry> Planar(const GLuint &program, const vector<vec3> &vertex_li
 	vertices = new Vertex[N];
 	indices = new GLuint[N];
 
-	// create normal using first 3 points
-	normal = glm::normalize(glm::cross(vertex_list[2] - vertex_list[1], vertex_list[0] - vertex_list[1]));
-
-	int blah = 3;
+	vec3 normal = GetNormal(vertex_list);
 
 	// build the vertices
 	for (i = 0; i < N; ++i) {
