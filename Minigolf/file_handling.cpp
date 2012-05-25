@@ -17,6 +17,7 @@ vector<Hole> readData(char* file)
 	using std::cerr;*/
 	using namespace std;
 
+	bool course_file = false;
 	vector<Hole> course;
 	Hole h;
 	vector<string> line_data;  //vector to hold all elements in a single line of the input file
@@ -103,12 +104,13 @@ vector<Hole> readData(char* file)
 		}
 		else if(line_data.at(0) == "course")
 		{
+			course_file = true;
 		}
 		else
 		{
 			cerr<<"Invalid object type";
 		}
-
+		
 		line_data.clear();
 
 	}
@@ -117,6 +119,8 @@ vector<Hole> readData(char* file)
 	{
 		cerr << "Blah\n";
 	}
+	
+	if(!course_file){course.push_back(h);}
 
 	return course;
 }
