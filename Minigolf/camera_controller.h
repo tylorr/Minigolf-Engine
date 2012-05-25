@@ -32,6 +32,9 @@ private:
 	CameraProfile profile_;
 	CameraProfile third_person_;
 	CameraProfile top_down_;
+
+	float head_degrees_;
+	float pitch_degrees_;
 };
 
 #endif // CAMERA_CONTROLLER_H

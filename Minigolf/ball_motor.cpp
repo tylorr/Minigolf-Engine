@@ -24,6 +24,7 @@ void BallMotor::Process() {
 
 	// TODO: replace this later with proper force/acceleration input
 
+	/*
 	if (Input::GetKey("w")) {
 		ball_transform->Translate(0, 0, -delta);
 	}
@@ -36,4 +37,5 @@ void BallMotor::Process() {
 	if (Input::GetKey("d")) {
 		ball_transform->Translate(delta, 0, 0);
 	}
+	*/
 }
