@@ -41,6 +41,7 @@
 #include "input.h"
 #include "time.h"
 #include "ball_motor.h"
+#include "physics_system.h"
 
 using boost::shared_ptr;
 
@@ -125,6 +126,9 @@ void Initialize(int argc, char* argv[]) {
 
 	shared_ptr<BallMotor> motor(new BallMotor());
 	SystemManager::AddSystem(motor);
+
+	shared_ptr<PhysicsSystem> physics_system(new PhysicsSystem());
+	SystemManager::AddSystem(physics_system);
 
 	Factory::CreateCamera(60.0f, (float)CurrentWidth / CurrentHeight, 0.1f, 1000.0f);
 

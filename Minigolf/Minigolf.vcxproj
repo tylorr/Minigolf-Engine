@@ -98,6 +98,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="material.cpp" />
     <ClCompile Include="geometry.cpp" />
+    <ClCompile Include="physics_system.cpp" />
     <ClCompile Include="render_system.cpp" />
     <ClCompile Include="shader_cache.cpp" />
     <ClCompile Include="system_manager.cpp" />
