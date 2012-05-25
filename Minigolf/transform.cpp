@@ -54,7 +54,8 @@ void Transform::LookAt(const Transform &target, const vec3 &up) {
 }
 
 void Transform::LookAt(const vec3 &target, const vec3 &up) {
-	rotation_ = glm::quat_cast(glm::lookAt(position_, target, up));
+	quat q = glm::quat_cast(glm::lookAt(position_, target, up));
+	rotation_ = glm::conjugate(q);
 
 	UpdateMatrix();
 }

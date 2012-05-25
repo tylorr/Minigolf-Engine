@@ -59,17 +59,17 @@ void CameraController::Process() {
 		float speed = 2.0f;
 
 		vec3 camera_forward = camera_transform->forward();
-		camera_forward.z *= -1;
+		//camera_forward.z *= -1;
 		vec3 velocity(0);
 
 		if (Input::GetKey("w")) {
-			velocity += camera_forward * speed;
+			velocity -= camera_forward * speed;
 		}
 		if (Input::GetKey("a")) {
 			velocity += camera_transform->right() * -speed;
 		}
 		if (Input::GetKey("s")) {
-			velocity += camera_forward * -speed;
+			velocity -= camera_forward * -speed;
 		}
 		if (Input::GetKey("d")) {
 			velocity += camera_transform->right() * speed;
@@ -77,21 +77,21 @@ void CameraController::Process() {
 
 		camera_transform->Translate(velocity * delta);
 
-		float rot_speed = 40.0f;
+		float rot_speed = 60.0f;
 		head_degrees_ = 0;
 		pitch_degrees_ = 0;
 
 		if (Input::GetKey("i")) {
-			pitch_degrees_ += rot_speed * delta;
-		}
-		if (Input::GetKey("j")) {
-			head_degrees_ -= rot_speed * delta;
-		}
-		if (Input::GetKey("k")) {
 			pitch_degrees_ -= rot_speed * delta;
 		}
-		if (Input::GetKey("l")) {
+		if (Input::GetKey("j")) {
 			head_degrees_ += rot_speed * delta;
+		}
+		if (Input::GetKey("k")) {
+			pitch_degrees_ += rot_speed * delta;
+		}
+		if (Input::GetKey("l")) {
+			head_degrees_ -= rot_speed * delta;
 		}
 
 		// TODO: this needs to be fixed, the camera will not rotate about its 

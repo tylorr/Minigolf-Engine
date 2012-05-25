@@ -64,7 +64,9 @@ void RenderSystem::ProcessEntities(const EntityMap &entities) {
 	mat3 normal;
 	mat4 view;
 
-	view = glm::mat4_cast(camera_transform->rotation());
+	//view = glm::inverse(glm::mat4_cast(camera_transform->rotation()));
+	quat rot = glm::conjugate(camera_transform->rotation());
+	view = glm::mat4_cast(rot);
 	view = glm::translate(view, -camera_transform->position());
 
 	mat4 projection = camera_comp->Projection();
