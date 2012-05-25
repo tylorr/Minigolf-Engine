@@ -10,7 +10,7 @@
 
 
 
-Hole readData(char* file)
+vector<Hole> readData(char* file)
 {
 	/*using std::ifstream;
 	using std::istringstream;
