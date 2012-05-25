@@ -56,7 +56,7 @@ void PhysicsSystem::GetVolumes()
 	}
 
 	//push neighbors tile and wall volumes
-	for(unsigned i=0;i<curr_tile->neighbors.size();i++)
+	for(unsigned i = 0; i < curr_tile->neighbors.size(); i++)
 	{
 		//push all neighboring tile volumes onto vector
 		shared_ptr<Volume> tile_v = EntityManager::GetComponent<Volume>(curr_tile->neighbors.at(i), "Volume"); 
@@ -64,9 +64,9 @@ void PhysicsSystem::GetVolumes()
 	
 		//pushes walls of all neighbors
 		shared_ptr<TileComponent> neighbor = EntityManager::GetComponent<TileComponent>(curr_tile->neighbors.at(i), "TileComponent"); 
-		for( unsigned j=0;j<neighbor->walls.size();j++)
+		for (unsigned j = 0; j < neighbor->walls.size(); j++)
 		{
-			shared_ptr<Volume> wall_v = EntityManager::GetComponent<Volume>(neighbor->walls.at(i), "Volume");
+			shared_ptr<Volume> wall_v = EntityManager::GetComponent<Volume>(neighbor->walls.at(j), "Volume");
 			wall_vols_.push_back(wall_v);
 		}
 	}
