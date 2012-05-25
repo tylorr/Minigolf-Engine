@@ -1,5 +1,6 @@
-#include "basic_material.h"
+#include "glm\gtc\type_ptr.hpp"
 
+#include "basic_material.h"
 #include "Utils.h"
 
 BasicMaterial::BasicMaterial(const std::string &shader_program_key, const vec4 &light_position, const vec3 &Ld, const vec3 &Kd)

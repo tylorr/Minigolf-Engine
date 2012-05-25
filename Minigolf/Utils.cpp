@@ -1,19 +1,7 @@
+#include "GL\glew.h"
+#include "GL\freeglut.h"
+
 #include "Utils.h"
-
-float Cotangent(float angle)
-{
-	return (float)(1.0 / tan(angle));
-}
-
-float DegreesToRadians(float degrees)
-{
-	return degrees * (float)(PI / 180);
-}
-
-float RadiansToDegrees(float radians)
-{
-	return radians * (float)(180 / PI);
-}
 
 void ExitOnGLError(const char* error_message)
 {
@@ -34,4 +22,14 @@ void ExitOnGLError(const char* error_message)
 		free(display_message);
 		exit(EXIT_FAILURE);
 	}
+}
+
+glm::vec3 Project(const glm::vec3 &point, const glm::vec3 &normal, const glm::vec3 &point_on_plane) {
+	using glm::vec3;
+
+	// calculate D from Ax + Bx + Cx + D = 0 or N Dot POP = -D
+	float D = -glm::dot(normal, point_on_plane);
+
+	vec3 proj = point - ((glm::dot(normal, point) + D) * normal);
+	return proj;
 }

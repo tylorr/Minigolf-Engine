@@ -29,6 +29,9 @@ using glm::mat3;
 using EntityManager::ComponentPtr;
 
 RenderSystem::RenderSystem() : EntitySystem("RenderSystem") {
+
+	
+
 	std::string mesh = "Mesh";
 	AddTypeByName(mesh);
 	mesh_type_ = ComponentTypeManager::GetTypeFor(mesh);
@@ -57,14 +60,14 @@ void RenderSystem::ProcessEntities(const EntityMap &entities) {
 
 	// todo: make initialize step so this doesn't have to happen every time
 	shared_ptr<Entity> camera = EntityManager::Find("Camera");
-	shared_ptr<Camera> camera_comp = EntityManager::GetComponent<Camera>(camera, "Camera"); //boost::dynamic_pointer_cast<Camera>(EntityManager::GetComponent(camera, "Camera"));
-	shared_ptr<Transform> camera_transform = EntityManager::GetComponent<Transform>(camera, "Transform");//boost::dynamic_pointer_cast<Transform>(EntityManager::GetComponent(camera, "Transform"));
+	shared_ptr<Camera> camera_comp = EntityManager::GetComponent<Camera>(camera, "Camera");
+	shared_ptr<Transform> camera_transform = EntityManager::GetComponent<Transform>(camera, "Transform");
 
 	mat4 model, model_view, mvp;
 	mat3 normal;
 	mat4 view;
 
-	//view = glm::inverse(glm::mat4_cast(camera_transform->rotation()));
+	// view matrix is R^-1*-T
 	quat rot = glm::conjugate(camera_transform->rotation());
 	view = glm::mat4_cast(rot);
 	view = glm::translate(view, -camera_transform->position());
