@@ -3,6 +3,9 @@
 
 #include <boost\shared_ptr.hpp>
 
+#include "GL\glew.h"
+#include "GL\freeglut.h"
+
 #include "file_handling.h"
 
 class Entity;

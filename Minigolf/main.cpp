@@ -63,8 +63,7 @@ void IdleFunction(void);
 void TimerFunction(int);
 void Destroy(void);
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
 	InitOpenGL(argc, argv);
 	Initialize(argc, argv);
 
@@ -110,11 +109,9 @@ void InitOpenGL(int argc, char* argv[]) {
 	ExitOnGLError("ERROR: Could not set OpenGL culling options");
 }
 
-void Initialize(int argc, char* argv[])
-{
+void Initialize(int argc, char* argv[]) {
 	// check for existing of map file in args list
-	if (argv[1] == NULL)
-	{
+	if (argv[1] == NULL) {
 		fprintf(stderr, "Missing map file\n");
 		exit(EXIT_FAILURE);
 	}

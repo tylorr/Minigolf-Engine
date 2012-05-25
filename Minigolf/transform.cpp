@@ -54,15 +54,16 @@ void Transform::LookAt(const Transform &target, const vec3 &up) {
 }
 
 void Transform::LookAt(const vec3 &target, const vec3 &up) {
-	rotation_ = glm::quat_cast(glm::lookAt(position_, target, up));
+	quat q = glm::quat_cast(glm::lookAt(position_, target, up));
+	rotation_ = glm::conjugate(q);
 
 	UpdateMatrix();
 }
 
 void Transform::Rotate(const vec3 &euler_angles) {
-	Rotate(forward_, euler_angles.z);
-	Rotate(right_, euler_angles.x);
-	Rotate(up_, euler_angles.y);
+	Rotate(vec3(0, 0, 1), euler_angles.z);
+	Rotate(vec3(1, 0, 0), euler_angles.x);
+	Rotate(vec3(0, 1, 0), euler_angles.y);
 }
 
 void Transform::Rotate(const float &x, const float &y, const float &z) {

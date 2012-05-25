@@ -1,5 +1,6 @@
-#include "material.h"
+#include "glm\gtc\type_ptr.hpp"
 
+#include "material.h"
 #include "shader_cache.h"
 #include "Utils.h"
 

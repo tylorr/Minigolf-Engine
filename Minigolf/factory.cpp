@@ -86,10 +86,13 @@ void CreateLevel(const Hole &hole) {
 			}
 		}
 
+		// is there a hole on this tile?
 		if (hole.cup.id == it->id) {
+			// attach hole to tile
 			tile_comp->has_cup = true;
 			tile_comp->cup = cup;
 		}
+		// attach tile_comp to tile
 		EntityManager::AddComponent(tiles[it->id], tile_comp);
 	}
 

@@ -1,6 +1,9 @@
 #ifndef GEOMETRY_H
 #define GEOMETRY_H
 
+#include "GL\glew.h"
+#include "GL\freeglut.h"
+
 #include "Utils.h"
 
 enum VertexType { POSITION, POSITION_NORMAL, POSITION_NORMAL_TEX };
