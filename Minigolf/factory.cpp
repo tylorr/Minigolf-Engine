@@ -145,30 +145,14 @@ boost::shared_ptr<Entity> CreateTile(const Tile &tile, const boost::shared_ptr<M
 }
 
 boost::shared_ptr<Entity> CreateWall(const vec3 &tile_normal, const vec3 &p1, const vec3 &p2) {
-	float width = 0.25f;
-	float height = 0.5f;
+	float height = 0.1f;
 
 	vec3 forward = glm::normalize(p2 - p1);
 	vec3 left = glm::normalize(glm::cross(tile_normal, forward));
-
-	vec3 p3 = p2 - (left * width);
-	vec3 p4 = p1 - (left * width);
-
-	vector<vec3> vertex_list;
-	vertex_list.push_back(p4);
-	vertex_list.push_back(p3);
-	vertex_list.push_back(p2);
-	vertex_list.push_back(p1);
-
-	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(1.0f, 0.0f, 0.0f), vec3(0.8f, 0.8f, 0.8f)));
-	material->Initialize();
-
-	shared_ptr<Geometry> geometry = Planar(material->shader_program(), vertex_list);
-
-	shared_ptr<Volume> volume(new Volume());
-
 	vec3 h3 = p2 + (tile_normal * height);
 	vec3 h4 = p1 + (tile_normal * height);
+
+	shared_ptr<Volume> volume(new Volume());
 
 	volume->vertices.push_back(h4);	
 	volume->vertices.push_back(h3);
@@ -176,6 +160,11 @@ boost::shared_ptr<Entity> CreateWall(const vec3 &tile_normal, const vec3 &p1, co
 	volume->vertices.push_back(p1);
 
 	volume->normal = left;
+
+	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(1.0f, 0.0f, 0.0f), vec3(1.0f)));
+	material->Initialize();
+
+	shared_ptr<Geometry> geometry = Planar(material->shader_program(), volume->vertices);
 
 	shared_ptr<Mesh> mesh(new Mesh());
 	mesh->geometry = geometry;
