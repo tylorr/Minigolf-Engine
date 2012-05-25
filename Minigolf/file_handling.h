@@ -31,6 +31,10 @@ struct Hole {  //holds info about each hole
 	vector<Tile> tiles;
 	TeeCup tee;
 	TeeCup cup;
+	int par;
+	string name;
+
+	void clear(){tiles.clear();}
 };
 
 //==========================FUNCTIONS================================//

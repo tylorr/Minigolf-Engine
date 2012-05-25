@@ -131,8 +131,8 @@ void Initialize(int argc, char* argv[])
 
 	Factory::CreateCamera(60.0f, (float)CurrentWidth / CurrentHeight, 0.1f, 1000.0f);
 
-	Hole h = readData(argv[1]);
-	Factory::CreateLevel(h);
+	vector<Hole> h = readData(argv[1]);
+	Factory::CreateLevel(h.at(0));
 
 	SystemManager::Init();
 	SystemManager::Resolve();

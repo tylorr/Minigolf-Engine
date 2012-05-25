@@ -1,5 +1,10 @@
 #include <cassert>
 #include <boost/algorithm/string/trim.hpp>
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iterator>
 
 #include "file_handling.h"
 
@@ -7,9 +12,10 @@
 
 vector<Hole> readData(char* file)
 {
-	using std::ifstream;
+	/*using std::ifstream;
 	using std::istringstream;
-	using std::cerr;
+	using std::cerr;*/
+	using namespace std;
 
 	vector<Hole> course;
 	Hole h;
@@ -25,11 +31,15 @@ vector<Hole> readData(char* file)
 		istringstream ss( s );  //creates input stream from string s
 		while (ss)
 		{
-			string t;
-			if (!getline( ss, t, ' ' )) break;  //get elements in line separated by whitespace
-			boost::trim(t);
-			line_data.push_back( t );  //push each element in the line onto vector
+			copy(istream_iterator<string>(ss),		//fill line_data with all tokenized strings in given line
+			istream_iterator<string>(),
+			back_inserter<vector<string> >(line_data));
+
+			//string t;
+			//if (!getline( ss, t, ' ' )) break;  //get elements in line separated by whitespace
+			//line_data.push_back( t );  //push each element in the line onto vector
 		}
+
 		if(line_data.at(0) == "tile")
 		{
 			Tile t;
@@ -72,11 +82,35 @@ vector<Hole> readData(char* file)
 
 			h.cup.position = pos;
 		}
+		else if(line_data.at(0) == "name")
+		{
+			/*for( int i=0;i<line_data.size();i++)
+			{
+				h.name += line_data.at(i);
+			}*/
+		}
+		else if(line_data.at(0) == "par")
+		{
+			h.par = stringToInt(line_data.at(1));
+		}
+		else if(line_data.at(0) == "end_hole")
+		{
+			course.push_back(h);
+		}
+		else if(line_data.at(0) == "begin_hole")
+		{
+			h.clear();
+		}
+		else if(line_data.at(0) == "course")
+		{
+		}
 		else
 		{
 			cerr<<"Invalid object type";
 		}
+
 		line_data.clear();
+
 	}
 
 	if (!fin.eof())  //should be at the end of the file at this point
@@ -84,7 +118,7 @@ vector<Hole> readData(char* file)
 		cerr << "Blah\n";
 	}
 
-	return h;
+	return course;
 }
 
 float stringToFloat(string s)  //util

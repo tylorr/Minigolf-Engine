@@ -17,7 +17,7 @@ public:
 	glm::vec3 reference_;
 	glm::vec3 up_;
 
-	RenderSystem(const bool &relative, const glm::vec3 &reference, const glm::vec3 &up);
+	RenderSystem();
 	~RenderSystem();
 
 	virtual void ProcessEntities(const EntityMap &entities);
