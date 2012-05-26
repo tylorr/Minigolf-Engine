@@ -4,9 +4,11 @@
 #include <boost\shared_ptr.hpp>
 #include "glm\glm.hpp"
 #include "entity_system.h"
-#include "volume.h"
 
 class ComponentType;
+struct TileComponent;
+struct Volume;
+struct Transform;
 
 class PhysicsSystem : public EntitySystem {
 public:
@@ -21,6 +23,9 @@ private:
 	boost::shared_ptr<Entity> ball_;
 	std::vector<boost::shared_ptr<Volume>> tile_vols_;
 	std::vector<boost::shared_ptr<Volume>> wall_vols_;
+	boost::shared_ptr<TileComponent> curr_tile;
+
+	void UpdateTile(const boost::shared_ptr<Transform> &ball_transform);
 };
 
 #endif
