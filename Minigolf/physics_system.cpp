@@ -141,6 +141,6 @@ void PhysicsSystem::ApplyGravity(){
 	r = glm::cross(tile_vols_[0]->normal, x);
 
 	float delta = Time::GetDeltaTime();
-	r = glm::normalize(r);
+	if(glm::length(r)>0){ glm::normalize(r); }
 	ball_comp->velocity += r * gravity_ * delta;
 }
