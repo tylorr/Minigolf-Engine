@@ -32,14 +32,18 @@ void PhysicsSystem::Resolve(){
 void PhysicsSystem::Process(){
 
 	shared_ptr<Transform> ball_transform = EntityManager::GetComponent<Transform>(ball_, "Transform");
+	shared_ptr<BallComponent> ball_comp = EntityManager::GetComponent<BallComponent>(ball_, "BallComponent");
 	//shared_ptr<BallComponent> ball_comp = EntityManager::GetComponent<BallComponent>(ball_, "BallComponent");
 	//shared_ptr<TileComponent> curr_tile = EntityManager::GetComponent<TileComponent>(ball_comp->current_tile, "TileComponent");
 	//shared_ptr<Volume> volume_comp = EntityManager::GetComponent<Volume>(ball_comp->current_tile, "Volume");
-	
+	float delta = Time::GetDeltaTime();
+
 	GetVolumes();
 	UpdateTile(ball_transform);
 	ApplyGravity();
 	ApplyFriction();
+
+	ball_transform->Translate(ball_comp->velocity * delta);
 	
 	//clear vectors at the end so they are current each cycle
 	tile_vols_.clear();
