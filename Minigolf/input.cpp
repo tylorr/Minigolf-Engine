@@ -26,7 +26,6 @@ void KeyPressed(unsigned char key, int x, int y) {
 	string k;
 	k.push_back(tolower(key));
 
-	keyPrevious[k] = keys[k];
 	keys[k] = true;
 }
 
@@ -34,7 +33,7 @@ void KeyReleased(unsigned char key, int x, int y) {
 	string k;
 	k.push_back(tolower(key));
 
-	keyPrevious[k] = keys[k];
+	
 	keys[k] = false;
 }
 
@@ -95,6 +94,14 @@ bool GetKeyUp(std::string key) {
 	ToLower(key);
 
 	return keyPrevious[key] && !keys[key];
+}
+
+void Update() {
+	unordered_map<string, bool>::iterator it;
+
+	for (it = keyPrevious.begin(); it != keyPrevious.end(); ++it) {
+		keyPrevious[it->first] = keys[it->first];
+	}
 }
 
 }; // namespace Input
