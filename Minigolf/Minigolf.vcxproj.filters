@@ -191,6 +191,9 @@
     <ClInclude Include="movement.h">
       <Filter>Header Files\game\components</Filter>
     </ClInclude>
+    <ClInclude Include="HUD.h">
+      <Filter>Header Files\game\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="diffuse.fragment.glsl">
