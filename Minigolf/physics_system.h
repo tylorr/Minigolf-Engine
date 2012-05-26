@@ -16,10 +16,14 @@ public:
 	void Resolve();
 	void Process();
 	void GetVolumes();
+	void ApplyFriction();
+	void ApplyGravity();
 
 	PhysicsSystem();
 	~PhysicsSystem();
 private:
+	float gravity_;
+	float friction_;
 	boost::shared_ptr<Entity> ball_;
 	std::vector<boost::shared_ptr<Volume>> tile_vols_;
 	std::vector<boost::shared_ptr<Volume>> wall_vols_;
