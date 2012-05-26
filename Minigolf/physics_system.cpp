@@ -48,11 +48,18 @@ void PhysicsSystem::Process(){
 	GetVolumes();
 	UpdateTile(ball_transform);
 	UpdateCollision(ball_transform);
-	//ApplyGravity();
+	ApplyGravity();
 	ApplyFriction();
 
 	ball_comp->velocity += ball_comp->acceleration * delta;
 	ball_transform->Translate(ball_comp->velocity * delta);
+
+	if (glm::length(ball_comp->velocity) > 0) {
+		vec3 target = ball_comp->velocity;
+		target.y = 0;
+		target += ball_transform->position();
+		ball_transform->LookAt(target);
+	}
 	
 	//clear vectors at the end so they are current each cycle
 	tile_vols_.clear();
@@ -146,6 +153,12 @@ void PhysicsSystem::ApplyFriction(){
 	//grab ball component and dampen velocity based on coefficient of friction
 	shared_ptr<BallComponent> ball_comp = EntityManager::GetComponent<BallComponent>(ball_, "BallComponent");
 	ball_comp->velocity *= friction_;
+
+	static const float epsilon = 0.01f;
+
+	if (glm::length(ball_comp->velocity) < epsilon) {
+		ball_comp->velocity = vec3();
+	}
 }
 
 void PhysicsSystem::ApplyGravity(){
@@ -277,5 +290,5 @@ void PhysicsSystem::ResolveCollision(const boost::shared_ptr<Transform> &ball_tr
 	vec3 result = w + (w + direction);
 	ball_comp->velocity = result;
 
-	ball_transform->LookAt(ball_transform->position() + result);
+	
 }
