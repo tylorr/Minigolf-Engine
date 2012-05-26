@@ -10,6 +10,7 @@
 #include "tile_component.h"
 #include "volume.h"
 #include "Utils.h"
+#include "time.h"
 
 using boost::shared_ptr;
 
@@ -22,6 +23,7 @@ PhysicsSystem::~PhysicsSystem() {
 void PhysicsSystem::Init(){
 	ball_ = EntityManager::Find("Ball");
 	friction_ = 0.97f;
+	gravity_ = 1.f;
 }
 
 void PhysicsSystem::Resolve(){
@@ -36,6 +38,8 @@ void PhysicsSystem::Process(){
 	
 	GetVolumes();
 	UpdateTile(ball_transform);
+	ApplyGravity();
+	ApplyFriction();
 	
 	//clear vectors at the end so they are current each cycle
 	tile_vols_.clear();
@@ -135,4 +139,8 @@ void PhysicsSystem::ApplyGravity(){
 	//calculate x and r
 	x = glm::cross(glm::vec3(0,1,0), tile_vols_[0]->normal);
 	r = glm::cross(tile_vols_[0]->normal, x);
+
+	float delta = Time::GetDeltaTime();
+	r = glm::normalize(r);
+	ball_comp->velocity += r * gravity_ * delta;
 }
