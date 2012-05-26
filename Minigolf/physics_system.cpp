@@ -11,6 +11,8 @@
 #include "volume.h"
 #include "Utils.h"
 #include "time.h"
+#include "mesh.h"
+#include "basic_material.h"
 
 using boost::shared_ptr;
 using glm::vec3;
@@ -34,6 +36,10 @@ void PhysicsSystem::Process(){
 
 	shared_ptr<Transform> ball_transform = EntityManager::GetComponent<Transform>(ball_, "Transform");
 	shared_ptr<BallComponent> ball_comp = EntityManager::GetComponent<BallComponent>(ball_, "BallComponent");
+
+	shared_ptr<Mesh> mesh = EntityManager::GetComponent<Mesh>(ball_comp->current_tile, "Mesh");
+	shared_ptr<BasicMaterial> bm = boost::dynamic_pointer_cast<BasicMaterial>(mesh->material);
+	bm->Ld_ = vec3(1, 1, 0);
 	//shared_ptr<BallComponent> ball_comp = EntityManager::GetComponent<BallComponent>(ball_, "BallComponent");
 	//shared_ptr<TileComponent> curr_tile = EntityManager::GetComponent<TileComponent>(ball_comp->current_tile, "TileComponent");
 	//shared_ptr<Volume> volume_comp = EntityManager::GetComponent<Volume>(ball_comp->current_tile, "Volume");
@@ -41,6 +47,7 @@ void PhysicsSystem::Process(){
 
 	GetVolumes();
 	UpdateTile(ball_transform);
+	UpdateCollision(ball_transform);
 	ApplyGravity();
 	ApplyFriction();
 
@@ -121,7 +128,12 @@ void PhysicsSystem::UpdateTile(const boost::shared_ptr<Transform> &ball_transfor
 		// does ball overlap?
 		if (inter) {
 			// set current ball to overlapped neighbor
+			shared_ptr<Mesh> mesh = EntityManager::GetComponent<Mesh>(ball_comp->current_tile, "Mesh");
+			shared_ptr<BasicMaterial> bm = boost::dynamic_pointer_cast<BasicMaterial>(mesh->material);
+			bm->Ld_ = vec3(0, 1, 0);
+
 			ball_comp->current_tile = curr_tile->neighbors[i - 1];
+		
 			break;
 		}
 	}
@@ -239,6 +251,15 @@ bool PhysicsSystem::Intersect(const vec3 &start, const vec3 &end, const Volume &
 	return PointInPolygon(pos, vertices);
 }
 
-void PhysicsSystem::ResolveCollision(const boost::shared_ptr<Transform> &ball_transform, const vec3 &normal, const vec3 &penetration) {
+void PhysicsSystem::ResolveCollision(const boost::shared_ptr<Transform> &ball_transform, const vec3 &normal, const vec3 &intersection) {
+	shared_ptr<BallComponent> ball_comp = EntityManager::GetComponent<BallComponent>(ball_, "BallComponent");
 
+	ball_transform->set_position(intersection);
+
+	vec3 direction = ball_comp->velocity;
+	vec3 w = glm::dot(normal, -direction) * normal;
+	vec3 result = w + (w + direction);
+	ball_comp->velocity = result;
+
+	ball_transform->LookAt(ball_transform->position() + result);
 }

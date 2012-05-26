@@ -122,12 +122,16 @@ shared_ptr<Entity> CreateCamera(const float &fov, const float &aspect, const flo
 }
 
 boost::shared_ptr<Entity> CreateTile(const Tile &tile, const boost::shared_ptr<Material> &material) {
-	shared_ptr<Geometry> geometry = Planar(material->shader_program(), tile.vertices);
+
+	shared_ptr<BasicMaterial> mat(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(0.0f, 1.0f, 0.0f), vec3(0.8f, 0.8f, 0.8f)));
+	mat->Initialize();
+
+	shared_ptr<Geometry> geometry = Planar(mat->shader_program(), tile.vertices);
 
 	// build the mesh
 	shared_ptr<Mesh> mesh(new Mesh());
 	mesh->geometry = geometry;
-	mesh->material = material;
+	mesh->material = mat;
 
 	shared_ptr<Volume> volume(new Volume());
 	volume->vertices = tile.vertices;

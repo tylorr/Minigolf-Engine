@@ -24,6 +24,7 @@ void BallMotor::Process() {
 
 	float delta = Time::GetDeltaTime();
 	float speed = -7.0f;
+	float rot_speed = 0.5f;
 
 	// TODO: replace this later with proper force/acceleration input
 	vec3 velocity;
@@ -34,18 +35,18 @@ void BallMotor::Process() {
 	//if (Input::GetKey("down")) {
 	//	velocity += vec3(0, 0, speed);
 	//}
-	if (glm::length(ball_comp->velocity) <= .001f) {
+	//if (glm::length(ball_comp->velocity) <= .001f) {
 		if (Input::GetKey("left")) {
-			ball_transform->Rotate(vec3(0, 1, 0), 0.1f);
+			ball_transform->Rotate(vec3(0, 1, 0), rot_speed);
 		}
 		if (Input::GetKey("right")) {
-			ball_transform->Rotate(vec3(0, 1, 0), -.1f);
+			ball_transform->Rotate(vec3(0, 1, 0), -rot_speed);
 		}
 
 		if (Input::GetKeyUp("t")) {
 			ball_comp->velocity += ball_transform->forward() * speed;
 		}
-	}
+	//}
 
 	//ball_transform->Translate(velocity * delta);
 
