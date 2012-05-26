@@ -13,6 +13,7 @@
 #include "time.h"
 
 using boost::shared_ptr;
+using glm::vec3;
 
 PhysicsSystem::PhysicsSystem() : EntitySystem("PhysicsSystem") {
 }
@@ -147,4 +148,97 @@ void PhysicsSystem::ApplyGravity(){
 	float delta = Time::GetDeltaTime();
 	if(glm::length(r)>0){ glm::normalize(r); }
 	ball_comp->velocity += r * gravity_ * delta;
+}
+
+void PhysicsSystem::UpdateCollision(const boost::shared_ptr<Transform> &ball_transform) {
+	shared_ptr<BallComponent> ball_comp = EntityManager::GetComponent<BallComponent>(ball_, "BallComponent");
+	vec3 start = ball_transform->position();
+	vec3 end = start + ball_comp->velocity;
+
+	vec3 normal, penetration;
+
+	vector<shared_ptr<Volume>>::iterator it;
+	for (it = wall_vols_.begin(); it != wall_vols_.end(); ++it) {
+		if (Intersect(start, end, *(*it), normal, penetration)) {
+			ResolveCollision(ball_transform, normal, penetration);
+		}
+	}
+}
+
+bool PhysicsSystem::Intersect(const vec3 &start, const vec3 &end, const Volume &wall, vec3 &normal, vec3 &penetration) {
+	using glm::vec2;
+
+	static const unsigned int PLANE_FRONT = 0;
+	static const unsigned int PLANE_BACK = 1;
+	static const unsigned int ON_PLANE = 2;
+	
+	float p;
+	vec3 n = wall.normal;
+	float d = -glm::dot(n, wall.vertices[0]);
+	unsigned int start_loc = 3;
+	unsigned int end_loc = 3;
+	
+	p = glm::dot(n, start) + d;
+	if (p > 0.0f) {
+		start_loc = PLANE_FRONT;
+	} else if (p < 0.0f) {
+		start_loc = PLANE_BACK;
+	} else  {
+		start_loc = ON_PLANE;
+	}
+
+	p = glm::dot(n, end) + d;
+	if (p > 0.0f) {
+		end_loc = PLANE_FRONT;
+	} else if (p < 0.0f) {
+		end_loc = PLANE_BACK;
+	} else  {
+		end_loc = ON_PLANE;
+	}
+
+	if (start_loc == end_loc) {
+		return false;
+	}
+
+	vec3 ray = end - start;
+	ray = glm::normalize(ray);
+
+	float t = - (d + glm::dot(n, start)) / glm::dot(n, ray);
+
+	vec3 intersect = start + (t * ray);
+
+	float dx = glm::abs(start.x - end.x);
+	float dz = glm::abs(start.z - end.z);
+
+	bool x_axis = false;
+
+	if (dx > dz) {
+		x_axis = true;
+	}
+
+	vec2 pos;
+
+	if (x_axis) {
+		pos = vec2(intersect.x, intersect.y);
+	} else  {
+		pos = vec2(intersect.z, intersect.y);
+	}
+
+	vector<vec2> vertices;
+	vector<vec3>::const_iterator it;
+	for (it = wall.vertices.begin(); it != wall.vertices.end(); ++it) {
+		if (x_axis) {
+			vertices.push_back(vec2(it->x, it->y));
+		} else {
+			vertices.push_back(vec2(it->z, it->y));
+		}
+	}
+
+	normal = n;
+	penetration = intersect;
+	return PointInPolygon(pos, vertices);
+}
+
+void PhysicsSystem::ResolveCollision(const boost::shared_ptr<Transform> &ball_transform, const vec3 &normal, const vec3 &penetration) {
+
 }

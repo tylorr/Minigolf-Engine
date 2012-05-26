@@ -2,13 +2,17 @@
 #define PHYSICS_SYSTEM_H
 
 #include <boost\shared_ptr.hpp>
+
 #include "glm\glm.hpp"
+
 #include "entity_system.h"
+#include "volume.h"
 
 class ComponentType;
 struct TileComponent;
-struct Volume;
 struct Transform;
+
+using glm::vec3;
 
 class PhysicsSystem : public EntitySystem {
 public:
@@ -30,6 +34,10 @@ private:
 	boost::shared_ptr<TileComponent> curr_tile;
 
 	void UpdateTile(const boost::shared_ptr<Transform> &ball_transform);
+
+	void UpdateCollision(const boost::shared_ptr<Transform> &ball_transform);
+	bool Intersect(const vec3 &start, const vec3 &end, const Volume &wall, glm::vec3 &normal, glm::vec3 &penetration);
+	void ResolveCollision(const boost::shared_ptr<Transform> &ball_transform, const glm::vec3 &normal, const glm::vec3 &penetration);
 };
 
 #endif
