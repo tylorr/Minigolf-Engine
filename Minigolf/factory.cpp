@@ -239,6 +239,17 @@ boost::shared_ptr<Entity> CreateCup(const TeeCup &cup) {
 	mesh->geometry = geometry;
 	mesh->material = material;
 
+	vec3 p1 = cup.position + vec3(.5f,0,.5f);
+	vec3 p2 = cup.position + vec3(.5f,0,-.5f);
+	vec3 p3 = cup.position + vec3(-.5f,0,-.5f);
+	vec3 p4 = cup.position + vec3(-.5f,0,.5f);
+
+	shared_ptr<Volume> volume(new Volume());
+	volume->vertices.push_back(p1);	
+	volume->vertices.push_back(p2);
+	volume->vertices.push_back(p3);
+	volume->vertices.push_back(p4);
+
 	shared_ptr<Transform> transform(new Transform());
 	transform->set_position(cup.position);
 	transform->Translate(0, 0.01f, 0);

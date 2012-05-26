@@ -30,6 +30,7 @@ private:
 	boost::shared_ptr<TileComponent> curr_tile;
 
 	void UpdateTile(const boost::shared_ptr<Transform> &ball_transform);
+	void CheckCup(const boost::shared_ptr<Transform> &ball_transform);
 };
 
 #endif
