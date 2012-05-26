@@ -22,8 +22,8 @@ PhysicsSystem::~PhysicsSystem() {
 
 void PhysicsSystem::Init(){
 	ball_ = EntityManager::Find("Ball");
-	friction_ = 0.97f;
-	gravity_ = 1.f;
+	friction_ = 0.99f;
+	gravity_ = 15.f;
 }
 
 void PhysicsSystem::Resolve(){
@@ -142,7 +142,7 @@ void PhysicsSystem::ApplyGravity(){
 
 	//calculate x and r
 	x = glm::cross(glm::vec3(0,1,0), tile_vols_[0]->normal);
-	r = glm::cross(tile_vols_[0]->normal, x);
+	r = glm::cross(x, tile_vols_[0]->normal);
 
 	float delta = Time::GetDeltaTime();
 	if(glm::length(r)>0){ glm::normalize(r); }
