@@ -20,6 +20,7 @@ PhysicsSystem::~PhysicsSystem() {
 
 void PhysicsSystem::Init(){
 	ball_ = EntityManager::Find("Ball");
+	friction_ = 0.97f;
 }
 
 void PhysicsSystem::Resolve(){
@@ -37,13 +38,14 @@ void PhysicsSystem::Process(){
 	//clear vectors at the end so they are current each cycle
 	tile_vols_.clear();
 	wall_vols_.clear();
+	curr_tile = shared_ptr<TileComponent>();
 }
 
 void PhysicsSystem::GetVolumes()
 {
 	//get needed components
 	shared_ptr<BallComponent> ball_comp = EntityManager::GetComponent<BallComponent>(ball_, "BallComponent");
-	shared_ptr<TileComponent> curr_tile = EntityManager::GetComponent<TileComponent>(ball_comp->current_tile, "TileComponent");
+	curr_tile = EntityManager::GetComponent<TileComponent>(ball_comp->current_tile, "TileComponent");
 	
 	//pushes the current tile volume onto vector
 	tile_vols_.push_back(EntityManager::GetComponent<Volume>(ball_comp->current_tile, "Volume")); 
@@ -70,4 +72,23 @@ void PhysicsSystem::GetVolumes()
 			wall_vols_.push_back(wall_v);
 		}
 	}
+}
+
+void PhysicsSystem::ApplyFriction(){
+	//grab ball component and dampen velocity based on coefficient of friction
+	shared_ptr<BallComponent> ball_comp = EntityManager::GetComponent<BallComponent>(ball_, "BallComponent");
+	ball_comp->velocity *= friction_;
+}
+
+void PhysicsSystem::ApplyGravity(){
+	//grab ball component
+	shared_ptr<BallComponent> ball_comp = EntityManager::GetComponent<BallComponent>(ball_, "BallComponent");
+
+	//x is parallel x vector for current tile, r is downward slope vector
+	glm::vec3 x;
+	glm::vec3 r;
+
+	//calculate x and r
+	x = glm::cross(glm::vec3(0,1,0), tile_vols_[0]->normal);
+	r = glm::cross(tile_vols_[0]->normal, x);
 }
