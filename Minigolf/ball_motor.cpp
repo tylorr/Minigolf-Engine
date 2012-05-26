@@ -23,19 +23,28 @@ void BallMotor::Process() {
 	shared_ptr<BallComponent> ball_comp = EntityManager::GetComponent<BallComponent>(ball_, "BallComponent");
 
 	float delta = Time::GetDeltaTime();
-	float speed = -7.0f;
-	float rot_speed = 0.5f;
+	float speed = -5.0f;
+	float rot_speed = 0.75f;
 
 	// TODO: replace this later with proper force/acceleration input
-	vec3 velocity;
+	//vec3 velocity;
 	
-	//if (Input::GetKey("up")) {
-	//	velocity += vec3(0, 0, -speed);
-	//}
-	//if (Input::GetKey("down")) {
-	//	velocity += vec3(0, 0, speed);
-	//}
+	ball_comp->acceleration = vec3();
+
+	if (Input::GetKey("up")) {
+		ball_comp->acceleration += vec3(0, 0, speed);
+	}
+	if (Input::GetKey("down")) {
+		ball_comp->acceleration += vec3(0, 0, -speed);
+	}
+	if (Input::GetKey("left")) {
+		ball_comp->acceleration += vec3(speed, 0, 0);
+	}
+	if (Input::GetKey("right")) {
+		ball_comp->acceleration += vec3(-speed, 0, 0);
+	}
 	//if (glm::length(ball_comp->velocity) <= .001f) {
+	/*
 		if (Input::GetKey("left")) {
 			ball_transform->Rotate(vec3(0, 1, 0), rot_speed);
 		}
@@ -46,6 +55,7 @@ void BallMotor::Process() {
 		if (Input::GetKeyUp("t")) {
 			ball_comp->velocity += ball_transform->forward() * speed;
 		}
+		*/
 	//}
 
 	//ball_transform->Translate(velocity * delta);
