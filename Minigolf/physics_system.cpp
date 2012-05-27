@@ -37,10 +37,10 @@ void PhysicsSystem::Resolve(){
 
 void PhysicsSystem::Process(){
 
-	TransformPtr ball_transform = EntityManager::GetComponent<Transform>(ball_);
-	BallComponentPtr ball_comp = EntityManager::GetComponent<BallComponent>(ball_);
+	TransformPtr ball_transform = transform_mapper_(ball_);
+	BallComponentPtr ball_comp = ball_comp_mapper_(ball_);
 
-	MeshPtr mesh = EntityManager::GetComponent<Mesh>(ball_comp->current_tile);
+	MeshPtr mesh = mesh_mapper_(ball_comp->current_tile);
 	shared_ptr<BasicMaterial> bm = boost::dynamic_pointer_cast<BasicMaterial>(mesh->material);
 	bm->Ld_ = vec3(1, 1, 0);
 	
@@ -73,16 +73,16 @@ void PhysicsSystem::Process(){
 void PhysicsSystem::GetVolumes()
 {
 	//get needed components
-	BallComponentPtr ball_comp = EntityManager::GetComponent<BallComponent>(ball_);
-	curr_tile = EntityManager::GetComponent<TileComponent>(ball_comp->current_tile);
+	BallComponentPtr ball_comp = ball_comp_mapper_(ball_);
+	curr_tile = tile_comp_mapper_(ball_comp->current_tile);
 	
 	//pushes the current tile volume onto vector
-	tile_vols_.push_back(EntityManager::GetComponent<Volume>(ball_comp->current_tile)); 
+	tile_vols_.push_back(volume_mapper_(ball_comp->current_tile)); 
 	
 	//pushes all current tile walls onto vector
 	for( unsigned j=0;j<curr_tile->walls.size();j++)  
 	{
-		VolumePtr wall_v = EntityManager::GetComponent<Volume>(curr_tile->walls.at(j));
+		VolumePtr wall_v = volume_mapper_(curr_tile->walls.at(j));
 		//wall_vols_.push_back(wall_v);
 		wall_map_[wall_v] = curr_tile->walls[j];
 	}
@@ -91,14 +91,14 @@ void PhysicsSystem::GetVolumes()
 	for(unsigned i = 0; i < curr_tile->neighbors.size(); i++)
 	{
 		//push all neighboring tile volumes onto vector
-		VolumePtr tile_v = EntityManager::GetComponent<Volume>(curr_tile->neighbors.at(i)); 
+		VolumePtr tile_v = volume_mapper_(curr_tile->neighbors.at(i)); 
 		tile_vols_.push_back(tile_v);
 	
 		//pushes walls of all neighbors
-		TileComponentPtr neighbor = EntityManager::GetComponent<TileComponent>(curr_tile->neighbors.at(i)); 
+		TileComponentPtr neighbor = tile_comp_mapper_(curr_tile->neighbors.at(i)); 
 		for (unsigned j = 0; j < neighbor->walls.size(); j++)
 		{
-			VolumePtr wall_v = EntityManager::GetComponent<Volume>(neighbor->walls.at(j));
+			VolumePtr wall_v = volume_mapper_(neighbor->walls.at(j));
 			//wall_vols_.push_back(wall_v);
 			wall_map_[wall_v] = neighbor->walls[j];
 		}
@@ -112,7 +112,7 @@ void PhysicsSystem::UpdateTile(const TransformPtr &ball_transform) {
 
 	VolumePtr curr_volume = tile_vols_[0];
 
-	BallComponentPtr ball_comp = EntityManager::GetComponent<BallComponent>(ball_);
+	BallComponentPtr ball_comp = ball_comp_mapper_(ball_);
 
 	// move ball  up slopes using projections
 	vec3 proj = Project(ball_transform->position(), curr_volume->normal, curr_volume->vertices[0]);
@@ -141,7 +141,7 @@ void PhysicsSystem::UpdateTile(const TransformPtr &ball_transform) {
 		// does ball overlap?
 		if (inter) {
 			// set current ball to overlapped neighbor
-			MeshPtr mesh = EntityManager::GetComponent<Mesh>(ball_comp->current_tile);
+			MeshPtr mesh = mesh_mapper_(ball_comp->current_tile);
 			shared_ptr<BasicMaterial> bm = boost::dynamic_pointer_cast<BasicMaterial>(mesh->material);
 			bm->Ld_ = vec3(0, 1, 0);
 
@@ -154,7 +154,7 @@ void PhysicsSystem::UpdateTile(const TransformPtr &ball_transform) {
 
 void PhysicsSystem::ApplyFriction(){
 	//grab ball component and dampen velocity based on coefficient of friction
-	BallComponentPtr ball_comp = EntityManager::GetComponent<BallComponent>(ball_);
+	BallComponentPtr ball_comp = ball_comp_mapper_(ball_);
 	ball_comp->velocity *= friction_;
 
 	static const float epsilon = 0.01f;
@@ -166,7 +166,7 @@ void PhysicsSystem::ApplyFriction(){
 
 void PhysicsSystem::ApplyGravity(){
 	//grab ball component
-	BallComponentPtr ball_comp = EntityManager::GetComponent<BallComponent>(ball_);
+	BallComponentPtr ball_comp = ball_comp_mapper_(ball_);
 
 	//x is parallel x vector for current tile, r is downward slope vector
 	glm::vec3 x;
@@ -182,7 +182,7 @@ void PhysicsSystem::ApplyGravity(){
 }
 
 void PhysicsSystem::UpdateCollision(const TransformPtr &ball_transform) {
-	BallComponentPtr ball_comp = EntityManager::GetComponent<BallComponent>(ball_);
+	BallComponentPtr ball_comp = ball_comp_mapper_(ball_);
 	vec3 start = ball_transform->position();
 	vec3 end = start + ball_comp->velocity * Time::GetDeltaTime();
 
@@ -235,7 +235,7 @@ bool PhysicsSystem::Intersect(const vec3 &start, const vec3 &end, const VolumePt
 		return false;
 	}
 
-	mesh = EntityManager::GetComponent<Mesh>(wall_map_[wall]);
+	mesh = mesh_mapper_(wall_map_[wall]);
 	bm = boost::dynamic_pointer_cast<BasicMaterial>(mesh->material);
 	bm->Ld_ = vec3(1, 0, 1);
 
@@ -275,7 +275,7 @@ bool PhysicsSystem::Intersect(const vec3 &start, const vec3 &end, const VolumePt
 	bool result = PointInPolygon(pos, vertices);
 
 	if (result) {
-		mesh = EntityManager::GetComponent<Mesh>(wall_map_[wall]);
+		mesh = mesh_mapper_(wall_map_[wall]);
 		bm = boost::dynamic_pointer_cast<BasicMaterial>(mesh->material);
 		bm->Ld_ = vec3(1, 1, 1);
 	}
@@ -284,7 +284,7 @@ bool PhysicsSystem::Intersect(const vec3 &start, const vec3 &end, const VolumePt
 }
 
 void PhysicsSystem::ResolveCollision(const TransformPtr &ball_transform, const vec3 &normal, const vec3 &intersection) {
-	BallComponentPtr ball_comp = EntityManager::GetComponent<BallComponent>(ball_);
+	BallComponentPtr ball_comp = ball_comp_mapper_(ball_);
 
 	ball_transform->set_position(intersection);
 

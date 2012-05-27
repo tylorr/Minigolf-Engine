@@ -7,12 +7,15 @@
 #include "glm\glm.hpp"
 
 #include "entity_system.h"
+#include "component_mapper.h"
 
 class Entity;
 class ComponentType;
 struct Transform;
 struct TileComponent;
 struct Volume;
+struct Mesh;
+struct BallComponent;
 
 class PhysicsSystem : public EntitySystem {
 public:
@@ -28,7 +31,14 @@ public:
 private:
 	float gravity_;
 	float friction_;
-	EntityPtr ball_;
+
+	ComponentMapper<Transform> transform_mapper_;
+	ComponentMapper<Volume> volume_mapper_;
+	ComponentMapper<Mesh> mesh_mapper_;
+	ComponentMapper<BallComponent> ball_comp_mapper_;
+	ComponentMapper<TileComponent> tile_comp_mapper_;
+
+	boost::shared_ptr<Entity> ball_;
 	std::vector<boost::shared_ptr<Volume>> tile_vols_;
 	//std::vector<boost::shared_ptr<Volume>> wall_vols_;
 	boost::unordered_map<boost::shared_ptr<Volume>, boost::shared_ptr<Entity>> wall_map_;
