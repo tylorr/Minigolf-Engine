@@ -54,12 +54,10 @@ public:
 protected:
 	typedef boost::unordered_map<unsigned int, EntityPtr> EntityMap;
 
-	void TrackType(const type_info &type);
-
 	template <typename T>
 	void TrackType() {
-		const type_info &type = typeid(T);
-		TrackType(type);
+		ComponentTypePtr comp_type = ComponentTypeManager::GetTypeFor<T>();
+		AddTypeBit(comp_type->bit());
 	}
 
 	void AddTypeBit(const long &bit);

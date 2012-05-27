@@ -40,26 +40,6 @@ namespace EntityManager {
 
 	void RemoveComponent(const EntityPtr &entity, const ComponentTypePtr &type);
 
-	//ComponentPtr GetComponent(const EntityPtr &entity, const ComponentTypePtr &type);
-
-	//ComponentPtr GetComponent(const EntityPtr &entity, const std::string &family_name);
-
-	/*
-		input:		Entity ptr and the family_name of the Component that is being looked for.
-
-		output:		Component with family_name attached to entity. Returns shared_ptr<T>() if
-					entity does not contain Component with that family_name.
-
-		remarks:	Use this to find Component attached to Entity via the Components family_name.
-					e.g. TransformPtr transform = EntityManager::GetComponent<Transform>(entity, "Transform");
-	*/
-	/*
-	template <typename T>
-	boost::shared_ptr<T> GetComponent(const EntityPtr &entity, const std::string &family_name) {
-		return boost::dynamic_pointer_cast<T>(GetComponent(entity, ComponentTypeManager::GetTypeFor(family_name)));
-	}
-	*/
-
 	boost::shared_ptr<Component> GetComponent(const EntityPtr &entity, const ComponentTypePtr &comp_type);
 
 	template <typename T>
@@ -69,8 +49,7 @@ namespace EntityManager {
 
 	template <typename T>
 	boost::shared_ptr<T> GetComponent(const EntityPtr &entity) {
-		const type_info &type = typeid(T);
-		return GetComponent<T>(entity, ComponentTypeManager::GetTypeFor(type));
+		return GetComponent<T>(entity, ComponentTypeManager::GetTypeFor<T>());
 	}
 
 	/*

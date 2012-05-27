@@ -31,11 +31,11 @@ RenderSystem::RenderSystem() {
 
 	std::string mesh = "Mesh";
 	TrackType<Mesh>();
-	mesh_type_ = ComponentTypeManager::GetTypeFor(typeid(Mesh));
+	mesh_type_ = ComponentTypeManager::GetTypeFor<Mesh>();
 
 	std::string transform = "Transform";
 	TrackType<Transform>();
-	transform_type_ = ComponentTypeManager::GetTypeFor(typeid(Transform));
+	transform_type_ = ComponentTypeManager::GetTypeFor<Transform>();
 }
 
 RenderSystem::~RenderSystem() {

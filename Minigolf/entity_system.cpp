@@ -13,11 +13,6 @@ using boost::shared_ptr;
 EntitySystem::~EntitySystem() {
 }
 
-void EntitySystem::TrackType(const type_info &type) {
-	ComponentTypePtr comp_type = ComponentTypeManager::GetTypeFor(type);
-	AddTypeBit(comp_type->bit());
-}
-
 void EntitySystem::AddTypeBit(const long &bit) {
 	type_bits_ |= bit;
 }

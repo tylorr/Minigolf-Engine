@@ -1,6 +1,3 @@
-#include <cstring>
-#include <cassert>
-
 #include <boost\unordered_map.hpp>
 
 #include "component_type_manager.h"
@@ -15,23 +12,27 @@ namespace {
 	ComponentTypeMap component_types_;
 };
 
-ComponentTypePtr GetTypeFor(const type_info &type) {
-	//make sure we are not passing something from boost i.e shared_ptr
-	assert(!strstr(type.name(), "boost"));
+namespace Inner {
+	ComponentTypePtr GetTypeFor(const type_info &type) {
+		//make sure we are not passing something from boost i.e shared_ptr
+		//assert(!strstr(type.name(), "boost"));
 
-	ComponentTypePtr comp_type;
-	ComponentTypeMap::iterator it;
+		ComponentTypePtr comp_type;
+		ComponentTypeMap::iterator it;
 	
-	it = component_types_.find(&type);
-	if (it == component_types_.end()) {
-		comp_type = ComponentTypePtr(new ComponentType());
-		component_types_[&type] = comp_type;
-	} else {
-		comp_type = it->second;
-	}
+		it = component_types_.find(&type);
+		if (it == component_types_.end()) {
+			comp_type = ComponentTypePtr(new ComponentType());
+			component_types_[&type] = comp_type;
+		} else {
+			comp_type = it->second;
+		}
 
-	return comp_type;
+		return comp_type;
+	}						
+};
+
+ComponentTypePtr GetTypeFor(const ComponentPtr &component) {
+	return Inner::GetTypeFor(typeid(*component));
 }
-
-
 };

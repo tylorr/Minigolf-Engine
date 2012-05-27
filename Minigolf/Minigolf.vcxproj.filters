@@ -194,6 +194,9 @@
     <ClInclude Include="HUD.h">
       <Filter>Header Files\game\components</Filter>
     </ClInclude>
+    <ClInclude Include="component_mapper.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="diffuse.fragment.glsl">

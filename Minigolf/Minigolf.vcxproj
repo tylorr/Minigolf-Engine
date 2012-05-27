@@ -112,6 +112,7 @@
     <ClInclude Include="basic_material.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="camera_controller.h" />
+    <ClInclude Include="component_mapper.h" />
     <ClInclude Include="component_type.h" />
     <ClInclude Include="component_type_manager.h" />
     <ClInclude Include="entity_manager.h" />
