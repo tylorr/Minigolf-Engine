@@ -13,8 +13,11 @@
 #include "time.h"
 #include "mesh.h"
 #include "basic_material.h"
+#include "volume.h"
 
 using boost::shared_ptr;
+using boost::unordered_map;
+
 using glm::vec3;
 
 PhysicsSystem::PhysicsSystem() {
