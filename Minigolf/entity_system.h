@@ -7,7 +7,7 @@
 #include <boost\shared_ptr.hpp>
 #include <boost\unordered_map.hpp>
 
-class Entity;
+#include "entity.h"
 
 class EntitySystem {
 public:
@@ -16,7 +16,7 @@ public:
 	EntitySystem(const std::string &family_name, const int &layer = 0) : family_name_(family_name), layer_(layer), type_bits_(0) { }
 	~EntitySystem();
 
-	virtual void OnChange(const boost::shared_ptr<Entity> &entity);
+	virtual void OnChange(const EntityPtr &entity);
 
 	virtual void Init() { }
 
@@ -35,19 +35,19 @@ public:
 	bool operator<(const EntitySystem &other);
 
 protected:
-	typedef boost::unordered_map<unsigned int, boost::shared_ptr<Entity>> EntityMap;
+	typedef boost::unordered_map<unsigned int, EntityPtr> EntityMap;
 
 	
 
 	void AddTypeByName(const std::string &family_name);
 	void AddTypeBit(const long &bit);
 
-	virtual bool CheckEntity(const bool &interest, const bool &contains, const boost::shared_ptr<Entity> &entity) { return true; }
+	virtual bool CheckEntity(const bool &interest, const bool &contains, const EntityPtr &entity) { return true; }
 
-	virtual void Add(const boost::shared_ptr<Entity> &entity);
-	virtual void Remove(const boost::shared_ptr<Entity> &entity);
-	virtual void Enable(const boost::shared_ptr<Entity> &entity);
-	virtual void Disable(const boost::shared_ptr<Entity> &entity);
+	virtual void Add(const EntityPtr &entity);
+	virtual void Remove(const EntityPtr &entity);
+	virtual void Enable(const EntityPtr &entity);
+	virtual void Disable(const EntityPtr &entity);
 
 	virtual void Begin() { }
 	virtual void End() { }

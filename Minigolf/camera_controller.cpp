@@ -48,8 +48,8 @@ void CameraController::Process() {
 		free_ = true;
 	}
 
-	shared_ptr<Transform> ball_transform = EntityManager::GetComponent<Transform>(ball_, "Transform");
-	shared_ptr<Transform> camera_transform = EntityManager::GetComponent<Transform>(camera_, "Transform");
+	TransformPtr ball_transform = EntityManager::GetComponent<Transform>(ball_, "Transform");
+	TransformPtr camera_transform = EntityManager::GetComponent<Transform>(camera_, "Transform");
 
 	// are we in free mode?
 	if (free_) {

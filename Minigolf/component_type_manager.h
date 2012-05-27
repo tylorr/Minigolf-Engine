@@ -5,7 +5,7 @@
 
 #include <boost\shared_ptr.hpp>
 
-class ComponentType;
+#include "component_type.h"
 
 /*
 	remarks:	ComponentTypeManager stores the relation of from Component
@@ -20,7 +20,7 @@ namespace ComponentTypeManager {
 
 		output:		A ComponentType that represents the family_name
 	*/
-	boost::shared_ptr<ComponentType> GetTypeFor(const std::string &family_name);
+	ComponentTypePtr GetTypeFor(const std::string &family_name);
 
 }; // namespace ComponentTypeManager
 

@@ -14,7 +14,7 @@ EntitySystem::~EntitySystem() {
 }
 
 void EntitySystem::AddTypeByName(const std::string &family_name) {
-	shared_ptr<ComponentType> type = ComponentTypeManager::GetTypeFor(family_name);
+	ComponentTypePtr type = ComponentTypeManager::GetTypeFor(family_name);
 	AddTypeBit(type->bit());
 }
 
@@ -28,7 +28,7 @@ void EntitySystem::Process() {
 	End();
 }
 
-void EntitySystem::OnChange(const boost::shared_ptr<Entity> &entity) {
+void EntitySystem::OnChange(const EntityPtr &entity) {
 	bool contains = (system_bit_ & entity->system_bits()) == system_bit_;
 	bool interest = (type_bits_ & entity->type_bits()) == type_bits_;
 
@@ -47,7 +47,7 @@ void EntitySystem::OnChange(const boost::shared_ptr<Entity> &entity) {
 	}
 }
 
-void EntitySystem::Add(const boost::shared_ptr<Entity> &entity) {
+void EntitySystem::Add(const EntityPtr &entity) {
 	entity->AddSystemBit(system_bit_);
 
 	if (entity->enabled()) {
@@ -55,14 +55,14 @@ void EntitySystem::Add(const boost::shared_ptr<Entity> &entity) {
 	}
 }
 
-void EntitySystem::Remove(const boost::shared_ptr<Entity> &entity) {
+void EntitySystem::Remove(const EntityPtr &entity) {
 	entity->RemoveSystemBit(system_bit_);
 	if (entity->enabled()) {
 		Disable(entity);
 	}
 }
 
-void EntitySystem::Enable(const boost::shared_ptr<Entity> &entity) {
+void EntitySystem::Enable(const EntityPtr &entity) {
 	EntityMap::iterator it;
 
 	it = this->active_entities_.find(entity->id());
@@ -73,7 +73,7 @@ void EntitySystem::Enable(const boost::shared_ptr<Entity> &entity) {
 	active_entities_[entity->id()] = entity;
 }
 
-void EntitySystem::Disable(const boost::shared_ptr<Entity> &entity) {
+void EntitySystem::Disable(const EntityPtr &entity) {
 	EntityMap::iterator it;
 
 	it = this->active_entities_.find(entity->id());

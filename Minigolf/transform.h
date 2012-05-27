@@ -63,4 +63,6 @@ private:
 	void UpdateMatrix();
 };
 
+typedef boost::shared_ptr<Transform> TransformPtr;
+
 #endif // TRANSFORM_H

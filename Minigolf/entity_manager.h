@@ -7,22 +7,19 @@
 #include <boost\shared_ptr.hpp>
 
 #include "component_type_manager.h"
-
-class Entity;
-struct Component;
-class ComponentType;
+#include "entity.h"
+#include "component.h"
+#include "component_type.h"
 
 /*
 	remarks:	EntityManager stores relations between Entities, Components,
 				and Entity names.
 */
 namespace EntityManager {
-	typedef boost::shared_ptr<Entity> EntityPtr;
-	typedef boost::shared_ptr<Component> ComponentPtr;
-
 	typedef std::deque<EntityPtr> EntityBag;
 	typedef std::deque<ComponentPtr> ComponentBag;
-	typedef std::deque<boost::shared_ptr<ComponentBag>> ComponentByTypeBag;
+	typedef boost::shared_ptr<ComponentBag> ComponentBagPtr;
+	typedef std::deque<ComponentBagPtr> ComponentByTypeBag;
 
 	/*
 		output:		A new empty Entity with new unique_id
@@ -40,9 +37,9 @@ namespace EntityManager {
 
 	void RemoveComponent(const EntityPtr &entity, const ComponentPtr &component);
 
-	void RemoveComponent(const EntityPtr &entity, const boost::shared_ptr<ComponentType> &type);
+	void RemoveComponent(const EntityPtr &entity, const ComponentTypePtr &type);
 
-	ComponentPtr GetComponent(const EntityPtr &entity, const boost::shared_ptr<ComponentType> &type);
+	ComponentPtr GetComponent(const EntityPtr &entity, const ComponentTypePtr &type);
 
 	ComponentPtr GetComponent(const EntityPtr &entity, const std::string &family_name);
 
@@ -53,7 +50,7 @@ namespace EntityManager {
 					entity does not contain Component with that family_name.
 
 		remarks:	Use this to find Component attached to Entity via the Components family_name.
-					e.g. shared_ptr<Transform> transform = EntityManager::GetComponent<Transform>(entity, "Transform");
+					e.g. TransformPtr transform = EntityManager::GetComponent<Transform>(entity, "Transform");
 	*/
 	template <typename T>
 	boost::shared_ptr<T> GetComponent(const EntityPtr &entity, const std::string &family_name) {
@@ -70,14 +67,14 @@ namespace EntityManager {
 	/*
 		input:		Name of Entity being looked for
 
-		output:		ptr to Entity with input name, shared_ptr<Entity>() 
+		output:		ptr to Entity with input name, EntityPtr() 
 					if an Entity with that name does not exist.
 
 		remarks:	Use this to find an Entity by name. Make sure to that
 					the Entity has been registered first  using:
 					EntityManager::Register()
 	*/
-	boost::shared_ptr<Entity> Find(const std::string &name);
+	EntityPtr Find(const std::string &name);
 
 }; // class EntityManager
 

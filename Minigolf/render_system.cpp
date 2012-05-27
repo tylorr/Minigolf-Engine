@@ -26,11 +26,7 @@ using glm::transpose;
 using glm::mat4;
 using glm::mat3;
 
-using EntityManager::ComponentPtr;
-
 RenderSystem::RenderSystem() : EntitySystem("RenderSystem") {
-
-	
 
 	std::string mesh = "Mesh";
 	AddTypeByName(mesh);
@@ -55,13 +51,13 @@ void RenderSystem::ProcessEntities(const EntityMap &entities) {
 	EntityMap::const_iterator it, ite;
 	ComponentPtr component;
 
-	shared_ptr<Mesh> mesh;
-	shared_ptr<Transform> transform;
+	MeshPtr mesh;
+	TransformPtr transform;
 
 	// todo: make initialize step so this doesn't have to happen every time
-	shared_ptr<Entity> camera = EntityManager::Find("Camera");
-	shared_ptr<Camera> camera_comp = EntityManager::GetComponent<Camera>(camera, "Camera");
-	shared_ptr<Transform> camera_transform = EntityManager::GetComponent<Transform>(camera, "Transform");
+	EntityPtr camera = EntityManager::Find("Camera");
+	CameraPtr camera_comp = EntityManager::GetComponent<Camera>(camera, "Camera");
+	TransformPtr camera_transform = EntityManager::GetComponent<Transform>(camera, "Transform");
 
 	mat4 model, model_view, mvp;
 	mat3 normal;

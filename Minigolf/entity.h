@@ -1,6 +1,8 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+#include <boost\shared_ptr.hpp>
+
 /*
 	remarks:	Entity stores information about what EntitySystems it belongs
 				to and what Components it has in the form of bits in a bit
@@ -56,5 +58,7 @@ private:
 	long system_bits_;
 	long type_bits_;
 };
+
+typedef boost::shared_ptr<Entity> EntityPtr;
 
 #endif // ENTITY_H

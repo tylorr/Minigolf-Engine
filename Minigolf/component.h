@@ -2,6 +2,7 @@
 #define COMPONENT_H
 
 #include <string>
+#include <boost\shared_ptr.hpp>
 
 /*
 	remarks:	Base class for components. All components should extend this.
@@ -20,5 +21,7 @@ struct Component {
 
 	virtual ~Component() { }
 };
+
+typedef boost::shared_ptr<Component> ComponentPtr;
 
 #endif // COMPONENT_H

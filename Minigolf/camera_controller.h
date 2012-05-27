@@ -25,8 +25,8 @@ private:
 		glm::vec3 up;
 	};
 
-	boost::shared_ptr<Entity> camera_;
-	boost::shared_ptr<Entity> ball_;
+	EntityPtr camera_;
+	EntityPtr ball_;
 
 	bool free_;
 	CameraProfile profile_;

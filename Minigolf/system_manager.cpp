@@ -53,7 +53,7 @@ long GetBitFor(const std::string &family_name) {
 	return bit;
 }
 
-void Refresh(const boost::shared_ptr<Entity> &entity) {
+void Refresh(const EntityPtr &entity) {
 	SystemList::iterator it;
 
 	for(it = systems_.begin(); it != systems_.end(); ++it) {

@@ -16,7 +16,7 @@ public:
 	virtual void Process();
 
 private:
-	boost::shared_ptr<Entity> ball_;
+	EntityPtr ball_;
 };
 
 #endif // BALL_MOTOR_H

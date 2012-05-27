@@ -8,11 +8,11 @@
 
 #include "entity_system.h"
 #include "volume.h"
+#include "tile_component.h"
+#include "transform.h"
 
 class Entity;
 class ComponentType;
-struct TileComponent;
-struct Transform;
 
 using glm::vec3;
 using boost::unordered_map;
@@ -33,17 +33,17 @@ public:
 private:
 	float gravity_;
 	float friction_;
-	boost::shared_ptr<Entity> ball_;
-	std::vector<boost::shared_ptr<Volume>> tile_vols_;
+	EntityPtr ball_;
+	std::vector<VolumePtr> tile_vols_;
 	//std::vector<boost::shared_ptr<Volume>> wall_vols_;
-	unordered_map<shared_ptr<Volume>, shared_ptr<Entity>> wall_map_;
-	boost::shared_ptr<TileComponent> curr_tile;
+	unordered_map<VolumePtr, EntityPtr> wall_map_;
+	TileComponentPtr curr_tile;
 
-	void UpdateTile(const boost::shared_ptr<Transform> &ball_transform);
+	void UpdateTile(const TransformPtr &ball_transform);
 
-	void UpdateCollision(const boost::shared_ptr<Transform> &ball_transform);
-	bool Intersect(const vec3 &start, const vec3 &end, const shared_ptr<Volume> &wall, glm::vec3 &normal, glm::vec3 &penetration);
-	void ResolveCollision(const boost::shared_ptr<Transform> &ball_transform, const glm::vec3 &normal, const glm::vec3 &penetration);
+	void UpdateCollision(const TransformPtr &ball_transform);
+	bool Intersect(const vec3 &start, const vec3 &end, const VolumePtr &wall, glm::vec3 &normal, glm::vec3 &penetration);
+	void ResolveCollision(const TransformPtr &ball_transform, const glm::vec3 &normal, const glm::vec3 &penetration);
 };
 
 #endif

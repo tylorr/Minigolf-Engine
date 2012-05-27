@@ -15,4 +15,6 @@ struct Mesh : public Component {
 	Mesh() : Component("Mesh") { }
 };
 
+typedef boost::shared_ptr<Mesh> MeshPtr;
+
 #endif // MESH_H

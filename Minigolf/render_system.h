@@ -6,8 +6,8 @@
 #include "glm\glm.hpp"
 
 #include "entity_system.h"
+#include "component_type.h"
 
-class ComponentType;
 struct Transform;
 struct Camera;
 
@@ -25,8 +25,8 @@ public:
 	//virtual bool CheckEntity(const bool &interest, const bool &contains, const boost::shared_ptr<Entity> &entity);
 
 private:
-	boost::shared_ptr<ComponentType> mesh_type_;
-	boost::shared_ptr<ComponentType> transform_type_;
+	ComponentTypePtr mesh_type_;
+	ComponentTypePtr transform_type_;
 	
 };
 

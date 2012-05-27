@@ -9,13 +9,15 @@
 #include "entity.h"
 
 struct TileComponent : public Component {
-	std::vector<boost::shared_ptr<Entity>> neighbors;
-	std::vector<boost::shared_ptr<Entity>> walls;
+	std::vector<EntityPtr> neighbors;
+	std::vector<EntityPtr> walls;
 
 	bool has_cup;
-	boost::shared_ptr<Entity> cup;
+	EntityPtr cup;
 
 	TileComponent() : Component("TileComponent") { }
 };
+
+typedef boost::shared_ptr<TileComponent> TileComponentPtr;
 
 #endif // TILE_COMPONENT_H

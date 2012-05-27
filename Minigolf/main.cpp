@@ -23,6 +23,8 @@
 */
 
 //#include <vld.h>
+#include <iostream>
+#include <typeinfo.h>
 
 #include <boost\shared_ptr.hpp>
 

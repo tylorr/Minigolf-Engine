@@ -15,6 +15,8 @@ namespace EntityManager {
 
 // kind of like private static variables
 namespace {
+	
+
 	int next_id_;
 	int next_unique_id_;
 
@@ -25,7 +27,7 @@ namespace {
 	unordered_map<string, EntityPtr> entity_names_;
 };
 
-shared_ptr<Entity> Create() {
+EntityPtr Create() {
 	// temp
 	EntityPtr entity;
 
@@ -74,17 +76,17 @@ void Remove(const EntityPtr &entity) {
 }
 
 void AddComponent(const EntityPtr &entity, const ComponentPtr &component) {
-	shared_ptr<ComponentType> type = ComponentTypeManager::GetTypeFor(component->family_name);
-	shared_ptr<ComponentBag> components;
+	ComponentTypePtr type = ComponentTypeManager::GetTypeFor(component->family_name);
+	ComponentBagPtr components;
 
 	// type not in bag?
 	if (type->id() >= components_by_type_.size()) {
 		components_by_type_.resize(type->id() * 2 + 1);
 	}
 
-	if (components_by_type_[type->id()] == shared_ptr<ComponentBag>())
+	if (components_by_type_[type->id()] == ComponentBagPtr())
 	{
-		components = shared_ptr<ComponentBag>(new ComponentBag());
+		components = ComponentBagPtr(new ComponentBag());
 		components_by_type_[type->id()] = components;
 	} else {
 		// grab existing type from bag
@@ -106,13 +108,13 @@ void AddComponent(const EntityPtr &entity, const ComponentPtr &component) {
 
 void RemoveComponent(const EntityPtr &entity, const ComponentPtr &component) {
 	// find type from component
-	shared_ptr<ComponentType> type = ComponentTypeManager::GetTypeFor(component->family_name);
+	ComponentTypePtr type = ComponentTypeManager::GetTypeFor(component->family_name);
 	RemoveComponent(entity, type);
 }
 
-void RemoveComponent(const EntityPtr &entity, const shared_ptr<ComponentType> &type) {
+void RemoveComponent(const EntityPtr &entity, const ComponentTypePtr &type) {
 	// get list of components
-	shared_ptr<ComponentBag> components = components_by_type_[type->id()];
+	ComponentBagPtr components = components_by_type_[type->id()];
 
 	// remove component/entity relationship
 	(*components)[entity->id()] = ComponentPtr();
@@ -123,8 +125,8 @@ void RemoveComponent(const EntityPtr &entity, const shared_ptr<ComponentType> &t
 	SystemManager::Refresh(entity);
 }
 
-ComponentPtr GetComponent(const EntityPtr &entity, const shared_ptr<ComponentType> &type) {
-	boost::shared_ptr<ComponentBag> bag; 
+ComponentPtr GetComponent(const EntityPtr &entity, const ComponentTypePtr &type) {
+	ComponentBagPtr bag; 
 	ComponentPtr component;
 	
 	if (type->id() < components_by_type_.size()) {
