@@ -1,5 +1,6 @@
 #include <vector>
 #include <string>
+#include <typeinfo.h>
 
 #include "glm\glm.hpp"
 #include "glm\gtc\matrix_transform.hpp"
@@ -29,12 +30,12 @@ using glm::mat3;
 RenderSystem::RenderSystem() : EntitySystem("RenderSystem") {
 
 	std::string mesh = "Mesh";
-	AddTypeByName(mesh);
-	mesh_type_ = ComponentTypeManager::GetTypeFor(mesh);
+	TrackType<Mesh>();
+	mesh_type_ = ComponentTypeManager::GetTypeFor(typeid(Mesh));
 
 	std::string transform = "Transform";
-	AddTypeByName(transform);
-	transform_type_ = ComponentTypeManager::GetTypeFor(transform);
+	TrackType<Transform>();
+	transform_type_ = ComponentTypeManager::GetTypeFor(typeid(Transform));
 }
 
 RenderSystem::~RenderSystem() {
@@ -56,8 +57,8 @@ void RenderSystem::ProcessEntities(const EntityMap &entities) {
 
 	// todo: make initialize step so this doesn't have to happen every time
 	EntityPtr camera = EntityManager::Find("Camera");
-	CameraPtr camera_comp = EntityManager::GetComponent<Camera>(camera, "Camera");
-	TransformPtr camera_transform = EntityManager::GetComponent<Transform>(camera, "Transform");
+	CameraPtr camera_comp = EntityManager::GetComponent<Camera>(camera);
+	TransformPtr camera_transform = EntityManager::GetComponent<Transform>(camera);
 
 	mat4 model, model_view, mvp;
 	mat3 normal;
@@ -71,10 +72,9 @@ void RenderSystem::ProcessEntities(const EntityMap &entities) {
 	mat4 projection = camera_comp->Projection();
 	
 	for (it = entities.begin(), ite = entities.end(); it != ite; ++it) {
-		mesh = EntityManager::GetComponent<Mesh>(it->second, "Mesh");
+		mesh = EntityManager::GetComponent<Mesh>(it->second);
 
-		component = EntityManager::GetComponent(it->second, transform_type_);
-		transform = dynamic_pointer_cast<Transform>(component);
+		transform = EntityManager::GetComponent<Transform>(it->second);
 
 		model = transform->world();
 		model_view = view * model;

@@ -11,8 +11,6 @@
 struct Mesh : public Component {
 	boost::shared_ptr<Material> material;
 	boost::shared_ptr<Geometry> geometry;
-
-	Mesh() : Component("Mesh") { }
 };
 
 typedef boost::shared_ptr<Mesh> MeshPtr;

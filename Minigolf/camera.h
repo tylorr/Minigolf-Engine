@@ -15,8 +15,6 @@ struct Camera: public Component {
 	float near_plane;
 	float far_plane;
 
-	Camera() : Component("Camera") { }
-
 	glm::mat4 Projection() const;
 };
 

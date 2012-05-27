@@ -1,31 +1,37 @@
+#include <cstring>
+#include <cassert>
+
 #include <boost\unordered_map.hpp>
 
 #include "component_type_manager.h"
 #include "component_type.h"
+#include "component.h"
 
 namespace ComponentTypeManager {
 
-using std::string;
-using boost::shared_ptr;
-
 namespace {
-	typedef boost::unordered_map<string, ComponentTypePtr> ComponentTypeMap;
+	typedef boost::unordered_map<const type_info *, ComponentTypePtr> ComponentTypeMap;
+
 	ComponentTypeMap component_types_;
 };
 
-ComponentTypePtr GetTypeFor(const string &family_name) {
-	ComponentTypePtr type;
+ComponentTypePtr GetTypeFor(const type_info &type) {
+	//make sure we are not passing something from boost aka shared_ptr
+	const char *test = strstr(type.name(), "boost");
+	assert(!test);
+
+	ComponentTypePtr comp_type;
 	ComponentTypeMap::iterator it;
 	
-	it = component_types_.find(family_name);
+	it = component_types_.find(&type);
 	if (it == component_types_.end()) {
-		type = ComponentTypePtr(new ComponentType());
-		component_types_[family_name] = type;
+		comp_type = ComponentTypePtr(new ComponentType());
+		component_types_[&type] = comp_type;
 	} else {
-		type = it->second;
+		comp_type = it->second;
 	}
 
-	return type;
+	return comp_type;
 }
 
 

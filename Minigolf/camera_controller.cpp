@@ -48,8 +48,8 @@ void CameraController::Process() {
 		free_ = true;
 	}
 
-	TransformPtr ball_transform = EntityManager::GetComponent<Transform>(ball_, "Transform");
-	TransformPtr camera_transform = EntityManager::GetComponent<Transform>(camera_, "Transform");
+	TransformPtr ball_transform = EntityManager::GetComponent<Transform>(ball_);
+	TransformPtr camera_transform = EntityManager::GetComponent<Transform>(camera_);
 
 	// are we in free mode?
 	if (free_) {

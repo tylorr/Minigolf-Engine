@@ -1,7 +1,7 @@
 #ifndef COMPONENT_H
 #define COMPONENT_H
 
-#include <string>
+//#include <string>
 #include <boost\shared_ptr.hpp>
 
 /*
@@ -11,13 +11,13 @@
 				different formats.
 */
 struct Component {
-	std::string family_name;
+	//std::string family_name;
 
 	/*
 		remarks:	Convention is to use CamelCase for family_name that 
 					matches the struct name of the component.
 	*/
-	Component(const std::string &family_name) : family_name(family_name) { }
+	//Component(const std::string &family_name) : family_name(family_name) { }
 
 	virtual ~Component() { }
 };

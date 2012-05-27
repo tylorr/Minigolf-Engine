@@ -15,7 +15,6 @@ struct hud_element{
 }
 
 struct HUD : public Component {
-
 	std::vector<hud_element> hud_elements;
 };
 

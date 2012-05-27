@@ -1,11 +1,12 @@
 #ifndef COMPONENT_TYPE_MANAGER_H
 #define COMPONENT_TYPE_MANAGER_H
 
-#include <string>
+#include <typeinfo.h>
 
 #include <boost\shared_ptr.hpp>
 
-#include "component_type.h"
+class ComponentType;
+struct Component;
 
 /*
 	remarks:	ComponentTypeManager stores the relation of from Component
@@ -13,6 +14,7 @@
 */
 namespace ComponentTypeManager {
 
+	
 	/*
 		input:		A string representing the family_name of a Component. A new 
 					family_name - ComponentType relation is created if one does 
@@ -20,7 +22,7 @@ namespace ComponentTypeManager {
 
 		output:		A ComponentType that represents the family_name
 	*/
-	ComponentTypePtr GetTypeFor(const std::string &family_name);
+	boost::shared_ptr<ComponentType> GetTypeFor(const type_info &type);
 
 }; // namespace ComponentTypeManager
 

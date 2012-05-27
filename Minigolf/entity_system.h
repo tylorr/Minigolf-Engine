@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <typeinfo.h>
 
 #include <boost\shared_ptr.hpp>
 #include <boost\unordered_map.hpp>
@@ -37,9 +38,14 @@ public:
 protected:
 	typedef boost::unordered_map<unsigned int, EntityPtr> EntityMap;
 
-	
+	void TrackType(const type_info &type);
 
-	void AddTypeByName(const std::string &family_name);
+	template <typename T>
+	void TrackType() {
+		const type_info &type = typeid(T);
+		TrackType(type);
+	}
+
 	void AddTypeBit(const long &bit);
 
 	virtual bool CheckEntity(const bool &interest, const bool &contains, const EntityPtr &entity) { return true; }

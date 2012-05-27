@@ -10,9 +10,6 @@
 #include "component.h"
 
 struct Volume : public Component {
-
-	Volume() : Component("Volume") { }
-
 	std::vector<glm::vec3> vertices;
 	glm::vec3 normal;
 };

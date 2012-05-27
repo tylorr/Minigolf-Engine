@@ -13,9 +13,9 @@ using boost::shared_ptr;
 EntitySystem::~EntitySystem() {
 }
 
-void EntitySystem::AddTypeByName(const std::string &family_name) {
-	ComponentTypePtr type = ComponentTypeManager::GetTypeFor(family_name);
-	AddTypeBit(type->bit());
+void EntitySystem::TrackType(const type_info &type) {
+	ComponentTypePtr comp_type = ComponentTypeManager::GetTypeFor(type);
+	AddTypeBit(comp_type->bit());
 }
 
 void EntitySystem::AddTypeBit(const long &bit) {

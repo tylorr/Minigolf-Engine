@@ -14,8 +14,6 @@ struct TileComponent : public Component {
 
 	bool has_cup;
 	EntityPtr cup;
-
-	TileComponent() : Component("TileComponent") { }
 };
 
 typedef boost::shared_ptr<TileComponent> TileComponentPtr;

@@ -1,4 +1,5 @@
 #include <boost\unordered_map.hpp>
+#include <typeinfo.h>
 
 #include "entity_manager.h"
 #include "entity.h"
@@ -76,7 +77,7 @@ void Remove(const EntityPtr &entity) {
 }
 
 void AddComponent(const EntityPtr &entity, const ComponentPtr &component) {
-	ComponentTypePtr type = ComponentTypeManager::GetTypeFor(component->family_name);
+	ComponentTypePtr type = ComponentTypeManager::GetTypeFor(typeid(*component));
 	ComponentBagPtr components;
 
 	// type not in bag?
@@ -108,7 +109,7 @@ void AddComponent(const EntityPtr &entity, const ComponentPtr &component) {
 
 void RemoveComponent(const EntityPtr &entity, const ComponentPtr &component) {
 	// find type from component
-	ComponentTypePtr type = ComponentTypeManager::GetTypeFor(component->family_name);
+	ComponentTypePtr type = ComponentTypeManager::GetTypeFor(typeid(component));
 	RemoveComponent(entity, type);
 }
 
@@ -125,6 +126,7 @@ void RemoveComponent(const EntityPtr &entity, const ComponentTypePtr &type) {
 	SystemManager::Refresh(entity);
 }
 
+/*
 ComponentPtr GetComponent(const EntityPtr &entity, const ComponentTypePtr &type) {
 	ComponentBagPtr bag; 
 	ComponentPtr component;
@@ -140,12 +142,29 @@ ComponentPtr GetComponent(const EntityPtr &entity, const ComponentTypePtr &type)
 
 	return component;
 }
+*/
 
 /*
 ComponentPtr GetComponent(const EntityPtr &entity, const std::string &family_name) {
 	return GetComponent(entity, ComponentTypeManager::GetTypeFor(family_name));
 }
 */
+
+ComponentPtr GetComponent(const EntityPtr &entity, const ComponentTypePtr &comp_type) {
+	ComponentBagPtr bag; 
+	ComponentPtr component;
+	
+	if (comp_type->id() < components_by_type_.size()) {
+
+		bag = components_by_type_[comp_type->id()];
+
+		if (entity->id() < bag->size()) {
+			component = (*bag)[entity->id()];
+		}
+	}
+
+	return component;
+}
 
 
 

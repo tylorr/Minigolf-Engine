@@ -19,8 +19,8 @@ void BallMotor::Resolve() {
 }
 
 void BallMotor::Process() {
-	TransformPtr ball_transform = EntityManager::GetComponent<Transform>(ball_, "Transform");
-	BallComponentPtr ball_comp = EntityManager::GetComponent<BallComponent>(ball_, "BallComponent");
+	TransformPtr ball_transform = EntityManager::GetComponent<Transform>(ball_);
+	BallComponentPtr ball_comp = EntityManager::GetComponent<BallComponent>(ball_);
 
 	float delta = Time::GetDeltaTime();
 	float speed = -10.0f;
