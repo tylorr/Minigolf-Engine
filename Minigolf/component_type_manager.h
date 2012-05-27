@@ -6,8 +6,9 @@
 #include <boost\shared_ptr.hpp>
 #include <boost\type_traits\is_base_of.hpp>
 
+#include "component.h"
+
 class ComponentType;
-struct Component;
 
 /*
 	remarks:	ComponentTypeManager stores the relation of from Component

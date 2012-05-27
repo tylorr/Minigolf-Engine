@@ -108,6 +108,9 @@
     <ClCompile Include="physics_system.cpp">
       <Filter>Source Files\game\systems</Filter>
     </ClCompile>
+    <ClCompile Include="component_mapper.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="entity.h">
