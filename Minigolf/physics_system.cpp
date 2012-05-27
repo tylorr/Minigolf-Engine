@@ -17,7 +17,7 @@
 using boost::shared_ptr;
 using glm::vec3;
 
-PhysicsSystem::PhysicsSystem() : EntitySystem("PhysicsSystem") {
+PhysicsSystem::PhysicsSystem() {
 }
 
 PhysicsSystem::~PhysicsSystem() {

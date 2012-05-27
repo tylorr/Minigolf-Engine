@@ -14,7 +14,7 @@ class EntitySystem {
 public:
 	int layer_;
 
-	EntitySystem(const std::string &family_name, const int &layer = 0) : family_name_(family_name), layer_(layer), type_bits_(0) { }
+	EntitySystem(const int &layer = 0) : layer_(layer), type_bits_(0) { }
 	~EntitySystem();
 
 	virtual void OnChange(const EntityPtr &entity);
@@ -27,10 +27,6 @@ public:
 
 	void set_system_bit(const long &bit) {
 		system_bit_ = bit;
-	}
-
-	std::string family_name() {
-		return family_name_;
 	}
 
 	bool operator<(const EntitySystem &other);
@@ -61,8 +57,6 @@ protected:
 	virtual void ProcessEntities(const EntityMap &entities) { }
 
 private:
-	std::string family_name_;
-
 	long system_bit_;
 	long type_bits_;
 

@@ -8,7 +8,7 @@
 
 using boost::shared_ptr;
 
-BallMotor::BallMotor() : EntitySystem("BallMotor") {
+BallMotor::BallMotor() {
 }
 
 BallMotor::~BallMotor() {

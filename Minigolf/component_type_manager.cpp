@@ -16,9 +16,8 @@ namespace {
 };
 
 ComponentTypePtr GetTypeFor(const type_info &type) {
-	//make sure we are not passing something from boost aka shared_ptr
-	const char *test = strstr(type.name(), "boost");
-	assert(!test);
+	//make sure we are not passing something from boost i.e shared_ptr
+	assert(!strstr(type.name(), "boost"));
 
 	ComponentTypePtr comp_type;
 	ComponentTypeMap::iterator it;

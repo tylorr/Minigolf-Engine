@@ -27,7 +27,7 @@ using glm::transpose;
 using glm::mat4;
 using glm::mat3;
 
-RenderSystem::RenderSystem() : EntitySystem("RenderSystem") {
+RenderSystem::RenderSystem() {
 
 	std::string mesh = "Mesh";
 	TrackType<Mesh>();

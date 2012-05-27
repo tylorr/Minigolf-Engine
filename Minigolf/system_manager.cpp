@@ -16,7 +16,7 @@ namespace SystemManager {
 namespace {
 	typedef shared_ptr<EntitySystem> SystemPtr;
 	typedef vector<SystemPtr> SystemList;
-	typedef unordered_map<string, long> SystemBitMap;
+	typedef unordered_map<SystemPtr, long> SystemBitMap;
 
 	SystemBitMap system_bits_;
 	SystemList systems_; 
@@ -31,21 +31,21 @@ void AddSystem(const SystemPtr &system) {
 	using std::sort;
 
 	systems_.push_back(system);
-	system->set_system_bit(GetBitFor(system->family_name()));
+	system->set_system_bit(GetBitFor(system));
 
 	// keep systems sorted by layer
 	sort(systems_.begin(), systems_.end(), CompareSystems());
 }
 
-long GetBitFor(const std::string &family_name) {
+long GetBitFor(const boost::shared_ptr<EntitySystem> &system) {
 	SystemBitMap::iterator it;
 	long bit;
 
-	it = system_bits_.find(family_name);
+	it = system_bits_.find(system);
 	if (it == system_bits_.end()) {
 		bit = next_bit_;
 		next_bit_ <<= 1;
-		system_bits_[family_name] = bit;
+		system_bits_[system] = bit;
 	} else {
 		bit = it->second;
 	}

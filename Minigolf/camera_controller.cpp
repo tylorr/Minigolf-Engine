@@ -12,7 +12,7 @@ using glm::mat3;
 using glm::vec3;
 using boost::shared_ptr;
 
-CameraController::CameraController() : EntitySystem("CameraController") {
+CameraController::CameraController() {
 }
 
 CameraController::~CameraController() {
