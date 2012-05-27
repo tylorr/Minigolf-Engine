@@ -87,7 +87,6 @@
     <ClCompile Include="basic_material.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="camera_controller.cpp" />
-    <ClCompile Include="component_mapper.cpp" />
     <ClCompile Include="component_type.cpp" />
     <ClCompile Include="component_type_manager.cpp" />
     <ClCompile Include="entity.cpp" />

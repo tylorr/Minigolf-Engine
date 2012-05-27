@@ -6,6 +6,7 @@
 #include <typeinfo.h>
 
 #include <boost\shared_ptr.hpp>
+#include <boost\type_traits\is_base_of.hpp>
 
 #include "component_type_manager.h"
 #include "entity.h"
@@ -44,6 +45,11 @@ namespace EntityManager {
 
 	template <typename T>
 	boost::shared_ptr<T> GetComponent(const EntityPtr &entity, const ComponentTypePtr &comp_type) {
+		static_assert(
+			(boost::is_base_of<Component, T>::value),
+			"T must be a descendant of Component"
+		);
+
 		return boost::dynamic_pointer_cast<T>(GetComponent(entity, comp_type));
 	}
 
