@@ -14,16 +14,36 @@ class EntitySystem {
 public:
 	int layer_;
 
+	/*
+		remarks:	Use the constructor to clear pointers and set default values
+	*/
 	EntitySystem(const int &layer = 0) : layer_(layer), type_bits_(0) { }
+
+	/*
+		remarks:	Use the destructor to make sure that all memory has been cleared
+	*/
 	~EntitySystem();
 
-	virtual void OnChange(const EntityPtr &entity);
-
+	/*
+		remarks:	Use this stage to configure data (usually loaded from a level)
+					Overload this to give it your own parameters, but make sure that
+					you call it yourself.
+	*/
 	virtual void Init() { }
 
+	/*
+		remarks:	Use this stage to make any inter-system connections
+	*/
 	virtual void Resolve() { }
 
+	/*
+		remarks:	Use this stage to clear memory and release assets
+	*/
+	virtual void Deinit() { }
+
 	virtual void Process();
+
+	virtual void OnChange(const EntityPtr &entity);
 
 	void set_system_bit(const long &bit) {
 		system_bit_ = bit;
