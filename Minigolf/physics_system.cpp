@@ -202,10 +202,13 @@ bool PhysicsSystem::Intersect(const vec3 &start, const vec3 &end, const VolumePt
 	static const unsigned int PLANE_FRONT = 0;
 	static const unsigned int PLANE_BACK = 1;
 	static const unsigned int ON_PLANE = 2;
+
+	float radius = 0.05f;
 	
 	float p;
 	vec3 n = wall->normal;
-	float d = -glm::dot(n, wall->vertices[0]);
+	vec3 offset = n * radius;
+	float d = -glm::dot(n, (wall->vertices[0] + offset));
 	unsigned int start_loc = 3;
 	unsigned int end_loc = 3;
 	
@@ -260,13 +263,18 @@ bool PhysicsSystem::Intersect(const vec3 &start, const vec3 &end, const VolumePt
 		pos = vec2(intersect.z, intersect.y);
 	}
 
+	vec2 vert;
 	vector<vec2> vertices;
 	vector<vec3>::const_iterator it;
 	for (it = wall->vertices.begin(); it != wall->vertices.end(); ++it) {
 		if (x_axis) {
-			vertices.push_back(vec2(it->x, it->y));
+			vert = vec2(it->x, it->y);
+			vert += vec2(offset.x, offset.y);
+			vertices.push_back(vert);
 		} else {
-			vertices.push_back(vec2(it->z, it->y));
+			vert = vec2(it->z, it->y);
+			vert += vec2(offset.z, offset.y);
+			vertices.push_back(vert);
 		}
 	}
 
