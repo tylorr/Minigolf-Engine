@@ -33,6 +33,7 @@ namespace Inner {
 };
 
 ComponentTypePtr GetTypeFor(const ComponentPtr &component) {
-	return Inner::GetTypeFor(typeid(*component));
+	const type_info &ti = typeid(*component);
+	return Inner::GetTypeFor(ti);
 }
 };
