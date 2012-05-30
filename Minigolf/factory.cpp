@@ -127,7 +127,7 @@ EntityPtr CreateTile(const Tile &tile, const boost::shared_ptr<Material> &materi
 	mat->Initialize();
 
 	shared_ptr<Geometry> geometry = Planar(mat->shader_program(), tile.vertices);
-
+	
 	// build the mesh
 	MeshPtr mesh(new Mesh());
 	mesh->geometry = geometry;

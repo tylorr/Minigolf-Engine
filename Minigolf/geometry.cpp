@@ -1,7 +1,6 @@
 #include "geometry.h"
 
 Geometry::~Geometry() {
-	//Destroy();
 }
 
 // TODO: Maybe this should go in the constructor
@@ -63,10 +62,11 @@ void Geometry::Initialize(const GLuint &program, const GLenum &draw_mode, const 
 }
 
 void Geometry::Destroy() {
-	//glDeleteBuffers(1, &vertex_buffer_object_);
-	//glDeleteBuffers(1, &index_buffer_object_);
+	glDeleteBuffers(1, &vertex_buffer_object_);
+	glDeleteBuffers(1, &index_buffer_object_);
 	//glDeleteVertexArrays(1, &vertex_array_object_);
-	//ExitOnGLError("ERROR: Could not destroy the buffer objects");
+
+	ExitOnGLError("ERROR: Could not destroy the buffer objects");
 }
 
 void Geometry::Draw() const {

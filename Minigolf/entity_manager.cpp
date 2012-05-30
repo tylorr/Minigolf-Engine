@@ -16,8 +16,6 @@ namespace EntityManager {
 
 // kind of like private static variables
 namespace {
-	
-
 	int next_id_;
 	int next_unique_id_;
 
@@ -27,6 +25,23 @@ namespace {
 
 	unordered_map<string, EntityPtr> entity_names_;
 };
+
+void Destroy() {
+	EntityBag::iterator it, ite;
+	EntityPtr entity;
+
+	for (it = active_entities_.begin(), ite = active_entities_.end(); it != ite; ++it) {
+		entity = *it;
+		if (entity) {
+			Remove(entity);
+		}
+	}
+
+	active_entities_.clear();
+	inactive_entities_.clear();
+	components_by_type_.clear();
+	entity_names_.clear();
+}
 
 EntityPtr Create() {
 	// temp
@@ -64,13 +79,14 @@ EntityPtr Create() {
 
 void Remove(const EntityPtr &entity) {
 	// remove entity from bag
-	active_entities_[entity->id()] = EntityPtr();
+	active_entities_[entity->id()].reset();
 
 	// this may not be necessary
 	entity->RemoveTypeBit(~0);
 
 	SystemManager::Refresh(entity);
-	// todo: decrement count
+	
+	RemoveComponentsOfEntity(entity);
 
 	// add entity to inactive list for later use
 	inactive_entities_.push_back(entity);
@@ -107,6 +123,27 @@ void AddComponent(const EntityPtr &entity, const ComponentPtr &component) {
 	SystemManager::Refresh(entity);
 }
 
+void RemoveComponentsOfEntity(const EntityPtr &entity) {
+	ComponentByTypeBag::iterator it;
+	ComponentByTypeBag::iterator ite;
+	ComponentBagPtr components;
+	ComponentPtr component;
+
+	unsigned int id = entity->id();
+
+	for (it = components_by_type_.begin(), ite = components_by_type_.end(); it != ite; ++it) {
+		components = *it;
+		if (components && id < components->size()) {
+			component = (*components)[id];
+
+			if (component) {
+				component->Deinit();
+				component.reset();
+			}
+		}
+	}
+}
+
 void RemoveComponent(const EntityPtr &entity, const ComponentPtr &component) {
 	// find type from component
 	ComponentTypePtr type = ComponentTypeManager::GetTypeFor(component);
@@ -116,9 +153,13 @@ void RemoveComponent(const EntityPtr &entity, const ComponentPtr &component) {
 void RemoveComponent(const EntityPtr &entity, const ComponentTypePtr &type) {
 	// get list of components
 	ComponentBagPtr components = components_by_type_[type->id()];
+	ComponentPtr component;
+
+	component = (*components)[entity->id()];
 
 	// remove component/entity relationship
-	(*components)[entity->id()] = ComponentPtr();
+	component->Deinit();
+	component.reset();
 
 	// remove bit from entity
 	entity->RemoveTypeBit(type->bit());

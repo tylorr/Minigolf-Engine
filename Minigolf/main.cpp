@@ -240,7 +240,7 @@ void TimerFunction(int Value)
 	glutTimerFunc(250, TimerFunction, 1);
 }
 
-void Destroy()
-{
+void Destroy() {
+	EntityManager::Destroy();
 	ShaderCache::Destroy();
 }

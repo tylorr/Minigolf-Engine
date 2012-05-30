@@ -36,11 +36,6 @@ public:
 	*/
 	virtual void Resolve() { }
 
-	/*
-		remarks:	Use this stage to clear memory and release assets
-	*/
-	virtual void Deinit() { }
-
 	virtual void Process();
 
 	virtual void OnChange(const EntityPtr &entity);

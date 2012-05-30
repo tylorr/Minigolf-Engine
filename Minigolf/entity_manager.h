@@ -1,4 +1,4 @@
-#ifndef ENTITY_MANAGER_H
+	#ifndef ENTITY_MANAGER_H
 #define ENTITY_MANAGER_H
 
 #include <deque>
@@ -23,6 +23,8 @@ namespace EntityManager {
 	typedef boost::shared_ptr<ComponentBag> ComponentBagPtr;
 	typedef std::deque<ComponentBagPtr> ComponentByTypeBag;
 
+	void Destroy();
+
 	/*
 		output:		A new empty Entity with new unique_id
 
@@ -36,6 +38,8 @@ namespace EntityManager {
 		remarks:	Binds a component to an Entity. 
 	*/
 	void AddComponent(const EntityPtr &entity, const ComponentPtr &component);
+
+	void RemoveComponentsOfEntity(const EntityPtr &entity);
 
 	void RemoveComponent(const EntityPtr &entity, const ComponentPtr &component);
 

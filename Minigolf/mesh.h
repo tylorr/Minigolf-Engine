@@ -11,6 +11,20 @@
 struct Mesh : public Component {
 	boost::shared_ptr<Material> material;
 	boost::shared_ptr<Geometry> geometry;
+
+	virtual ~Mesh() {
+#if _DEBUG
+		assert(!material);
+		assert(!geometry);
+#endif
+	}
+
+	virtual void Deinit() {
+		geometry->Destroy();
+
+		material.reset();
+		geometry.reset();
+	}
 };
 
 typedef boost::shared_ptr<Mesh> MeshPtr;

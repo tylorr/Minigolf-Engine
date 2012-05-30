@@ -18,6 +18,8 @@ struct Component {
 					a derived object.
 	*/
 	virtual ~Component() { }
+
+	virtual void Deinit() { }
 };
 
 typedef boost::shared_ptr<Component> ComponentPtr;
