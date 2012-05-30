@@ -36,7 +36,6 @@ void PhysicsSystem::Resolve(){
 }
 
 void PhysicsSystem::Process(){
-
 	TransformPtr ball_transform = transform_mapper_(ball_);
 	BallComponentPtr ball_comp = ball_comp_mapper_(ball_);
 
@@ -155,11 +154,15 @@ void PhysicsSystem::UpdateTile(const TransformPtr &ball_transform) {
 void PhysicsSystem::ApplyFriction(){
 	//grab ball component and dampen velocity based on coefficient of friction
 	BallComponentPtr ball_comp = ball_comp_mapper_(ball_);
-	ball_comp->velocity *= friction_;
+	//ball_comp->velocity *= friction_;
+	static const float epsilon = 0.05f;
+	float speed = glm::length(ball_comp->velocity);
 
-	static const float epsilon = 0.01f;
+	if (speed > epsilon) {
+		ball_comp->acceleration += -(ball_comp->velocity);
+	}
 
-	if (glm::length(ball_comp->velocity) < epsilon) {
+	if (speed < epsilon) {
 		ball_comp->velocity = vec3();
 	}
 }
@@ -178,7 +181,8 @@ void PhysicsSystem::ApplyGravity(){
 
 	float delta = Time::GetDeltaTime();
 	if(glm::length(r)>0){ glm::normalize(r); }
-	ball_comp->velocity += r * gravity_ * delta;
+	//ball_comp->velocity += r * gravity_ * delta;
+	ball_comp->acceleration += (r * gravity_);
 }
 
 void PhysicsSystem::UpdateCollision(const TransformPtr &ball_transform) {
@@ -300,6 +304,4 @@ void PhysicsSystem::ResolveCollision(const TransformPtr &ball_transform, const v
 	vec3 w = glm::dot(normal, -direction) * normal;
 	vec3 result = w + (w + direction);
 	ball_comp->velocity = result;
-
-	
 }
