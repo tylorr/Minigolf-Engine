@@ -58,7 +58,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glew32.lib;freeglut.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;freeglut.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\Minigolf\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -79,7 +79,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>glew32.lib;freeglut.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;freeglut.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -94,6 +94,7 @@
     <ClCompile Include="entity_system.cpp" />
     <ClCompile Include="factory.cpp" />
     <ClCompile Include="file_handling.cpp" />
+    <ClCompile Include="gui.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="material.cpp" />
@@ -118,6 +119,8 @@
     <ClInclude Include="entity_manager.h" />
     <ClInclude Include="entity_system.h" />
     <ClInclude Include="factory.h" />
+    <ClInclude Include="gui.h" />
+    <ClInclude Include="gui_text.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="material.h" />

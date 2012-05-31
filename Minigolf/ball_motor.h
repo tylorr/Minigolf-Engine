@@ -9,7 +9,7 @@ class Entity;
 
 class BallMotor : public EntitySystem {
 public:
-	BallMotor();
+	BallMotor(const int &layer);
 	virtual ~BallMotor();
 
 	virtual void Resolve();

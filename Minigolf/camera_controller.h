@@ -11,7 +11,7 @@ class Entity;
 
 class CameraController : public EntitySystem {
 public:
-	CameraController();
+	CameraController(const int &layer);
 	~CameraController();
 
 	virtual void Init();

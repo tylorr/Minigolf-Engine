@@ -26,7 +26,7 @@ using glm::transpose;
 using glm::mat4;
 using glm::mat3;
 
-RenderSystem::RenderSystem() {
+RenderSystem::RenderSystem(const int &layer) : EntitySystem(layer) {
 	TrackType<Transform>();
 	TrackType<Mesh>();
 }
@@ -45,6 +45,8 @@ void RenderSystem::ProcessEntities(const EntityMap &entities) {
 	if (entities.empty()) {
 		return;
 	}
+
+	
 
 	EntityMap::const_iterator it, ite;
 	ComponentPtr component;

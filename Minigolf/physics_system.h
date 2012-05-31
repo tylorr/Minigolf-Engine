@@ -19,15 +19,12 @@ struct BallComponent;
 
 class PhysicsSystem : public EntitySystem {
 public:
+	PhysicsSystem(const int &layer);
+	~PhysicsSystem();
+
 	void Init();
 	void Resolve();
 	void Process();
-	void GetVolumes();
-	void ApplyFriction();
-	void ApplyGravity();
-
-	PhysicsSystem();
-	~PhysicsSystem();
 private:
 	float gravity_;
 	float friction_;
@@ -45,6 +42,10 @@ private:
 	boost::shared_ptr<TileComponent> curr_tile;
 
 	void UpdateTile(const boost::shared_ptr<Transform> &ball_transform);
+
+	void GetVolumes();
+	void ApplyFriction();
+	void ApplyGravity();
 
 	void UpdateCollision(const boost::shared_ptr<Transform> &ball_transform);
 	bool Intersect(const glm::vec3 &start, const glm::vec3 &end, const boost::shared_ptr<Volume> &wall, glm::vec3 &normal, glm::vec3 &penetration);

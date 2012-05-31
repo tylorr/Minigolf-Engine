@@ -108,6 +108,9 @@
     <ClCompile Include="physics_system.cpp">
       <Filter>Source Files\game\systems</Filter>
     </ClCompile>
+    <ClCompile Include="gui.cpp">
+      <Filter>Source Files\game\systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="entity.h">
@@ -196,6 +199,12 @@
     </ClInclude>
     <ClInclude Include="component_mapper.h">
       <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="gui_text.h">
+      <Filter>Header Files\game\components</Filter>
+    </ClInclude>
+    <ClInclude Include="gui.h">
+      <Filter>Header Files\game\systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

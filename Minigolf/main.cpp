@@ -22,12 +22,12 @@
 	THE SOFTWARE.
 */
 
-//#include <vld.h>
+
 #include <iostream>
 #include <typeinfo.h>
 
+#include <vld.h>
 #include <boost\shared_ptr.hpp>
-
 #include "glm\glm.hpp"
 
 #include "Utils.h"
@@ -44,6 +44,9 @@
 #include "time.h"
 #include "ball_motor.h"
 #include "physics_system.h"
+#include "camera.h"
+#include "gui.h"
+#include "gui_text.h"
 
 using boost::shared_ptr;
 
@@ -113,6 +116,7 @@ void InitOpenGL(int argc, char* argv[]) {
 
 void Initialize(int argc, char* argv[]) {
 	// check for existing of map file in args list
+	
 	if (argv[1] == NULL) {
 		fprintf(stderr, "Missing map file\n");
 		exit(EXIT_FAILURE);
@@ -120,22 +124,35 @@ void Initialize(int argc, char* argv[]) {
 
 	ShaderCache::AddShader("diffuse", "diffuse.vertex.2.1.glsl", "diffuse.fragment.2.1.glsl");
 
-	shared_ptr<RenderSystem> render_system = shared_ptr<RenderSystem>(new RenderSystem());
+	shared_ptr<RenderSystem> render_system = shared_ptr<RenderSystem>(new RenderSystem(50));
 	SystemManager::AddSystem(render_system);
 
-	shared_ptr<CameraController> controller(new CameraController());
+	shared_ptr<GUI> gui_system(new GUI(40));
+	SystemManager::AddSystem(gui_system);
+
+	shared_ptr<CameraController> controller(new CameraController(30));
 	SystemManager::AddSystem(controller);
 
-	shared_ptr<BallMotor> motor(new BallMotor());
+	shared_ptr<BallMotor> motor(new BallMotor(0));
 	SystemManager::AddSystem(motor);
 
-	shared_ptr<PhysicsSystem> physics_system(new PhysicsSystem());
+	shared_ptr<PhysicsSystem> physics_system(new PhysicsSystem(20));
 	SystemManager::AddSystem(physics_system);
 
 	Factory::CreateCamera(60.0f, (float)CurrentWidth / CurrentHeight, 0.1f, 1000.0f);
 
 	vector<Hole> h = readData(argv[1]);
 	Factory::CreateLevel(h.at(0));
+
+	/*
+	Example of adding text to the screen
+
+	EntityPtr entity = EntityManager::Create();
+	GUITextPtr text(new GUIText());
+	text->text = "Hello there";
+	text->position = glm::vec2(400.0f, 300.0f);
+	EntityManager::AddComponent(entity, text);
+	*/
 
 	SystemManager::Init();
 	SystemManager::Resolve();
@@ -182,7 +199,7 @@ void ResizeFunction(int Width, int Height)
 	
 	CurrentWidth = Width;
 	CurrentHeight = Height;
-	//glViewport(0, 0, CurrentWidth, CurrentHeight);
+	glViewport(0, 0, CurrentWidth, CurrentHeight);
 	
 	// todo: move this logic into camera controller
 	/*
@@ -194,6 +211,10 @@ void ResizeFunction(int Width, int Height)
 			100.0f
 		);
 	*/
+
+	EntityPtr camera = EntityManager::Find("Camera");
+	CameraPtr camera_comp = EntityManager::GetComponent<Camera>(camera);
+	camera_comp->aspect_ratio = CurrentWidth / (float)CurrentHeight;
 }
 
 void RenderFunction(void)

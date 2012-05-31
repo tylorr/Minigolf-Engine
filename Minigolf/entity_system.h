@@ -17,7 +17,7 @@ public:
 	/*
 		remarks:	Use the constructor to clear pointers and set default values
 	*/
-	EntitySystem(const int &layer = 0) : layer_(layer), type_bits_(0) { }
+	EntitySystem(const int &layer) : layer_(layer), type_bits_(0), system_bit_(0) { }
 
 	/*
 		remarks:	Use the destructor to make sure that all memory has been cleared

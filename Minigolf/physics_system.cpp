@@ -20,7 +20,7 @@ using boost::unordered_map;
 
 using glm::vec3;
 
-PhysicsSystem::PhysicsSystem() {
+PhysicsSystem::PhysicsSystem(const int &layer) : EntitySystem(layer) {
 }
 
 PhysicsSystem::~PhysicsSystem() {
