@@ -58,7 +58,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glew32.lib;freeglut.lib</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;freeglut.lib;SOIL.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\Minigolf\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -103,6 +103,7 @@
     <ClCompile Include="render_system.cpp" />
     <ClCompile Include="shader_cache.cpp" />
     <ClCompile Include="system_manager.cpp" />
+    <ClCompile Include="texture_cache.cpp" />
     <ClCompile Include="time.cpp" />
     <ClCompile Include="transform.cpp" />
     <ClCompile Include="Utils.cpp" />
@@ -121,7 +122,6 @@
     <ClInclude Include="factory.h" />
     <ClInclude Include="gui.h" />
     <ClInclude Include="gui_text.h" />
-    <ClInclude Include="HUD.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="material.h" />
     <ClInclude Include="geometry.h" />
@@ -134,6 +134,7 @@
     <ClInclude Include="entity.h" />
     <ClInclude Include="file_handling.h" />
     <ClInclude Include="system_manager.h" />
+    <ClInclude Include="texture_cache.h" />
     <ClInclude Include="tile_component.h" />
     <ClInclude Include="time.h" />
     <ClInclude Include="transform.h" />
@@ -150,6 +151,8 @@
     <None Include="hole.00.db" />
     <None Include="hole.01.db" />
     <None Include="hole.02.db" />
+    <None Include="texture.fragment.glsl" />
+    <None Include="texture.vertex.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

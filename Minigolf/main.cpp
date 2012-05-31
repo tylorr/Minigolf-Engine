@@ -26,9 +26,10 @@
 #include <iostream>
 #include <typeinfo.h>
 
-#include <vld.h>
+//#include <vld.h>
 #include <boost\shared_ptr.hpp>
 #include "glm\glm.hpp"
+#include "SOIL.h"
 
 #include "Utils.h"
 #include "file_handling.h"
@@ -47,6 +48,7 @@
 #include "camera.h"
 #include "gui.h"
 #include "gui_text.h"
+#include "texture_cache.h"
 
 using boost::shared_ptr;
 
@@ -101,13 +103,13 @@ void InitOpenGL(int argc, char* argv[]) {
 	);
 
 	glGetError();
+
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	ExitOnGLError("ERROR: Could not set OpenGL depth testing options");
 
-	// culling disabled so we can see the bottom of tiles
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
@@ -123,6 +125,7 @@ void Initialize(int argc, char* argv[]) {
 	}
 
 	ShaderCache::AddShader("diffuse", "diffuse.vertex.2.1.glsl", "diffuse.fragment.2.1.glsl");
+	ShaderCache::AddShader("texture", "texture.vertex.glsl", "texture.vertex.glsl");
 
 	shared_ptr<RenderSystem> render_system = shared_ptr<RenderSystem>(new RenderSystem(50));
 	SystemManager::AddSystem(render_system);
@@ -154,6 +157,7 @@ void Initialize(int argc, char* argv[]) {
 	EntityManager::AddComponent(entity, text);
 	*/
 
+	// These must be called after systems and entities created
 	SystemManager::Init();
 	SystemManager::Resolve();
 }

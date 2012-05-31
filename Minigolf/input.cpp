@@ -33,7 +33,6 @@ void KeyReleased(unsigned char key, int x, int y) {
 	string k;
 	k.push_back(tolower(key));
 
-	
 	keys[k] = false;
 }
 
