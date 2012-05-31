@@ -108,11 +108,14 @@
     <ClCompile Include="physics_system.cpp">
       <Filter>Source Files\game\systems</Filter>
     </ClCompile>
-    <ClCompile Include="gui.cpp">
-      <Filter>Source Files\game\systems</Filter>
-    </ClCompile>
     <ClCompile Include="texture_cache.cpp">
       <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="gui_text_render.cpp">
+      <Filter>Source Files\game\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="texture_material.cpp">
+      <Filter>Source Files\game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -203,11 +206,14 @@
     <ClInclude Include="gui_text.h">
       <Filter>Header Files\game\components</Filter>
     </ClInclude>
-    <ClInclude Include="gui.h">
-      <Filter>Header Files\game\systems</Filter>
-    </ClInclude>
     <ClInclude Include="texture_cache.h">
       <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="gui_text_render.h">
+      <Filter>Header Files\game\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="texture_material.h">
+      <Filter>Header Files\game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -228,10 +234,10 @@
     <None Include="diffuse.vertex.2.1.glsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="texture.fragment.glsl">
+    <None Include="texture.fragment.2.1.glsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="texture.vertex.glsl">
+    <None Include="texture.vertex.2.1.glsl">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

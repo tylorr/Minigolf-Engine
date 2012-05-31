@@ -1,19 +1,19 @@
 #include "GL\glew.h"
 #include "GL\freeglut.h"
 
-#include "gui.h"
+#include "gui_text_render.h"
 #include "gui_text.h"
 
-GUI::GUI(const int &layer) : EntitySystem(layer) {
-	TrackType<GUIText>();
+GuiTextRender::GuiTextRender(const int &layer) : EntitySystem(layer) {
+	TrackType<GuiText>();
 }
 
-GUI::~GUI() { }
+GuiTextRender::~GuiTextRender() { }
 
-void GUI::Init() { 
+void GuiTextRender::Init() { 
 }
 
-void GUI::ProcessEntities(const EntityMap &entities) {
+void GuiTextRender::ProcessEntities(const EntityMap &entities) {
 	EntityMap::const_iterator it, ite;
 	EntityPtr entity;
 	GUITextPtr gui_text;

@@ -46,7 +46,7 @@
 #include "ball_motor.h"
 #include "physics_system.h"
 #include "camera.h"
-#include "gui.h"
+#include "gui_text_render.h"
 #include "gui_text.h"
 #include "texture_cache.h"
 
@@ -125,22 +125,21 @@ void Initialize(int argc, char* argv[]) {
 	}
 
 	ShaderCache::AddShader("diffuse", "diffuse.vertex.2.1.glsl", "diffuse.fragment.2.1.glsl");
-	ShaderCache::AddShader("texture", "texture.vertex.glsl", "texture.vertex.glsl");
 
-	shared_ptr<RenderSystem> render_system = shared_ptr<RenderSystem>(new RenderSystem(50));
+	shared_ptr<RenderSystem> render_system(new RenderSystem(50));
 	SystemManager::AddSystem(render_system);
 
-	shared_ptr<GUI> gui_system(new GUI(40));
-	SystemManager::AddSystem(gui_system);
+	shared_ptr<GuiTextRender> gui_text_render(new GuiTextRender(40));
+	SystemManager::AddSystem(gui_text_render);
 
 	shared_ptr<CameraController> controller(new CameraController(30));
 	SystemManager::AddSystem(controller);
 
-	shared_ptr<BallMotor> motor(new BallMotor(0));
-	SystemManager::AddSystem(motor);
-
 	shared_ptr<PhysicsSystem> physics_system(new PhysicsSystem(20));
 	SystemManager::AddSystem(physics_system);
+
+	shared_ptr<BallMotor> motor(new BallMotor(0));
+	SystemManager::AddSystem(motor);
 
 	Factory::CreateCamera(60.0f, (float)CurrentWidth / CurrentHeight, 0.1f, 1000.0f);
 
@@ -151,7 +150,7 @@ void Initialize(int argc, char* argv[]) {
 	Example of adding text to the screen
 
 	EntityPtr entity = EntityManager::Create();
-	GUITextPtr text(new GUIText());
+	GUITextPtr text(new GuiText());
 	text->text = "Hello there";
 	text->position = glm::vec2(400.0f, 300.0f);
 	EntityManager::AddComponent(entity, text);
