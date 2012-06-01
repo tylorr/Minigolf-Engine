@@ -211,7 +211,7 @@ bool PhysicsSystem::Intersect(const vec3 &start, const vec3 &end, const VolumePt
 	
 	float p;
 	vec3 n = wall->normal;
-	vec3 offset = n * radius;
+	vec3 offset = vec3(0); //n * radius; // This hack for adding radius to ball does not work when walls do not form convex shape
 	float d = -glm::dot(n, (wall->vertices[0] + offset));
 	unsigned int start_loc = 3;
 	unsigned int end_loc = 3;
