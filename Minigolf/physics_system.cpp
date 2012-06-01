@@ -234,6 +234,8 @@ bool PhysicsSystem::Intersect(const vec3 &start, const vec3 &end, const VolumePt
 		end_loc = ON_PLANE;
 	}
 
+	/*
+	This hack only works if the walls form a convex shape
 	// HACK: tries to prevent ball from ever being behind a wall
 	if (start_loc == PLANE_BACK) {
 		TransformPtr ball_transform = transform_mapper_(ball_);
@@ -242,6 +244,7 @@ bool PhysicsSystem::Intersect(const vec3 &start, const vec3 &end, const VolumePt
 		ball_transform->set_position(new_start);
 		return false;
 	}
+	*/
 
 	MeshPtr mesh;// = EntityManager::GetComponent<Mesh>(wall_map_[wall], "Mesh");
 	shared_ptr<BasicMaterial> bm;// = boost::dynamic_pointer_cast<BasicMaterial>(mesh->material);
