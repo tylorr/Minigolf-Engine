@@ -8,17 +8,15 @@
 
 using boost::shared_ptr;
 
-BallMotor::BallMotor(const int &layer) : EntitySystem(layer) {
-}
-
-BallMotor::~BallMotor() {
-}
-
-void BallMotor::Resolve() {
-	ball_ = EntityManager::Find("Ball");
-}
+BallMotor::BallMotor(const int &layer) : EntitySystem(layer) { }
 
 void BallMotor::Process() {
+	EntityPtr ball_ = EntityManager::Find("Ball");
+
+	if (!ball_) {
+		return;
+	}
+
 	TransformPtr ball_transform = EntityManager::GetComponent<Transform>(ball_);
 	BallComponentPtr ball_comp = EntityManager::GetComponent<BallComponent>(ball_);
 

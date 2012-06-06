@@ -14,6 +14,11 @@ void GuiTextRender::Init() {
 }
 
 void GuiTextRender::ProcessEntities(const EntityMap &entities) {
+
+	if (entities.empty()) {
+		return;
+	}
+
 	EntityMap::const_iterator it, ite;
 	EntityPtr entity;
 	GUITextPtr gui_text;

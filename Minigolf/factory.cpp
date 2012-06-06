@@ -17,6 +17,7 @@
 #include "volume.h"
 #include "tile_component.h"
 #include "ball_component.h"
+#include "gui_mesh.h"
 
 namespace Factory {
 
@@ -40,10 +41,24 @@ namespace {
 		return vertex_list;
 	}
 
+	vector<vec3> VerticalSquare(const float &width, const float &height) {
+		vector<vec3> vertex_list;
+		float hw = width / 2.0f;
+		float hh = height / 2.0f;
+
+		vertex_list.push_back(vec3(hw, hh, 0));
+		vertex_list.push_back(vec3(-hw, hh, 0));
+		vertex_list.push_back(vec3(-hw, -hh, 0));
+		vertex_list.push_back(vec3(hw, -hh, 0));	
+
+		return vertex_list;
+	}
+
 	vec3 GetNormal(const vector<vec3> &vertex_list) {
 		return glm::normalize(glm::cross(vertex_list[2] - vertex_list[1], vertex_list[0] - vertex_list[1]));
 	}
 
+	/*
 	shared_ptr<Geometry> Texture(const GLuint &program, const vector<vec3> &vertex_list) {
 		Vertex *vertices;
 		GLuint *indices;
@@ -150,6 +165,7 @@ namespace {
 
 		return geometry;
 	}
+	*/
 }; // namespace
 
 // returns root entity, used to rotate entire scene
@@ -209,6 +225,29 @@ void CreateLevel(const Hole &hole) {
 	BallComponentPtr ball_comp(new BallComponent());
 	ball_comp->current_tile = tiles[hole.tee.id];
 	EntityManager::AddComponent(ball, ball_comp);
+
+	
+	/* This also doesnt work
+
+	// Test Gui shape
+	
+	shared_ptr<BasicMaterial> mat(new BasicMaterial("diffuse", vec4(0.0f, 0.0f, 5.0f, 1.0f), vec3(1.0f, 0.0f, 1.0f), vec3(0.8f, 0.8f, 0.8f)));
+	mat->Initialize();
+	shared_ptr<Geometry> geometry = Planar(mat->shader_program(), VerticalSquare(50, 50));
+	
+	
+	GuiMeshPtr mesh(new GuiMesh());
+	//MeshPtr mesh(new Mesh());
+	mesh->geometry = geometry;
+	mesh->material = mat;
+
+	TransformPtr transform(new Transform());
+	//transform->Translate(50, 50, 0);
+
+	EntityPtr test_gui = EntityManager::Create();
+	EntityManager::AddComponent(test_gui, mesh);
+	EntityManager::AddComponent(test_gui, transform);
+	*/
 }
 
 EntityPtr CreateCamera(const float &fov, const float &aspect, const float &near_plane, const float &far_plane) {

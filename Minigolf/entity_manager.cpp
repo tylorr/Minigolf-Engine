@@ -80,8 +80,8 @@ EntityPtr Create() {
 void Remove(const EntityPtr &entity) {
 	// remove entity from bag
 	active_entities_[entity->id()].reset();
+	entity_names_[entity->name].reset();
 
-	// this may not be necessary
 	entity->RemoveTypeBit(~0);
 
 	SystemManager::Refresh(entity);
@@ -90,6 +90,18 @@ void Remove(const EntityPtr &entity) {
 
 	// add entity to inactive list for later use
 	inactive_entities_.push_back(entity);
+}
+
+void RemoveAll() {
+	EntityBag::iterator it, ite;
+	EntityPtr entity;
+
+	for (it = active_entities_.begin(), ite = active_entities_.end(); it != ite; ++it) {
+		entity = *it;
+		if (entity) {
+			Remove(entity);
+		}
+	}
 }
 
 void AddComponent(const EntityPtr &entity, const ComponentPtr &component) {
@@ -187,6 +199,7 @@ ComponentPtr GetComponent(const EntityPtr &entity, const ComponentTypePtr &comp_
 
 void Register(const EntityPtr &entity, const std::string &name) {
 	entity_names_[name] = entity;
+	entity->name = name;
 }
 
 EntityPtr Find(const string &name) {

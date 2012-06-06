@@ -30,17 +30,20 @@ RenderSystem::RenderSystem(const int &layer) : EntitySystem(layer) {
 }
 
 void RenderSystem::Init() {
-	camera_ = EntityManager::Find("Camera");
+	
+}
+
+void RenderSystem::OnChange(const EntityPtr &entity) {
+	EntitySystem::OnChange(entity);
 }
 
 void RenderSystem::ProcessEntities(const EntityMap &entities) {
+	camera_ = EntityManager::Find("Camera");
 
-	if (entities.empty()) {
-		printf("Warning: RenderSystem: Entity list is empty\n");
+	if (!camera_ || entities.empty()) {
+		//printf("Warning: RenderSystem: Entity list is empty\n");
 		return;
 	}
-
-	
 
 	EntityMap::const_iterator it, ite;
 	ComponentPtr component;

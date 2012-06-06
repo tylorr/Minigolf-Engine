@@ -20,7 +20,9 @@ struct Mesh : public Component {
 	}
 
 	virtual void Deinit() {
-		geometry->Destroy();
+		if (geometry) {
+			geometry->Destroy();
+		}
 
 		material.reset();
 		geometry.reset();

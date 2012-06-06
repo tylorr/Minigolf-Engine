@@ -19,6 +19,8 @@ public:
 
 	virtual void Init();
 
+	virtual void OnChange(const EntityPtr &entity);
+
 	virtual void ProcessEntities(const EntityMap &entities);
 
 	//virtual bool CheckEntity(const bool &interest, const bool &contains, const boost::shared_ptr<Entity> &entity);

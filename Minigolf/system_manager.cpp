@@ -78,7 +78,6 @@ void Resolve() {
 }
 
 void Update() {
-	static_assert(true, "hello");
 	SystemList::iterator it;
 
 	for(it = systems_.begin(); it != systems_.end(); ++it) {

@@ -27,7 +27,7 @@ PhysicsSystem::~PhysicsSystem() {
 }
 
 void PhysicsSystem::Init(){
-	ball_ = EntityManager::Find("Ball");
+	
 	friction_ = 0.97f;
 	gravity_ = 15.f;
 }
@@ -36,6 +36,12 @@ void PhysicsSystem::Resolve(){
 }
 
 void PhysicsSystem::Process(){
+	ball_ = EntityManager::Find("Ball");
+
+	if (!ball_) {
+		return;
+	}
+
 	TransformPtr ball_transform = transform_mapper_(ball_);
 	BallComponentPtr ball_comp = ball_comp_mapper_(ball_);
 

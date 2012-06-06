@@ -25,6 +25,7 @@
 
 #include <iostream>
 #include <typeinfo.h>
+#include <signal.h>
 
 //#include <vld.h>
 #include <boost\shared_ptr.hpp>
@@ -48,7 +49,8 @@
 #include "camera.h"
 #include "gui_text_render.h"
 #include "gui_text.h"
-#include "texture_cache.h"
+#include "gui_mesh.h"
+#include "gui_mesh_render.h"
 
 using boost::shared_ptr;
 
@@ -60,6 +62,9 @@ int CurrentWidth = 800,
 
 unsigned FrameCount = 0;
 
+vector<Hole> holes;
+unsigned int hole_index;
+
 void InitOpenGL(int, char*[]);
 void InitWindow(int, char*[]);
 void Initialize(int, char*[]);
@@ -70,7 +75,15 @@ void IdleFunction(void);
 void TimerFunction(int);
 void Destroy(void);
 
+void MoveToHole(const unsigned int &index);
+
+extern "C" void HandleAbort(int signal_number) {
+	printf("Abort happened\n");
+}
+
 int main(int argc, char* argv[]) {
+	signal(SIGABRT, &HandleAbort);
+
 	InitOpenGL(argc, argv);
 	Initialize(argc, argv);
 
@@ -125,10 +138,12 @@ void Initialize(int argc, char* argv[]) {
 	}
 
 	ShaderCache::AddShader("diffuse", "diffuse.vertex.2.1.glsl", "diffuse.fragment.2.1.glsl");
-	ShaderCache::AddShader("color", "color.vertex.glsl", "color.fragment.glsl");
 
 	shared_ptr<RenderSystem> render_system(new RenderSystem(50));
 	SystemManager::AddSystem(render_system);
+
+	shared_ptr<GuiMeshRender> gui_mesh_render(new GuiMeshRender(55));
+	SystemManager::AddSystem(gui_mesh_render);
 
 	shared_ptr<GuiTextRender> gui_text_render(new GuiTextRender(40));
 	SystemManager::AddSystem(gui_text_render);
@@ -142,10 +157,9 @@ void Initialize(int argc, char* argv[]) {
 	shared_ptr<BallMotor> motor(new BallMotor(0));
 	SystemManager::AddSystem(motor);
 
-	Factory::CreateCamera(60.0f, (float)CurrentWidth / CurrentHeight, 0.1f, 1000.0f);
-
-	vector<Hole> h = readData(argv[1]);
-	Factory::CreateLevel(h.at(0));
+	holes = readData(argv[1]);
+	hole_index = 0;
+	MoveToHole(hole_index);
 
 	/*
 	Example of adding text to the screen
@@ -217,6 +231,11 @@ void ResizeFunction(int Width, int Height)
 	*/
 
 	EntityPtr camera = EntityManager::Find("Camera");
+
+	if (!camera) {
+		return;
+	}
+
 	CameraPtr camera_comp = EntityManager::GetComponent<Camera>(camera);
 	camera_comp->aspect_ratio = CurrentWidth / (float)CurrentHeight;
 }
@@ -231,6 +250,15 @@ void RenderFunction(void)
 		
 	SystemManager::Update();
 
+	if (Input::GetKeyDown("n")) {
+		// todo: Switch to next level
+		MoveToHole(hole_index + 1);
+	} else if (Input::GetKeyDown("m")) {
+		// todo: sweitch to previous level
+		MoveToHole(hole_index - 1);
+	}
+
+	// warning: input update must happen after systems
 	Input::Update();
 
 	glutSwapBuffers();
@@ -268,4 +296,29 @@ void TimerFunction(int Value)
 void Destroy() {
 	EntityManager::Destroy();
 	ShaderCache::Destroy();
+}
+
+void MoveToHole(const unsigned int &index) {
+	if (index < 0 || index >= holes.size()) {
+		//fprintf(stderr, "Hole index out of bounds\n");
+		//exit(EXIT_FAILURE);
+		return;
+	}
+
+	// are we already at this hole?
+	//if (index == hole_index) {
+	//	return;
+	//}
+
+	
+	hole_index = index;
+
+	if (index == 2) {
+		int i = 0;
+	}
+
+	EntityManager::RemoveAll();
+
+	Factory::CreateCamera(60.0f, (float)CurrentWidth / CurrentHeight, 0.1f, 1000.0f);
+	Factory::CreateLevel(holes[hole_index]);
 }

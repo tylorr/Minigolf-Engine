@@ -261,5 +261,6 @@
     <None Include="color.vertex.glsl">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="course.db" />
   </ItemGroup>
 </Project>

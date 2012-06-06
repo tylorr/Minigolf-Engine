@@ -12,6 +12,9 @@
 struct GuiMesh;
 struct Transform;
 
+/*
+	remarks:	Seems that this doesn't work either
+*/
 class GuiMeshRender : public EntitySystem {
 public:
 	GuiMeshRender(const int &layer = 0);

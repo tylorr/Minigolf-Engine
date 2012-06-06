@@ -33,6 +33,7 @@ namespace EntityManager {
 	EntityPtr Create();
 
 	void Remove(const EntityPtr &entity);
+	void RemoveAll();
 
 	/*
 		remarks:	Binds a component to an Entity. 
