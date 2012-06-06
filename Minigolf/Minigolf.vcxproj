@@ -155,8 +155,6 @@
   <ItemGroup>
     <None Include="..\.gitignore" />
     <None Include="..\README" />
-    <None Include="add.lua" />
-    <None Include="avg.lua" />
     <None Include="color.fragment.glsl" />
     <None Include="color.vertex.glsl" />
     <None Include="course.db" />
@@ -167,7 +165,6 @@
     <None Include="hole.00.db" />
     <None Include="hole.01.db" />
     <None Include="hole.02.db" />
-    <None Include="test.lua" />
     <None Include="texture.fragment.2.1.glsl" />
     <None Include="texture.vertex.2.1.glsl" />
   </ItemGroup>
