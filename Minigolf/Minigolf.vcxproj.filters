@@ -279,5 +279,11 @@
     <None Include="test.lua">
       <Filter>Scripts</Filter>
     </None>
+    <None Include="add.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="avg.lua">
+      <Filter>Scripts</Filter>
+    </None>
   </ItemGroup>
 </Project>

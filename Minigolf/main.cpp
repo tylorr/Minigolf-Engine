@@ -86,30 +86,13 @@ extern "C" void HandleAbort(int signal_number) {
 
 int main(int argc, char* argv[]) {
 	signal(SIGABRT, &HandleAbort);
-
-	/*
-	L = lua_open();
-
-	luaL_openlibs(L);
-
-	luaL_dofile(L, "test.lua");
-
-	lua_close(L);
-
-	printf( "Press enter to exit..." );
-	getchar();
-
-	return 0;
-	*/
-
 	
 	InitOpenGL(argc, argv);
 	Initialize(argc, argv);
 
 	glutMainLoop();
 
-	exit(EXIT_SUCCESS);
-	
+	return 0;
 }
 
 void InitOpenGL(int argc, char* argv[]) {

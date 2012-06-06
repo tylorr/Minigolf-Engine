@@ -53,13 +53,13 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <CompileAs>Default</CompileAs>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>C:\boost_1_49_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>References\opengl\include;References\glm\include;References\luabind\include;References\lua\include;References\soil\include;C:\boost_1_49_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glew32.lib;freeglut.lib;SOIL.lib;lua5.1.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)\Minigolf\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32.lib;freeglut.lib;SOIL.lib;lua.$(ConfigurationName).lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>References\soil\lib;References\lua\lib;References\opengl\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>
@@ -155,6 +155,8 @@
   <ItemGroup>
     <None Include="..\.gitignore" />
     <None Include="..\README" />
+    <None Include="add.lua" />
+    <None Include="avg.lua" />
     <None Include="color.fragment.glsl" />
     <None Include="color.vertex.glsl" />
     <None Include="course.db" />
