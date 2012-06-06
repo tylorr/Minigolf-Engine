@@ -125,6 +125,7 @@ void Initialize(int argc, char* argv[]) {
 	}
 
 	ShaderCache::AddShader("diffuse", "diffuse.vertex.2.1.glsl", "diffuse.fragment.2.1.glsl");
+	ShaderCache::AddShader("color", "color.vertex.glsl", "color.fragment.glsl");
 
 	shared_ptr<RenderSystem> render_system(new RenderSystem(50));
 	SystemManager::AddSystem(render_system);

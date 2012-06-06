@@ -117,6 +117,12 @@
     <ClCompile Include="texture_material.cpp">
       <Filter>Source Files\game</Filter>
     </ClCompile>
+    <ClCompile Include="color_material.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="gui_mesh_render.cpp">
+      <Filter>Source Files\game\systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="entity.h">
@@ -215,6 +221,15 @@
     <ClInclude Include="texture_material.h">
       <Filter>Header Files\game</Filter>
     </ClInclude>
+    <ClInclude Include="color_material.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="gui_mesh.h">
+      <Filter>Header Files\game\components</Filter>
+    </ClInclude>
+    <ClInclude Include="gui_mesh_render.h">
+      <Filter>Header Files\game\systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="diffuse.fragment.glsl">
@@ -238,6 +253,12 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="texture.vertex.2.1.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="color.fragment.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="color.vertex.glsl">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

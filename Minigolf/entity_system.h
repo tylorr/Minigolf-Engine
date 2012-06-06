@@ -22,7 +22,7 @@ public:
 	/*
 		remarks:	Use the destructor to make sure that all memory has been cleared
 	*/
-	~EntitySystem();
+	virtual ~EntitySystem() { }
 
 	/*
 		remarks:	Use this stage to configure data (usually loaded from a level)

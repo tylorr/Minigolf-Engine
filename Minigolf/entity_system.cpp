@@ -10,9 +10,6 @@ using std::vector;
 
 using boost::shared_ptr;
 
-EntitySystem::~EntitySystem() {
-}
-
 void EntitySystem::AddTypeBit(const long &bit) {
 	type_bits_ |= bit;
 }

@@ -3,6 +3,9 @@
 
 #include "material.h"
 
+/*
+	remarks:	This does not currently work
+*/
 class TextureMaterial : public Material {
 public:
 	TextureMaterial(const std::string &shader_program_key, const std::string &texture_key);

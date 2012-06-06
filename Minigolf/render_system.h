@@ -16,7 +16,6 @@ struct Camera;
 class RenderSystem : public EntitySystem {
 public:
 	RenderSystem(const int &layer = 0);
-	~RenderSystem();
 
 	virtual void Init();
 

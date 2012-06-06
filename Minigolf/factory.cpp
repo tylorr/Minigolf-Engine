@@ -17,7 +17,6 @@
 #include "volume.h"
 #include "tile_component.h"
 #include "ball_component.h"
-#include "texture_material.h"
 
 namespace Factory {
 
@@ -96,6 +95,55 @@ namespace {
 		// build the mesh
 		shared_ptr<Geometry> geometry(new Geometry());
 		geometry->Initialize(program, GL_TRIANGLE_STRIP, POSITION_NORMAL_TEX, vertices, N, indices, N);
+
+		delete [] vertices;
+		delete [] indices;
+
+		return geometry;
+	}
+
+	shared_ptr<Geometry> Color(const GLuint &program, const vector<vec3> &vertex_list) {
+		Vertex *vertices;
+		GLuint *indices;
+
+		vec3 vertex;
+		GLsizei N;
+		int i, index, count, vertex_index;
+
+		N = vertex_list.size();
+	
+		vertices = new Vertex[N];
+		indices = new GLuint[N];
+
+		// build the vertices
+		for (i = 0; i < N; ++i) {
+			vertex = vertex_list[i];
+
+			vertices[i].Position[0] = vertex.x;
+			vertices[i].Position[1] = vertex.y;
+			vertices[i].Position[2] = vertex.z;
+		}
+
+		// build the indices
+		index = count = 0;
+		while (index < N)
+		{
+			switch (index % 2) {
+			case 0:
+				vertex_index = (N - count) % N;
+				break;
+			case 1:
+				count++;
+				vertex_index = count;
+				break;
+			}
+			indices[index] = vertex_index;
+			index++;
+		}
+
+		// build the mesh
+		shared_ptr<Geometry> geometry(new Geometry());
+		geometry->Initialize(program, GL_TRIANGLE_STRIP, POSITION, vertices, N, indices, N);
 
 		delete [] vertices;
 		delete [] indices;
@@ -250,6 +298,7 @@ EntityPtr CreateBall(const TeeCup &tee) {
 
 	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(1.0f, 1.0f, 1.0f), vec3(0.8f, 0.8f, 0.8f)));
 	//shared_ptr<TextureMaterial> material(new TextureMaterial("texture", "img.png"));
+	//shared_ptr<ColorMaterial> material(new ColorMaterial("color", vec3(1, 1, 1)));
 	material->Initialize();
 
 	shared_ptr<Geometry> geometry = Planar(material->shader_program(), vertex_list);

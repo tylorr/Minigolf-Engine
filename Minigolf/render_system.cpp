@@ -2,7 +2,6 @@
 
 #include "glm\glm.hpp"
 #include "glm\gtc\matrix_transform.hpp"
-#include "glm\gtx\string_cast.hpp"
 
 #include "render_system.h"
 #include "component_type.h"
@@ -14,7 +13,6 @@
 #include "camera.h"
 #include "entity.h"
 #include "basic_material.h"
-
 
 using std::string;
 
@@ -31,18 +29,14 @@ RenderSystem::RenderSystem(const int &layer) : EntitySystem(layer) {
 	TrackType<Mesh>();
 }
 
-RenderSystem::~RenderSystem() {
-}
-
 void RenderSystem::Init() {
 	camera_ = EntityManager::Find("Camera");
 }
 
 void RenderSystem::ProcessEntities(const EntityMap &entities) {
-	// todo: check for existance of camera
-	// todo: create component entity mapper like artemis has
 
 	if (entities.empty()) {
+		printf("Warning: RenderSystem: Entity list is empty\n");
 		return;
 	}
 
@@ -59,16 +53,15 @@ void RenderSystem::ProcessEntities(const EntityMap &entities) {
 	CameraPtr camera_comp = camera_mapper_(camera_);
 	TransformPtr camera_transform = transform_mapper_(camera_);
 
-	mat4 model, model_view, mvp;
+	mat4 model, view, projection, model_view, mvp;
 	mat3 normal;
-	mat4 view;
 
 	// view matrix is R^-1*-T
 	quat rot = glm::conjugate(camera_transform->rotation());
 	view = glm::mat4_cast(rot);
 	view = glm::translate(view, -camera_transform->position());
 
-	mat4 projection = camera_comp->Projection();
+	projection = camera_comp->Projection();
 	
 	for (it = entities.begin(), ite = entities.end(); it != ite; ++it) {
 		mesh = mesh_mapper_(it->second);
