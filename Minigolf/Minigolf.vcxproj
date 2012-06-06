@@ -107,6 +107,7 @@
     <ClCompile Include="geometry.cpp" />
     <ClCompile Include="physics_system.cpp" />
     <ClCompile Include="render_system.cpp" />
+    <ClCompile Include="script_system.cpp" />
     <ClCompile Include="shader_cache.cpp" />
     <ClCompile Include="system_manager.cpp" />
     <ClCompile Include="texture_cache.cpp" />
@@ -139,6 +140,8 @@
     <ClInclude Include="movement.h" />
     <ClInclude Include="physics_system.h" />
     <ClInclude Include="render_system.h" />
+    <ClInclude Include="script.h" />
+    <ClInclude Include="script_system.h" />
     <ClInclude Include="shader_cache.h" />
     <ClInclude Include="component.h" />
     <ClInclude Include="entity.h" />
@@ -165,6 +168,7 @@
     <None Include="hole.00.db" />
     <None Include="hole.01.db" />
     <None Include="hole.02.db" />
+    <None Include="test.lua" />
     <None Include="texture.fragment.2.1.glsl" />
     <None Include="texture.vertex.2.1.glsl" />
   </ItemGroup>

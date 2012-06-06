@@ -27,7 +27,7 @@
 #include <typeinfo.h>
 #include <signal.h>
 
-//#include <vld.h>
+#include <vld.h>
 #include <boost\shared_ptr.hpp>
 #include "glm\glm.hpp"
 #include "SOIL.h"
@@ -53,6 +53,8 @@
 #include "gui_text.h"
 #include "gui_mesh.h"
 #include "gui_mesh_render.h"
+#include "script.h"
+#include "script_system.h"
 
 using boost::shared_ptr;
 
@@ -143,7 +145,18 @@ void Initialize(int argc, char* argv[]) {
 		exit(EXIT_FAILURE);
 	}
 
-	ShaderCache::AddShader("diffuse", "diffuse.vertex.2.1.glsl", "diffuse.fragment.2.1.glsl");
+	//---------------------------------------------------------------------
+	// Initialize lua
+
+	L = luaL_newstate();
+	luaL_openlibs(L);
+	luabind::open(L);
+
+	//---------------------------------------------------------------------
+	// Initialize systems
+
+	shared_ptr<ScriptSystem> script_system(new ScriptSystem(L, 10));
+	SystemManager::AddSystem(script_system);
 
 	shared_ptr<RenderSystem> render_system(new RenderSystem(50));
 	SystemManager::AddSystem(render_system);
@@ -163,9 +176,19 @@ void Initialize(int argc, char* argv[]) {
 	shared_ptr<BallMotor> motor(new BallMotor(0));
 	SystemManager::AddSystem(motor);
 
+	//---------------------------------------------------------------------
+	// Entities and Components
+
+	ShaderCache::AddShader("diffuse", "diffuse.vertex.2.1.glsl", "diffuse.fragment.2.1.glsl");
+
 	holes = readData(argv[1]);
 	hole_index = 0;
 	MoveToHole(hole_index);
+
+	EntityPtr entity = EntityManager::Create();
+	ScriptPtr script(new Script());
+	script->file = "test.lua";
+	EntityManager::AddComponent(entity, script);
 
 	/*
 	Example of adding text to the screen
@@ -176,6 +199,9 @@ void Initialize(int argc, char* argv[]) {
 	text->position = glm::vec2(400.0f, 300.0f);
 	EntityManager::AddComponent(entity, text);
 	*/
+
+	//---------------------------------------------------------------------
+	// Finalize initialization
 
 	// These must be called after systems and entities created
 	SystemManager::Init();
@@ -299,11 +325,6 @@ void TimerFunction(int Value)
 	glutTimerFunc(250, TimerFunction, 1);
 }
 
-void Destroy() {
-	EntityManager::Destroy();
-	ShaderCache::Destroy();
-}
-
 void MoveToHole(const unsigned int &index) {
 	if (index < 0 || index >= holes.size()) {
 		//fprintf(stderr, "Hole index out of bounds\n");
@@ -323,4 +344,10 @@ void MoveToHole(const unsigned int &index) {
 
 	Factory::CreateCamera(60.0f, (float)CurrentWidth / CurrentHeight, 0.1f, 1000.0f);
 	Factory::CreateLevel(holes[hole_index]);
+}
+
+void Destroy() {
+	EntityManager::Destroy();
+	ShaderCache::Destroy();
+	lua_close(L);
 }

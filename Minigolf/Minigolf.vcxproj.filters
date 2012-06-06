@@ -129,6 +129,9 @@
     <ClCompile Include="gui_mesh_render.cpp">
       <Filter>Source Files\game\systems</Filter>
     </ClCompile>
+    <ClCompile Include="script_system.cpp">
+      <Filter>Source Files\game\systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="entity.h">
@@ -236,6 +239,12 @@
     <ClInclude Include="gui_mesh_render.h">
       <Filter>Header Files\game\systems</Filter>
     </ClInclude>
+    <ClInclude Include="script.h">
+      <Filter>Header Files\game\components</Filter>
+    </ClInclude>
+    <ClInclude Include="script_system.h">
+      <Filter>Header Files\game\systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="diffuse.fragment.glsl">
@@ -275,6 +284,9 @@
     </None>
     <None Include="hole.01.db">
       <Filter>Courses</Filter>
+    </None>
+    <None Include="test.lua">
+      <Filter>Scripts</Filter>
     </None>
   </ItemGroup>
 </Project>
