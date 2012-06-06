@@ -58,8 +58,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glew32.lib;freeglut.lib;SOIL.lib;lua.$(ConfigurationName).lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>References\soil\lib;References\lua\lib;References\opengl\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32.lib;freeglut.lib;SOIL.lib;lua.$(ConfigurationName).lib;luabind.$(ConfigurationName).lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>References\soil\lib;References\lua\lib;References\luabind\lib;References\opengl\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>

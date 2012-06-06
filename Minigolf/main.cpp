@@ -32,6 +32,7 @@
 #include "glm\glm.hpp"
 #include "SOIL.h"
 #include "lua.hpp"
+#include "luabind\luabind.hpp"
 
 #include "Utils.h"
 #include "file_handling.h"
@@ -133,6 +134,8 @@ void InitOpenGL(int argc, char* argv[]) {
 }
 
 void Initialize(int argc, char* argv[]) {
+	using boost::shared_ptr;
+
 	// check for existing of map file in args list
 	
 	if (argv[1] == NULL) {
