@@ -123,7 +123,7 @@ void InitOpenGL(int argc, char* argv[]) {
 	glDepthFunc(GL_LESS);
 	ExitOnGLError("ERROR: Could not set OpenGL depth testing options");
 
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
 	ExitOnGLError("ERROR: Could not set OpenGL culling options");
@@ -250,10 +250,10 @@ void RenderFunction(void)
 		
 	SystemManager::Update();
 
-	if (Input::GetKeyDown("n")) {
+	if (Input::GetKeyDown("]")) {
 		// todo: Switch to next level
 		MoveToHole(hole_index + 1);
-	} else if (Input::GetKeyDown("m")) {
+	} else if (Input::GetKeyDown("[")) {
 		// todo: sweitch to previous level
 		MoveToHole(hole_index - 1);
 	}

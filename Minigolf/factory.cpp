@@ -301,6 +301,7 @@ EntityPtr CreateWall(const vec3 &tile_normal, const vec3 &p1, const vec3 &p2) {
 
 	vec3 forward = glm::normalize(p2 - p1);
 	vec3 left = glm::normalize(glm::cross(tile_normal, forward));
+	
 	vec3 h3 = p2 + (tile_normal * height);
 	vec3 h4 = p1 + (tile_normal * height);
 
@@ -313,7 +314,7 @@ EntityPtr CreateWall(const vec3 &tile_normal, const vec3 &p1, const vec3 &p2) {
 
 	volume->normal = left;
 
-	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(1.0f, 0.0f, 0.0f), vec3(1.0f)));
+	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(left, 1.0f), vec3(1.0f, 0.0f, 0.0f), vec3(1.0f)));
 	material->Initialize();
 
 	shared_ptr<Geometry> geometry = Planar(material->shader_program(), volume->vertices);

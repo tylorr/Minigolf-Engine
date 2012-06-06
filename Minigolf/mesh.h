@@ -21,6 +21,7 @@ struct Mesh : public Component {
 
 	virtual void Deinit() {
 		if (geometry) {
+			// Not sure why this woul ever be null but it happens
 			geometry->Destroy();
 		}
 
