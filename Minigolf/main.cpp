@@ -31,6 +31,7 @@
 #include <boost\shared_ptr.hpp>
 #include "glm\glm.hpp"
 #include "SOIL.h"
+#include "lua.hpp"
 
 #include "Utils.h"
 #include "file_handling.h"
@@ -65,6 +66,8 @@ unsigned FrameCount = 0;
 vector<Hole> holes;
 unsigned int hole_index;
 
+lua_State *L;
+
 void InitOpenGL(int, char*[]);
 void InitWindow(int, char*[]);
 void Initialize(int, char*[]);
@@ -84,12 +87,29 @@ extern "C" void HandleAbort(int signal_number) {
 int main(int argc, char* argv[]) {
 	signal(SIGABRT, &HandleAbort);
 
+	/*
+	L = lua_open();
+
+	luaL_openlibs(L);
+
+	luaL_dofile(L, "test.lua");
+
+	lua_close(L);
+
+	printf( "Press enter to exit..." );
+	getchar();
+
+	return 0;
+	*/
+
+	
 	InitOpenGL(argc, argv);
 	Initialize(argc, argv);
 
 	glutMainLoop();
 
 	exit(EXIT_SUCCESS);
+	
 }
 
 void InitOpenGL(int argc, char* argv[]) {
@@ -312,11 +332,7 @@ void MoveToHole(const unsigned int &index) {
 
 	
 	hole_index = index;
-
-	if (index == 2) {
-		int i = 0;
-	}
-
+	
 	EntityManager::RemoveAll();
 
 	Factory::CreateCamera(60.0f, (float)CurrentWidth / CurrentHeight, 0.1f, 1000.0f);
