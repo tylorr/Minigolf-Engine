@@ -40,6 +40,12 @@
     <Filter Include="Source Files\game\systems">
       <UniqueIdentifier>{147172d7-99df-4cff-bea7-6f43fabdbb7e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Courses">
+      <UniqueIdentifier>{bb7d2eee-7993-4603-9e13-81f6827dcce2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scripts">
+      <UniqueIdentifier>{f9e6e817-841a-4fed-9748-feb0e084a00c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="entity.cpp">
@@ -108,7 +114,22 @@
     <ClCompile Include="physics_system.cpp">
       <Filter>Source Files\game\systems</Filter>
     </ClCompile>
-    <ClCompile Include="gui.cpp">
+    <ClCompile Include="texture_cache.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="gui_text_render.cpp">
+      <Filter>Source Files\game\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="texture_material.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="color_material.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="gui_mesh_render.cpp">
+      <Filter>Source Files\game\systems</Filter>
+    </ClCompile>
+    <ClCompile Include="script_system.cpp">
       <Filter>Source Files\game\systems</Filter>
     </ClCompile>
   </ItemGroup>
@@ -194,16 +215,34 @@
     <ClInclude Include="movement.h">
       <Filter>Header Files\game\components</Filter>
     </ClInclude>
-    <ClInclude Include="HUD.h">
-      <Filter>Header Files\game\components</Filter>
-    </ClInclude>
     <ClInclude Include="component_mapper.h">
       <Filter>Header Files\engine</Filter>
     </ClInclude>
     <ClInclude Include="gui_text.h">
       <Filter>Header Files\game\components</Filter>
     </ClInclude>
-    <ClInclude Include="gui.h">
+    <ClInclude Include="texture_cache.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="gui_text_render.h">
+      <Filter>Header Files\game\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="texture_material.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="color_material.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="gui_mesh.h">
+      <Filter>Header Files\game\components</Filter>
+    </ClInclude>
+    <ClInclude Include="gui_mesh_render.h">
+      <Filter>Header Files\game\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="script.h">
+      <Filter>Header Files\game\components</Filter>
+    </ClInclude>
+    <ClInclude Include="script_system.h">
       <Filter>Header Files\game\systems</Filter>
     </ClInclude>
   </ItemGroup>
@@ -216,14 +255,38 @@
     </None>
     <None Include="..\README" />
     <None Include="..\.gitignore" />
-    <None Include="hole.00.db" />
-    <None Include="hole.01.db" />
-    <None Include="hole.02.db" />
     <None Include="diffuse.fragment.2.1.glsl">
       <Filter>Shaders</Filter>
     </None>
     <None Include="diffuse.vertex.2.1.glsl">
       <Filter>Shaders</Filter>
+    </None>
+    <None Include="texture.fragment.2.1.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="texture.vertex.2.1.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="color.fragment.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="color.vertex.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="course.db">
+      <Filter>Courses</Filter>
+    </None>
+    <None Include="hole.02.db">
+      <Filter>Courses</Filter>
+    </None>
+    <None Include="hole.00.db">
+      <Filter>Courses</Filter>
+    </None>
+    <None Include="hole.01.db">
+      <Filter>Courses</Filter>
+    </None>
+    <None Include="test.lua">
+      <Filter>Scripts</Filter>
     </None>
   </ItemGroup>
 </Project>

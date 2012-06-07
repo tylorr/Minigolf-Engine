@@ -1,6 +1,8 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+#include <string>
+
 #include <boost\shared_ptr.hpp>
 
 /*
@@ -13,6 +15,8 @@
 */
 class Entity {
 public:
+	std::string name;
+
 	Entity();
 	Entity(const unsigned int &id);
 

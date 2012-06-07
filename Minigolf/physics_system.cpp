@@ -37,6 +37,12 @@ void PhysicsSystem::Resolve(){
 }
 
 void PhysicsSystem::Process(){
+	ball_ = EntityManager::Find("Ball");
+
+	if (!ball_) {
+		return;
+	}
+
 	TransformPtr ball_transform = transform_mapper_(ball_);
 	BallComponentPtr ball_comp = ball_comp_mapper_(ball_);
 
@@ -263,7 +269,7 @@ bool PhysicsSystem::Intersect(const vec3 &start, const vec3 &end, const VolumePt
 	
 	float p;
 	vec3 n = wall->normal;
-	vec3 offset = n * radius;
+	vec3 offset = vec3(0); //n * radius; // This hack for adding radius to ball does not work when walls do not form convex shape
 	float d = -glm::dot(n, (wall->vertices[0] + offset));
 	unsigned int start_loc = 3;
 	unsigned int end_loc = 3;
@@ -285,6 +291,18 @@ bool PhysicsSystem::Intersect(const vec3 &start, const vec3 &end, const VolumePt
 	} else  {
 		end_loc = ON_PLANE;
 	}
+
+	/*
+	This hack only works if the walls form a convex shape
+	// HACK: tries to prevent ball from ever being behind a wall
+	if (start_loc == PLANE_BACK) {
+		TransformPtr ball_transform = transform_mapper_(ball_);
+		BallComponentPtr ball_comp = ball_comp_mapper_(ball_);
+		vec3 new_start = start - ball_comp->velocity * Time::GetDeltaTime();
+		ball_transform->set_position(new_start);
+		return false;
+	}
+	*/
 
 	MeshPtr mesh;// = EntityManager::GetComponent<Mesh>(wall_map_[wall], "Mesh");
 	shared_ptr<BasicMaterial> bm;// = boost::dynamic_pointer_cast<BasicMaterial>(mesh->material);

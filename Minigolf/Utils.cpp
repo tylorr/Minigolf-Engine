@@ -5,8 +5,7 @@
 
 #include "Utils.h"
 
-void ExitOnGLError(const char* error_message)
-{
+void ExitOnGLError(const char* error_message) {
 	const GLenum ErrorValue = glGetError();
 
 	if (ErrorValue != GL_NO_ERROR)

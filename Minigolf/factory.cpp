@@ -17,6 +17,7 @@
 #include "volume.h"
 #include "tile_component.h"
 #include "ball_component.h"
+#include "gui_mesh.h"
 
 namespace Factory {
 
@@ -40,9 +41,131 @@ namespace {
 		return vertex_list;
 	}
 
+	vector<vec3> VerticalSquare(const float &width, const float &height) {
+		vector<vec3> vertex_list;
+		float hw = width / 2.0f;
+		float hh = height / 2.0f;
+
+		vertex_list.push_back(vec3(hw, hh, 0));
+		vertex_list.push_back(vec3(-hw, hh, 0));
+		vertex_list.push_back(vec3(-hw, -hh, 0));
+		vertex_list.push_back(vec3(hw, -hh, 0));	
+
+		return vertex_list;
+	}
+
 	vec3 GetNormal(const vector<vec3> &vertex_list) {
 		return glm::normalize(glm::cross(vertex_list[2] - vertex_list[1], vertex_list[0] - vertex_list[1]));
 	}
+
+	/*
+	shared_ptr<Geometry> Texture(const GLuint &program, const vector<vec3> &vertex_list) {
+		Vertex *vertices;
+		GLuint *indices;
+
+		vec3 vertex;
+		GLsizei N;
+		int i, index, count, vertex_index;
+
+		N = vertex_list.size();
+	
+		vertices = new Vertex[N];
+		indices = new GLuint[N];
+
+		vec3 normal = GetNormal(vertex_list);
+
+		// build the vertices
+		for (i = 0; i < N; ++i) {
+			vertex = vertex_list[i];
+
+			vertices[i].Position[0] = vertex.x;
+			vertices[i].Position[1] = vertex.y;
+			vertices[i].Position[2] = vertex.z;
+
+			vertices[i].Normal[0] = normal.x;
+			vertices[i].Normal[1] = normal.y;
+			vertices[i].Normal[2] = normal.z;
+
+			vertices[i].TexCoord[0] = 0;
+			vertices[i].TexCoord[1] = 0;
+		}
+
+		// build the indices
+		index = count = 0;
+		while (index < N)
+		{
+			switch (index % 2) {
+			case 0:
+				vertex_index = (N - count) % N;
+				break;
+			case 1:
+				count++;
+				vertex_index = count;
+				break;
+			}
+			indices[index] = vertex_index;
+			index++;
+		}
+
+		// build the mesh
+		shared_ptr<Geometry> geometry(new Geometry());
+		geometry->Initialize(program, GL_TRIANGLE_STRIP, POSITION_NORMAL_TEX, vertices, N, indices, N);
+
+		delete [] vertices;
+		delete [] indices;
+
+		return geometry;
+	}
+
+	shared_ptr<Geometry> Color(const GLuint &program, const vector<vec3> &vertex_list) {
+		Vertex *vertices;
+		GLuint *indices;
+
+		vec3 vertex;
+		GLsizei N;
+		int i, index, count, vertex_index;
+
+		N = vertex_list.size();
+	
+		vertices = new Vertex[N];
+		indices = new GLuint[N];
+
+		// build the vertices
+		for (i = 0; i < N; ++i) {
+			vertex = vertex_list[i];
+
+			vertices[i].Position[0] = vertex.x;
+			vertices[i].Position[1] = vertex.y;
+			vertices[i].Position[2] = vertex.z;
+		}
+
+		// build the indices
+		index = count = 0;
+		while (index < N)
+		{
+			switch (index % 2) {
+			case 0:
+				vertex_index = (N - count) % N;
+				break;
+			case 1:
+				count++;
+				vertex_index = count;
+				break;
+			}
+			indices[index] = vertex_index;
+			index++;
+		}
+
+		// build the mesh
+		shared_ptr<Geometry> geometry(new Geometry());
+		geometry->Initialize(program, GL_TRIANGLE_STRIP, POSITION, vertices, N, indices, N);
+
+		delete [] vertices;
+		delete [] indices;
+
+		return geometry;
+	}
+	*/
 }; // namespace
 
 // returns root entity, used to rotate entire scene
@@ -50,13 +173,15 @@ void CreateLevel(const Hole &hole) {
 	vector<Tile>::const_iterator it, ite;
 
 	// todo: Create light entity/component
-	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(0.0f, 1.0f, 0.0f), vec3(0.8f, 0.8f, 0.8f)));
-	material->Initialize();
+	
 	// todo: build material
 
 	EntityPtr ball = CreateBall(hole.tee);
 	CreateTee(hole.tee);
 	EntityPtr cup = CreateCup(hole.cup);
+
+	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(0.0f, 1.0f, 0.0f), vec3(0.8f, 0.8f, 0.8f)));
+	material->Initialize();
 
 	unordered_map<int, EntityPtr> tiles;
 
@@ -100,6 +225,29 @@ void CreateLevel(const Hole &hole) {
 	BallComponentPtr ball_comp(new BallComponent());
 	ball_comp->current_tile = tiles[hole.tee.id];
 	EntityManager::AddComponent(ball, ball_comp);
+
+	
+	/* This also doesnt work
+
+	// Test Gui shape
+	
+	shared_ptr<BasicMaterial> mat(new BasicMaterial("diffuse", vec4(0.0f, 0.0f, 5.0f, 1.0f), vec3(1.0f, 0.0f, 1.0f), vec3(0.8f, 0.8f, 0.8f)));
+	mat->Initialize();
+	shared_ptr<Geometry> geometry = Planar(mat->shader_program(), VerticalSquare(50, 50));
+	
+	
+	GuiMeshPtr mesh(new GuiMesh());
+	//MeshPtr mesh(new Mesh());
+	mesh->geometry = geometry;
+	mesh->material = mat;
+
+	TransformPtr transform(new Transform());
+	//transform->Translate(50, 50, 0);
+
+	EntityPtr test_gui = EntityManager::Create();
+	EntityManager::AddComponent(test_gui, mesh);
+	EntityManager::AddComponent(test_gui, transform);
+	*/
 }
 
 EntityPtr CreateCamera(const float &fov, const float &aspect, const float &near_plane, const float &far_plane) {
@@ -153,6 +301,7 @@ EntityPtr CreateWall(const vec3 &tile_normal, const vec3 &p1, const vec3 &p2) {
 
 	vec3 forward = glm::normalize(p2 - p1);
 	vec3 left = glm::normalize(glm::cross(tile_normal, forward));
+	
 	vec3 h3 = p2 + (tile_normal * height);
 	vec3 h4 = p1 + (tile_normal * height);
 
@@ -165,7 +314,7 @@ EntityPtr CreateWall(const vec3 &tile_normal, const vec3 &p1, const vec3 &p2) {
 
 	volume->normal = left;
 
-	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(1.0f, 0.0f, 0.0f), vec3(1.0f)));
+	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(left, 1.0f), vec3(1.0f, 0.0f, 0.0f), vec3(1.0f)));
 	material->Initialize();
 
 	shared_ptr<Geometry> geometry = Planar(material->shader_program(), volume->vertices);
@@ -188,6 +337,8 @@ EntityPtr CreateBall(const TeeCup &tee) {
 	vector<vec3> vertex_list = Square(0.25f, 0.25f);
 
 	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(1.0f, 1.0f, 1.0f), vec3(0.8f, 0.8f, 0.8f)));
+	//shared_ptr<TextureMaterial> material(new TextureMaterial("texture", "img.png"));
+	//shared_ptr<ColorMaterial> material(new ColorMaterial("color", vec3(1, 1, 1)));
 	material->Initialize();
 
 	shared_ptr<Geometry> geometry = Planar(material->shader_program(), vertex_list);

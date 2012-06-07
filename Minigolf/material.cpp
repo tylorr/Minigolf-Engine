@@ -9,6 +9,7 @@ Material::Material(const std::string &shader_program_key){
 }
 
 void Material::Initialize() {
+	ExitOnGLError("ERROR: Could not get shader uniform locations");
 	model_view_uniform_ = glGetUniformLocation(shader_program_, "ModelViewMatrix");
 	projection_uniform_ = glGetUniformLocation(shader_program_, "ProjectionMatrix");
 	mvp_uniform_ = glGetUniformLocation(shader_program_, "MVP");

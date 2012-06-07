@@ -15,7 +15,6 @@ public:
 	~CameraController();
 
 	virtual void Init();
-	virtual void Resolve();
 	virtual void Process();
 	
 
@@ -25,8 +24,7 @@ private:
 		glm::vec3 up;
 	};
 
-	EntityPtr camera_;
-	EntityPtr ball_;
+	
 
 	bool free_;
 	CameraProfile profile_;

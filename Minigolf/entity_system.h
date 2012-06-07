@@ -22,7 +22,7 @@ public:
 	/*
 		remarks:	Use the destructor to make sure that all memory has been cleared
 	*/
-	~EntitySystem();
+	virtual ~EntitySystem() { }
 
 	/*
 		remarks:	Use this stage to configure data (usually loaded from a level)
@@ -49,6 +49,8 @@ public:
 protected:
 	typedef boost::unordered_map<unsigned int, EntityPtr> EntityMap;
 
+	EntityMap active_entities_;
+
 	template <typename T>
 	void TrackType() {
 		ComponentTypePtr comp_type = ComponentTypeManager::GetTypeFor<T>();
@@ -72,8 +74,6 @@ protected:
 private:
 	long system_bit_;
 	long type_bits_;
-
-	EntityMap active_entities_;
 };
 
 #endif // ENTITY_SYSTEM_H

@@ -28,7 +28,7 @@ private:
 	GLenum draw_mode_;
 	GLsizei index_count_;
 
-	GLuint vertex_array_object_;
+	//GLuint vertex_array_object_;
 	GLuint vertex_buffer_object_;
 	GLuint index_buffer_object_;
 

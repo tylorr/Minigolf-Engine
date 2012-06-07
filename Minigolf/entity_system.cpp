@@ -10,9 +10,6 @@ using std::vector;
 
 using boost::shared_ptr;
 
-EntitySystem::~EntitySystem() {
-}
-
 void EntitySystem::AddTypeBit(const long &bit) {
 	type_bits_ |= bit;
 }
@@ -27,7 +24,7 @@ void EntitySystem::OnChange(const EntityPtr &entity) {
 	bool contains = (system_bit_ & entity->system_bits()) == system_bit_;
 	bool interest = (type_bits_ & entity->type_bits()) == type_bits_;
 
-	if (CheckEntity(interest, contains, entity) && type_bits_ > 0) {
+	if (type_bits_ > 0) {
 		if (interest && !contains) {
 			Add(entity);
 		} else if (!interest && contains) {

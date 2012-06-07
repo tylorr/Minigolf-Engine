@@ -16,9 +16,10 @@ struct Camera;
 class RenderSystem : public EntitySystem {
 public:
 	RenderSystem(const int &layer = 0);
-	~RenderSystem();
 
 	virtual void Init();
+
+	virtual void OnChange(const EntityPtr &entity);
 
 	virtual void ProcessEntities(const EntityMap &entities);
 

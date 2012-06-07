@@ -10,13 +10,8 @@ class Entity;
 class BallMotor : public EntitySystem {
 public:
 	BallMotor(const int &layer);
-	virtual ~BallMotor();
 
-	virtual void Resolve();
 	virtual void Process();
-
-private:
-	EntityPtr ball_;
 };
 
 #endif // BALL_MOTOR_H

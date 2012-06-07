@@ -9,11 +9,11 @@
 
 #include "component.h"
 
-struct GUIText : public Component {
+struct GuiText : public Component {
 	std::string text;
 	glm::vec2 position;
 };
 
-typedef boost::shared_ptr<GUIText> GUITextPtr;
+typedef boost::shared_ptr<GuiText> GUITextPtr;
 
 #endif // GUI_TEXT_H

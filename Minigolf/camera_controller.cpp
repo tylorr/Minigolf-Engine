@@ -32,12 +32,14 @@ void CameraController::Init() {
 	pitch_degrees_ = 0;
 }
 
-void CameraController::Resolve() {
-	camera_ = EntityManager::Find("Camera");
-	ball_ = EntityManager::Find("Ball");
-}
-
 void CameraController::Process() {
+	EntityPtr camera_ = EntityManager::Find("Camera");
+	EntityPtr ball_ = EntityManager::Find("Ball");
+
+	if (!camera_ || !ball_) {
+		return;
+	}
+
 	if (Input::GetKeyDown("1")) {
 		free_ = false;
 		profile_ = third_person_;

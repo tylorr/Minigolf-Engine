@@ -25,10 +25,14 @@
 
 #include <iostream>
 #include <typeinfo.h>
+#include <signal.h>
 
 #include <vld.h>
 #include <boost\shared_ptr.hpp>
 #include "glm\glm.hpp"
+#include "SOIL.h"
+#include "lua.hpp"
+#include "luabind\luabind.hpp"
 
 #include "Utils.h"
 #include "file_handling.h"
@@ -45,8 +49,12 @@
 #include "ball_motor.h"
 #include "physics_system.h"
 #include "camera.h"
-#include "gui.h"
+#include "gui_text_render.h"
 #include "gui_text.h"
+#include "gui_mesh.h"
+#include "gui_mesh_render.h"
+#include "script.h"
+#include "script_system.h"
 
 using boost::shared_ptr;
 
@@ -58,6 +66,11 @@ int CurrentWidth = 800,
 
 unsigned FrameCount = 0;
 
+vector<Hole> holes;
+unsigned int hole_index;
+
+lua_State *L;
+
 void InitOpenGL(int, char*[]);
 void InitWindow(int, char*[]);
 void Initialize(int, char*[]);
@@ -68,13 +81,21 @@ void IdleFunction(void);
 void TimerFunction(int);
 void Destroy(void);
 
+void MoveToHole(const unsigned int &index);
+
+extern "C" void HandleAbort(int signal_number) {
+	printf("Abort happened\n");
+}
+
 int main(int argc, char* argv[]) {
+	signal(SIGABRT, &HandleAbort);
+	
 	InitOpenGL(argc, argv);
 	Initialize(argc, argv);
 
 	glutMainLoop();
 
-	exit(EXIT_SUCCESS);
+	return 0;
 }
 
 void InitOpenGL(int argc, char* argv[]) {
@@ -101,20 +122,22 @@ void InitOpenGL(int argc, char* argv[]) {
 	);
 
 	glGetError();
+
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	ExitOnGLError("ERROR: Could not set OpenGL depth testing options");
 
-	// culling disabled so we can see the bottom of tiles
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
 	ExitOnGLError("ERROR: Could not set OpenGL culling options");
 }
 
 void Initialize(int argc, char* argv[]) {
+	using boost::shared_ptr;
+
 	// check for existing of map file in args list
 	
 	if (argv[1] == NULL) {
@@ -122,38 +145,65 @@ void Initialize(int argc, char* argv[]) {
 		exit(EXIT_FAILURE);
 	}
 
-	ShaderCache::AddShader("diffuse", "diffuse.vertex.2.1.glsl", "diffuse.fragment.2.1.glsl");
+	//---------------------------------------------------------------------
+	// Initialize lua
 
-	shared_ptr<RenderSystem> render_system = shared_ptr<RenderSystem>(new RenderSystem(50));
+	L = luaL_newstate();
+	luaL_openlibs(L);
+	luabind::open(L);
+
+	//---------------------------------------------------------------------
+	// Initialize systems
+
+	shared_ptr<ScriptSystem> script_system(new ScriptSystem(L, 10));
+	SystemManager::AddSystem(script_system);
+
+	shared_ptr<RenderSystem> render_system(new RenderSystem(50));
 	SystemManager::AddSystem(render_system);
 
-	shared_ptr<GUI> gui_system(new GUI(40));
-	SystemManager::AddSystem(gui_system);
+	shared_ptr<GuiMeshRender> gui_mesh_render(new GuiMeshRender(55));
+	SystemManager::AddSystem(gui_mesh_render);
+
+	shared_ptr<GuiTextRender> gui_text_render(new GuiTextRender(40));
+	SystemManager::AddSystem(gui_text_render);
 
 	shared_ptr<CameraController> controller(new CameraController(30));
 	SystemManager::AddSystem(controller);
 
-	shared_ptr<BallMotor> motor(new BallMotor(0));
-	SystemManager::AddSystem(motor);
-
 	shared_ptr<PhysicsSystem> physics_system(new PhysicsSystem(20));
 	SystemManager::AddSystem(physics_system);
 
-	Factory::CreateCamera(60.0f, (float)CurrentWidth / CurrentHeight, 0.1f, 1000.0f);
+	shared_ptr<BallMotor> motor(new BallMotor(0));
+	SystemManager::AddSystem(motor);
 
-	vector<Hole> h = readData(argv[1]);
-	Factory::CreateLevel(h.at(0));
+	//---------------------------------------------------------------------
+	// Entities and Components
+
+	ShaderCache::AddShader("diffuse", "diffuse.vertex.2.1.glsl", "diffuse.fragment.2.1.glsl");
+
+	holes = readData(argv[1]);
+	hole_index = 0;
+	MoveToHole(hole_index);
+
+	EntityPtr entity = EntityManager::Create();
+	ScriptPtr script(new Script());
+	script->file = "test.lua";
+	EntityManager::AddComponent(entity, script);
 
 	/*
 	Example of adding text to the screen
 
 	EntityPtr entity = EntityManager::Create();
-	GUITextPtr text(new GUIText());
+	GUITextPtr text(new GuiText());
 	text->text = "Hello there";
 	text->position = glm::vec2(400.0f, 300.0f);
 	EntityManager::AddComponent(entity, text);
 	*/
 
+	//---------------------------------------------------------------------
+	// Finalize initialization
+
+	// These must be called after systems and entities created
 	SystemManager::Init();
 	SystemManager::Resolve();
 }
@@ -213,6 +263,11 @@ void ResizeFunction(int Width, int Height)
 	*/
 
 	EntityPtr camera = EntityManager::Find("Camera");
+
+	if (!camera) {
+		return;
+	}
+
 	CameraPtr camera_comp = EntityManager::GetComponent<Camera>(camera);
 	camera_comp->aspect_ratio = CurrentWidth / (float)CurrentHeight;
 }
@@ -227,6 +282,15 @@ void RenderFunction(void)
 		
 	SystemManager::Update();
 
+	if (Input::GetKeyDown("]")) {
+		// todo: Switch to next level
+		MoveToHole(hole_index + 1);
+	} else if (Input::GetKeyDown("[")) {
+		// todo: sweitch to previous level
+		MoveToHole(hole_index - 1);
+	}
+
+	// warning: input update must happen after systems
 	Input::Update();
 
 	glutSwapBuffers();
@@ -261,7 +325,29 @@ void TimerFunction(int Value)
 	glutTimerFunc(250, TimerFunction, 1);
 }
 
+void MoveToHole(const unsigned int &index) {
+	if (index < 0 || index >= holes.size()) {
+		//fprintf(stderr, "Hole index out of bounds\n");
+		//exit(EXIT_FAILURE);
+		return;
+	}
+
+	// are we already at this hole?
+	//if (index == hole_index) {
+	//	return;
+	//}
+
+	
+	hole_index = index;
+	
+	EntityManager::RemoveAll();
+
+	Factory::CreateCamera(60.0f, (float)CurrentWidth / CurrentHeight, 0.1f, 1000.0f);
+	Factory::CreateLevel(holes[hole_index]);
+}
+
 void Destroy() {
 	EntityManager::Destroy();
 	ShaderCache::Destroy();
+	lua_close(L);
 }

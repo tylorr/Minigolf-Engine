@@ -83,9 +83,11 @@ void Geometry::Draw() const {
 		glEnableVertexAttribArray(tex_index_);
 		ExitOnGLError("ERROR: Could not enable attribute texture");
 	case POSITION_NORMAL:
-		glVertexAttribPointer(normal_index_, 3, GL_FLOAT, GL_FALSE, vertex_size_, (GLvoid*)normal_offset_);
-		glEnableVertexAttribArray(normal_index_);
-		ExitOnGLError("ERROR: Could not enable attribute normal");
+		if (normal_index_ != 4294967295) { 
+			glVertexAttribPointer(normal_index_, 3, GL_FLOAT, GL_FALSE, vertex_size_, (GLvoid*)normal_offset_);
+			glEnableVertexAttribArray(normal_index_);
+			ExitOnGLError("ERROR: Could not enable attribute normal");
+		}
 	case POSITION:
 		glVertexAttribPointer(position_index_, 3, GL_FLOAT, GL_FALSE, vertex_size_, (GLvoid*)0);
 		glEnableVertexAttribArray(position_index_);

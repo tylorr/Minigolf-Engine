@@ -13,6 +13,10 @@ namespace {
 }; // namespace
 
 void AddShader(const std::string &key, const char *vertex_file, const char *fragment_file) {
+	// Sanity check
+	assert(vertex_file != fragment_file);
+
+
 	GLuint program, vertex, fragment;
 	ShaderMap::iterator it;
 
