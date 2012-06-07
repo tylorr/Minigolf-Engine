@@ -54,11 +54,11 @@ void CreateLevel(const Hole &hole) {
 	material->Initialize();
 	// todo: build material
 
-	shared_ptr<Entity> ball = CreateBall(hole.tee);
+	EntityPtr ball = CreateBall(hole.tee);
 	CreateTee(hole.tee);
-	shared_ptr<Entity> cup = CreateCup(hole.cup);
+	EntityPtr cup = CreateCup(hole.cup);
 
-	unordered_map<int, shared_ptr<Entity>> tiles;
+	unordered_map<int, EntityPtr> tiles;
 
 	// building tiles
 	for (it = hole.tiles.begin(), ite = hole.tiles.end(); it != ite; ++it) {
@@ -66,11 +66,11 @@ void CreateLevel(const Hole &hole) {
 	}
 
 	// bind the tile_component to tile i.e. neighbors, walls, cup
-	shared_ptr<Entity> wall;
-	shared_ptr<TileComponent> tile_comp;
+	EntityPtr wall;
+	TileComponentPtr tile_comp;
 	for (it = hole.tiles.begin(), ite = hole.tiles.end(); it != ite; ++it) {
 
-		tile_comp = shared_ptr<TileComponent>(new TileComponent());
+		tile_comp = TileComponentPtr(new TileComponent());
 		for (size_t i = 0; i < it->neighbors.size(); ++i) {
 			int id = it->neighbors[i];
 
@@ -97,22 +97,22 @@ void CreateLevel(const Hole &hole) {
 	}
 
 	// Attach starting tile to ball
-	shared_ptr<BallComponent> ball_comp(new BallComponent());
+	BallComponentPtr ball_comp(new BallComponent());
 	ball_comp->current_tile = tiles[hole.tee.id];
 	EntityManager::AddComponent(ball, ball_comp);
 }
 
-shared_ptr<Entity> CreateCamera(const float &fov, const float &aspect, const float &near_plane, const float &far_plane) {
-	shared_ptr<Entity> entity = EntityManager::Create();
+EntityPtr CreateCamera(const float &fov, const float &aspect, const float &near_plane, const float &far_plane) {
+	EntityPtr entity = EntityManager::Create();
 
-	shared_ptr<Camera> camera(new Camera());
+	CameraPtr camera(new Camera());
 	camera->orthographic = false;
 	camera->field_of_view = fov;
 	camera->aspect_ratio = aspect;
 	camera->near_plane = near_plane;
 	camera->far_plane = far_plane;
 
-	shared_ptr<Transform> transform(new Transform());
+	TransformPtr transform(new Transform());
 
 	EntityManager::AddComponent(entity, camera);
 	EntityManager::AddComponent(entity, transform);
@@ -121,25 +121,25 @@ shared_ptr<Entity> CreateCamera(const float &fov, const float &aspect, const flo
 	return entity;
 }
 
-boost::shared_ptr<Entity> CreateTile(const Tile &tile, const boost::shared_ptr<Material> &material) {
+EntityPtr CreateTile(const Tile &tile, const boost::shared_ptr<Material> &material) {
 
 	shared_ptr<BasicMaterial> mat(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(0.0f, 1.0f, 0.0f), vec3(0.8f, 0.8f, 0.8f)));
 	mat->Initialize();
 
 	shared_ptr<Geometry> geometry = Planar(mat->shader_program(), tile.vertices);
-
+	
 	// build the mesh
-	shared_ptr<Mesh> mesh(new Mesh());
+	MeshPtr mesh(new Mesh());
 	mesh->geometry = geometry;
 	mesh->material = mat;
 
-	shared_ptr<Volume> volume(new Volume());
+	VolumePtr volume(new Volume());
 	volume->vertices = tile.vertices;
 	volume->normal = GetNormal(tile.vertices);
 
-	shared_ptr<Transform> transform(new Transform());
+	TransformPtr transform(new Transform());
 
-	shared_ptr<Entity> entity = EntityManager::Create();
+	EntityPtr entity = EntityManager::Create();
 
 	EntityManager::AddComponent(entity, mesh);
 	EntityManager::AddComponent(entity, transform);
@@ -148,7 +148,7 @@ boost::shared_ptr<Entity> CreateTile(const Tile &tile, const boost::shared_ptr<M
 	return entity;
 }
 
-boost::shared_ptr<Entity> CreateWall(const vec3 &tile_normal, const vec3 &p1, const vec3 &p2) {
+EntityPtr CreateWall(const vec3 &tile_normal, const vec3 &p1, const vec3 &p2) {
 	float height = 0.1f;
 
 	vec3 forward = glm::normalize(p2 - p1);
@@ -156,7 +156,7 @@ boost::shared_ptr<Entity> CreateWall(const vec3 &tile_normal, const vec3 &p1, co
 	vec3 h3 = p2 + (tile_normal * height);
 	vec3 h4 = p1 + (tile_normal * height);
 
-	shared_ptr<Volume> volume(new Volume());
+	VolumePtr volume(new Volume());
 
 	volume->vertices.push_back(h4);	
 	volume->vertices.push_back(h3);
@@ -170,13 +170,13 @@ boost::shared_ptr<Entity> CreateWall(const vec3 &tile_normal, const vec3 &p1, co
 
 	shared_ptr<Geometry> geometry = Planar(material->shader_program(), volume->vertices);
 
-	shared_ptr<Mesh> mesh(new Mesh());
+	MeshPtr mesh(new Mesh());
 	mesh->geometry = geometry;
 	mesh->material = material;
 
-	shared_ptr<Transform> transform(new Transform());
+	TransformPtr transform(new Transform());
 
-	shared_ptr<Entity> entity = EntityManager::Create();
+	EntityPtr entity = EntityManager::Create();
 	EntityManager::AddComponent(entity, mesh);
 	EntityManager::AddComponent(entity, transform);
 	EntityManager::AddComponent(entity, volume);
@@ -184,7 +184,7 @@ boost::shared_ptr<Entity> CreateWall(const vec3 &tile_normal, const vec3 &p1, co
 	return entity;
 }
 
-boost::shared_ptr<Entity> CreateBall(const TeeCup &tee) {
+EntityPtr CreateBall(const TeeCup &tee) {
 	vector<vec3> vertex_list = Square(0.25f, 0.25f);
 
 	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(1.0f, 1.0f, 1.0f), vec3(0.8f, 0.8f, 0.8f)));
@@ -192,15 +192,15 @@ boost::shared_ptr<Entity> CreateBall(const TeeCup &tee) {
 
 	shared_ptr<Geometry> geometry = Planar(material->shader_program(), vertex_list);
 
-	shared_ptr<Mesh> mesh(new Mesh());
+	MeshPtr mesh(new Mesh());
 	mesh->geometry = geometry;
 	mesh->material = material;
 
-	shared_ptr<Transform> transform(new Transform());
+	TransformPtr transform(new Transform());
 	transform->set_position(tee.position);
 	transform->Translate(0, 0.02f, 0);
 
-	shared_ptr<Entity> entity = EntityManager::Create();
+	EntityPtr entity = EntityManager::Create();
 	EntityManager::AddComponent(entity, mesh);
 	EntityManager::AddComponent(entity, transform);
 	EntityManager::Register(entity, "Ball");
@@ -208,7 +208,7 @@ boost::shared_ptr<Entity> CreateBall(const TeeCup &tee) {
 	return entity;
 }
 
-boost::shared_ptr<Entity> CreateTee(const TeeCup &tee) {
+EntityPtr CreateTee(const TeeCup &tee) {
 	vector<vec3> vertex_list = Square(0.25f, 0.25f);
 
 	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(0.0f, 0.0f, 1.0f), vec3(0.8f, 0.8f, 0.8f)));
@@ -216,22 +216,22 @@ boost::shared_ptr<Entity> CreateTee(const TeeCup &tee) {
 
 	shared_ptr<Geometry> geometry = Planar(material->shader_program(), vertex_list);
 
-	shared_ptr<Mesh> mesh(new Mesh());
+	MeshPtr mesh(new Mesh());
 	mesh->geometry = geometry;
 	mesh->material = material;
 
-	shared_ptr<Transform> transform(new Transform());
+	TransformPtr transform(new Transform());
 	transform->set_position(tee.position);
 	transform->Translate(0, 0.01f, 0);
 
-	shared_ptr<Entity> entity = EntityManager::Create();
+	EntityPtr entity = EntityManager::Create();
 	EntityManager::AddComponent(entity, mesh);
 	EntityManager::AddComponent(entity, transform);
 
 	return entity;
 }
 
-boost::shared_ptr<Entity> CreateCup(const TeeCup &cup) {
+EntityPtr CreateCup(const TeeCup &cup) {
 	vector<vec3> vertex_list = Square(0.5f, 0.5f);
 
 	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.8f, 0.8f, 0.8f)));
@@ -239,28 +239,30 @@ boost::shared_ptr<Entity> CreateCup(const TeeCup &cup) {
 
 	shared_ptr<Geometry> geometry = Planar(material->shader_program(), vertex_list);
 
-	shared_ptr<Mesh> mesh(new Mesh());
+	MeshPtr mesh(new Mesh());
 	mesh->geometry = geometry;
 	mesh->material = material;
 
-	vec3 p1 = cup.position + vec3(.5f,0,.5f);
-	vec3 p2 = cup.position + vec3(.5f,0,-.5f);
-	vec3 p3 = cup.position + vec3(-.5f,0,-.5f);
-	vec3 p4 = cup.position + vec3(-.5f,0,.5f);
+	vec3 p1 = cup.position + vec3(.3f,0, .3f);
+	vec3 p2 = cup.position + vec3(.3f,0, -.3f);
+	vec3 p3 = cup.position + vec3(-.3f,0, -.3f);
+	vec3 p4 = cup.position + vec3(-.3f,0, .3f);
 
 	shared_ptr<Volume> volume(new Volume());
 	volume->vertices.push_back(p1);	
 	volume->vertices.push_back(p2);
 	volume->vertices.push_back(p3);
 	volume->vertices.push_back(p4);
+	volume->normal = GetNormal(volume->vertices);
 
-	shared_ptr<Transform> transform(new Transform());
+	TransformPtr transform(new Transform());
 	transform->set_position(cup.position);
 	transform->Translate(0, 0.01f, 0);
 
-	shared_ptr<Entity> entity = EntityManager::Create();
+	EntityPtr entity = EntityManager::Create();
 	EntityManager::AddComponent(entity, mesh);
 	EntityManager::AddComponent(entity, transform);
+	EntityManager::AddComponent(entity, volume);
 
 	return entity;
 }

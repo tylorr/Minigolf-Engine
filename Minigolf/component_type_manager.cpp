@@ -2,31 +2,38 @@
 
 #include "component_type_manager.h"
 #include "component_type.h"
+#include "component.h"
 
 namespace ComponentTypeManager {
 
-using std::string;
-using boost::shared_ptr;
-
 namespace {
-	typedef boost::unordered_map<string, shared_ptr<ComponentType>> ComponentTypeMap;
+	typedef boost::unordered_map<const type_info *, ComponentTypePtr> ComponentTypeMap;
+
 	ComponentTypeMap component_types_;
 };
 
-shared_ptr<ComponentType> GetTypeFor(const string &family_name) {
-	shared_ptr<ComponentType> type;
-	ComponentTypeMap::iterator it;
+namespace Inner {
+	ComponentTypePtr GetTypeFor(const type_info &type) {
+		//make sure we are not passing something from boost i.e shared_ptr
+		//assert(!strstr(type.name(), "boost"));
+
+		ComponentTypePtr comp_type;
+		ComponentTypeMap::iterator it;
 	
-	it = component_types_.find(family_name);
-	if (it == component_types_.end()) {
-		type = shared_ptr<ComponentType>(new ComponentType());
-		component_types_[family_name] = type;
-	} else {
-		type = it->second;
-	}
+		it = component_types_.find(&type);
+		if (it == component_types_.end()) {
+			comp_type = ComponentTypePtr(new ComponentType());
+			component_types_[&type] = comp_type;
+		} else {
+			comp_type = it->second;
+		}
 
-	return type;
+		return comp_type;
+	}						
+};
+
+ComponentTypePtr GetTypeFor(const ComponentPtr &component) {
+	const type_info &ti = typeid(*component);
+	return Inner::GetTypeFor(ti);
 }
-
-
 };

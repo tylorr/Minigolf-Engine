@@ -12,7 +12,7 @@ using glm::mat3;
 using glm::vec3;
 using boost::shared_ptr;
 
-CameraController::CameraController() : EntitySystem("CameraController") {
+CameraController::CameraController(const int &layer) : EntitySystem(layer) {
 }
 
 CameraController::~CameraController() {
@@ -48,8 +48,8 @@ void CameraController::Process() {
 		free_ = true;
 	}
 
-	shared_ptr<Transform> ball_transform = EntityManager::GetComponent<Transform>(ball_, "Transform");
-	shared_ptr<Transform> camera_transform = EntityManager::GetComponent<Transform>(camera_, "Transform");
+	TransformPtr ball_transform = EntityManager::GetComponent<Transform>(ball_);
+	TransformPtr camera_transform = EntityManager::GetComponent<Transform>(camera_);
 
 	// are we in free mode?
 	if (free_) {

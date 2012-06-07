@@ -5,14 +5,15 @@
 
 #include <boost\shared_ptr.hpp>
 
-class Entity;
+#include "entity.h"
+
 class EntitySystem;
 
 namespace SystemManager {
 	void AddSystem(const boost::shared_ptr<EntitySystem> &system);
-	long GetBitFor(const std::string &family_name);
+	long GetBitFor(const boost::shared_ptr<EntitySystem> &system);
 
-	void Refresh(const boost::shared_ptr<Entity> &entity);
+	void Refresh(const EntityPtr &entity);
 
 	void Init();
 	void Resolve();

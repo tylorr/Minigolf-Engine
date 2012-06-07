@@ -9,14 +9,14 @@ class Entity;
 
 class BallMotor : public EntitySystem {
 public:
-	BallMotor();
+	BallMotor(const int &layer);
 	virtual ~BallMotor();
 
 	virtual void Resolve();
 	virtual void Process();
 
 private:
-	boost::shared_ptr<Entity> ball_;
+	EntityPtr ball_;
 };
 
 #endif // BALL_MOTOR_H

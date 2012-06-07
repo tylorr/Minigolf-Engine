@@ -1,6 +1,8 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include <boost\shared_ptr.hpp>
+
 #include "glm\glm.hpp"
 
 #include "component.h"
@@ -13,9 +15,9 @@ struct Camera: public Component {
 	float near_plane;
 	float far_plane;
 
-	Camera() : Component("Camera") { }
-
 	glm::mat4 Projection() const;
 };
+
+typedef boost::shared_ptr<Camera> CameraPtr;
 
 #endif // CAMERA_H

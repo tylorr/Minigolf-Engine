@@ -19,8 +19,7 @@ using glm::mat4;
 struct Transform : public Component {
 public:
 	Transform() 
-		: Component("Transform"), 
-		  scale_(1.0f),
+		: scale_(1.0f),
 		  right_(1.0f, 0.0f, 0.0f),
 		  up_(0.0f, 1.0f, 0.0f),
 		  forward_(0.0f, 0.0f, 1.0f) { }
@@ -62,5 +61,7 @@ private:
 	void UpdateAxes();
 	void UpdateMatrix();
 };
+
+typedef boost::shared_ptr<Transform> TransformPtr;
 
 #endif // TRANSFORM_H

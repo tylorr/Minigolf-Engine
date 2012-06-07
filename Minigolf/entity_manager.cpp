@@ -1,4 +1,5 @@
 #include <boost\unordered_map.hpp>
+#include <typeinfo.h>
 
 #include "entity_manager.h"
 #include "entity.h"
@@ -25,7 +26,24 @@ namespace {
 	unordered_map<string, EntityPtr> entity_names_;
 };
 
-shared_ptr<Entity> Create() {
+void Destroy() {
+	EntityBag::iterator it, ite;
+	EntityPtr entity;
+
+	for (it = active_entities_.begin(), ite = active_entities_.end(); it != ite; ++it) {
+		entity = *it;
+		if (entity) {
+			Remove(entity);
+		}
+	}
+
+	active_entities_.clear();
+	inactive_entities_.clear();
+	components_by_type_.clear();
+	entity_names_.clear();
+}
+
+EntityPtr Create() {
 	// temp
 	EntityPtr entity;
 
@@ -61,30 +79,31 @@ shared_ptr<Entity> Create() {
 
 void Remove(const EntityPtr &entity) {
 	// remove entity from bag
-	active_entities_[entity->id()] = EntityPtr();
+	active_entities_[entity->id()].reset();
 
 	// this may not be necessary
 	entity->RemoveTypeBit(~0);
 
 	SystemManager::Refresh(entity);
-	// todo: decrement count
+	
+	RemoveComponentsOfEntity(entity);
 
 	// add entity to inactive list for later use
 	inactive_entities_.push_back(entity);
 }
 
 void AddComponent(const EntityPtr &entity, const ComponentPtr &component) {
-	shared_ptr<ComponentType> type = ComponentTypeManager::GetTypeFor(component->family_name);
-	shared_ptr<ComponentBag> components;
+	ComponentTypePtr type = ComponentTypeManager::GetTypeFor(component);
+	ComponentBagPtr components;
 
 	// type not in bag?
 	if (type->id() >= components_by_type_.size()) {
 		components_by_type_.resize(type->id() * 2 + 1);
 	}
 
-	if (components_by_type_[type->id()] == shared_ptr<ComponentBag>())
+	if (components_by_type_[type->id()] == ComponentBagPtr())
 	{
-		components = shared_ptr<ComponentBag>(new ComponentBag());
+		components = ComponentBagPtr(new ComponentBag());
 		components_by_type_[type->id()] = components;
 	} else {
 		// grab existing type from bag
@@ -104,18 +123,43 @@ void AddComponent(const EntityPtr &entity, const ComponentPtr &component) {
 	SystemManager::Refresh(entity);
 }
 
+void RemoveComponentsOfEntity(const EntityPtr &entity) {
+	ComponentByTypeBag::iterator it;
+	ComponentByTypeBag::iterator ite;
+	ComponentBagPtr components;
+	ComponentPtr component;
+
+	unsigned int id = entity->id();
+
+	for (it = components_by_type_.begin(), ite = components_by_type_.end(); it != ite; ++it) {
+		components = *it;
+		if (components && id < components->size()) {
+			component = (*components)[id];
+
+			if (component) {
+				component->Deinit();
+				component.reset();
+			}
+		}
+	}
+}
+
 void RemoveComponent(const EntityPtr &entity, const ComponentPtr &component) {
 	// find type from component
-	shared_ptr<ComponentType> type = ComponentTypeManager::GetTypeFor(component->family_name);
+	ComponentTypePtr type = ComponentTypeManager::GetTypeFor(component);
 	RemoveComponent(entity, type);
 }
 
-void RemoveComponent(const EntityPtr &entity, const shared_ptr<ComponentType> &type) {
+void RemoveComponent(const EntityPtr &entity, const ComponentTypePtr &type) {
 	// get list of components
-	shared_ptr<ComponentBag> components = components_by_type_[type->id()];
+	ComponentBagPtr components = components_by_type_[type->id()];
+	ComponentPtr component;
+
+	component = (*components)[entity->id()];
 
 	// remove component/entity relationship
-	(*components)[entity->id()] = ComponentPtr();
+	component->Deinit();
+	component.reset();
 
 	// remove bit from entity
 	entity->RemoveTypeBit(type->bit());
@@ -123,13 +167,13 @@ void RemoveComponent(const EntityPtr &entity, const shared_ptr<ComponentType> &t
 	SystemManager::Refresh(entity);
 }
 
-ComponentPtr GetComponent(const EntityPtr &entity, const shared_ptr<ComponentType> &type) {
-	boost::shared_ptr<ComponentBag> bag; 
+ComponentPtr GetComponent(const EntityPtr &entity, const ComponentTypePtr &comp_type) {
+	ComponentBagPtr bag; 
 	ComponentPtr component;
 	
-	if (type->id() < components_by_type_.size()) {
+	if (comp_type->id() < components_by_type_.size()) {
 
-		bag = components_by_type_[type->id()];
+		bag = components_by_type_[comp_type->id()];
 
 		if (entity->id() < bag->size()) {
 			component = (*bag)[entity->id()];
@@ -138,12 +182,6 @@ ComponentPtr GetComponent(const EntityPtr &entity, const shared_ptr<ComponentTyp
 
 	return component;
 }
-
-/*
-ComponentPtr GetComponent(const EntityPtr &entity, const std::string &family_name) {
-	return GetComponent(entity, ComponentTypeManager::GetTypeFor(family_name));
-}
-*/
 
 
 

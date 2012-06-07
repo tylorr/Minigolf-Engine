@@ -1,6 +1,8 @@
 #ifndef COMPONENT_TYPE_H
 #define COMPONENT_TYPE_H
 
+#include <boost\shared_ptr.hpp>
+
 /*
 	remarks:	ComponentType stores information about the "type" of a component.
 				There is a unique mapping from the family name from a Component to 
@@ -24,5 +26,7 @@ private:
 	long bit_;
 	unsigned int id_;
 };
+
+typedef boost::shared_ptr<ComponentType> ComponentTypePtr;
 
 #endif // COMPONENT_TYPE_H

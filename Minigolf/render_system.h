@@ -6,28 +6,30 @@
 #include "glm\glm.hpp"
 
 #include "entity_system.h"
+#include "component_mapper.h"
+#include "transform.h"
 
-class ComponentType;
-struct Transform;
+//struct Transform;
+struct Mesh;
 struct Camera;
 
 class RenderSystem : public EntitySystem {
 public:
-	bool relative_;
-	glm::vec3 reference_;
-	glm::vec3 up_;
-
-	RenderSystem();
+	RenderSystem(const int &layer = 0);
 	~RenderSystem();
+
+	virtual void Init();
 
 	virtual void ProcessEntities(const EntityMap &entities);
 
 	//virtual bool CheckEntity(const bool &interest, const bool &contains, const boost::shared_ptr<Entity> &entity);
 
 private:
-	boost::shared_ptr<ComponentType> mesh_type_;
-	boost::shared_ptr<ComponentType> transform_type_;
-	
+	ComponentMapper<Transform> transform_mapper_;
+	ComponentMapper<Mesh> mesh_mapper_;
+	ComponentMapper<Camera> camera_mapper_;
+
+	boost::shared_ptr<Entity> camera_;
 };
 
 #endif // RENDERER_H

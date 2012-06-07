@@ -8,7 +8,7 @@
 
 using boost::shared_ptr;
 
-BallMotor::BallMotor() : EntitySystem("BallMotor") {
+BallMotor::BallMotor(const int &layer) : EntitySystem(layer) {
 }
 
 BallMotor::~BallMotor() {
@@ -19,8 +19,8 @@ void BallMotor::Resolve() {
 }
 
 void BallMotor::Process() {
-	shared_ptr<Transform> ball_transform = EntityManager::GetComponent<Transform>(ball_, "Transform");
-	shared_ptr<BallComponent> ball_comp = EntityManager::GetComponent<BallComponent>(ball_, "BallComponent");
+	TransformPtr ball_transform = EntityManager::GetComponent<Transform>(ball_);
+	BallComponentPtr ball_comp = EntityManager::GetComponent<BallComponent>(ball_);
 
 	float delta = Time::GetDeltaTime();
 	float speed = -10.0f;

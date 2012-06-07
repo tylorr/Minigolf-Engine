@@ -3,51 +3,66 @@
 
 #include <string>
 #include <vector>
+#include <typeinfo.h>
 
 #include <boost\shared_ptr.hpp>
 #include <boost\unordered_map.hpp>
 
-class Entity;
+#include "entity.h"
 
 class EntitySystem {
 public:
 	int layer_;
 
-	EntitySystem(const std::string &family_name, const int &layer = 0) : family_name_(family_name), layer_(layer), type_bits_(0) { }
+	/*
+		remarks:	Use the constructor to clear pointers and set default values
+	*/
+	EntitySystem(const int &layer) : layer_(layer), type_bits_(0), system_bit_(0) { }
+
+	/*
+		remarks:	Use the destructor to make sure that all memory has been cleared
+	*/
 	~EntitySystem();
 
-	virtual void OnChange(const boost::shared_ptr<Entity> &entity);
-
+	/*
+		remarks:	Use this stage to configure data (usually loaded from a level)
+					Overload this to give it your own parameters, but make sure that
+					you call it yourself.
+	*/
 	virtual void Init() { }
 
+	/*
+		remarks:	Use this stage to make any inter-system connections
+	*/
 	virtual void Resolve() { }
 
 	virtual void Process();
+
+	virtual void OnChange(const EntityPtr &entity);
 
 	void set_system_bit(const long &bit) {
 		system_bit_ = bit;
 	}
 
-	std::string family_name() {
-		return family_name_;
-	}
-
 	bool operator<(const EntitySystem &other);
 
 protected:
-	typedef boost::unordered_map<unsigned int, boost::shared_ptr<Entity>> EntityMap;
+	typedef boost::unordered_map<unsigned int, EntityPtr> EntityMap;
 
-	
+	template <typename T>
+	void TrackType() {
+		ComponentTypePtr comp_type = ComponentTypeManager::GetTypeFor<T>();
+		AddTypeBit(comp_type->bit());
+	}
 
-	void AddTypeByName(const std::string &family_name);
 	void AddTypeBit(const long &bit);
 
-	virtual bool CheckEntity(const bool &interest, const bool &contains, const boost::shared_ptr<Entity> &entity) { return true; }
+	virtual bool CheckEntity(const bool &interest, const bool &contains, const EntityPtr &entity) { return true; }
 
-	virtual void Add(const boost::shared_ptr<Entity> &entity);
-	virtual void Remove(const boost::shared_ptr<Entity> &entity);
-	virtual void Enable(const boost::shared_ptr<Entity> &entity);
-	virtual void Disable(const boost::shared_ptr<Entity> &entity);
+	virtual void Add(const EntityPtr &entity);
+	virtual void Remove(const EntityPtr &entity);
+	virtual void Enable(const EntityPtr &entity);
+	virtual void Disable(const EntityPtr &entity);
 
 	virtual void Begin() { }
 	virtual void End() { }
@@ -55,8 +70,6 @@ protected:
 	virtual void ProcessEntities(const EntityMap &entities) { }
 
 private:
-	std::string family_name_;
-
 	long system_bit_;
 	long type_bits_;
 

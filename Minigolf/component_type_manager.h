@@ -1,9 +1,12 @@
 #ifndef COMPONENT_TYPE_MANAGER_H
 #define COMPONENT_TYPE_MANAGER_H
 
-#include <string>
+#include <typeinfo.h>
 
 #include <boost\shared_ptr.hpp>
+#include <boost\type_traits\is_base_of.hpp>
+
+#include "component.h"
 
 class ComponentType;
 
@@ -13,14 +16,22 @@ class ComponentType;
 */
 namespace ComponentTypeManager {
 
-	/*
-		input:		A string representing the family_name of a Component. A new 
-					family_name - ComponentType relation is created if one does 
-					not exist
+	namespace Inner {
+		boost::shared_ptr<ComponentType> GetTypeFor(const type_info &type);
+	};
 
-		output:		A ComponentType that represents the family_name
-	*/
-	boost::shared_ptr<ComponentType> GetTypeFor(const std::string &family_name);
+	boost::shared_ptr<ComponentType> GetTypeFor(const boost::shared_ptr<Component> &component);
+
+	template <typename T>
+	boost::shared_ptr<ComponentType> GetTypeFor() {
+		static_assert(
+			(boost::is_base_of<Component, T>::value),
+			"T must be a descendant of Component"
+		);
+
+		const type_info &type = typeid(T);
+		return Inner::GetTypeFor(type);
+	}
 
 }; // namespace ComponentTypeManager
 

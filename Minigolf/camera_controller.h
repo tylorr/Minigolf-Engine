@@ -11,7 +11,7 @@ class Entity;
 
 class CameraController : public EntitySystem {
 public:
-	CameraController();
+	CameraController(const int &layer);
 	~CameraController();
 
 	virtual void Init();
@@ -25,8 +25,8 @@ private:
 		glm::vec3 up;
 	};
 
-	boost::shared_ptr<Entity> camera_;
-	boost::shared_ptr<Entity> ball_;
+	EntityPtr camera_;
+	EntityPtr ball_;
 
 	bool free_;
 	CameraProfile profile_;

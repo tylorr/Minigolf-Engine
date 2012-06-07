@@ -1,5 +1,4 @@
 #include <vector>
-#include <string>
 
 #include "glm\glm.hpp"
 #include "glm\gtc\matrix_transform.hpp"
@@ -16,6 +15,7 @@
 #include "entity.h"
 #include "basic_material.h"
 
+
 using std::string;
 
 using boost::shared_ptr;
@@ -26,22 +26,16 @@ using glm::transpose;
 using glm::mat4;
 using glm::mat3;
 
-using EntityManager::ComponentPtr;
-
-RenderSystem::RenderSystem() : EntitySystem("RenderSystem") {
-
-	
-
-	std::string mesh = "Mesh";
-	AddTypeByName(mesh);
-	mesh_type_ = ComponentTypeManager::GetTypeFor(mesh);
-
-	std::string transform = "Transform";
-	AddTypeByName(transform);
-	transform_type_ = ComponentTypeManager::GetTypeFor(transform);
+RenderSystem::RenderSystem(const int &layer) : EntitySystem(layer) {
+	TrackType<Transform>();
+	TrackType<Mesh>();
 }
 
 RenderSystem::~RenderSystem() {
+}
+
+void RenderSystem::Init() {
+	camera_ = EntityManager::Find("Camera");
 }
 
 void RenderSystem::ProcessEntities(const EntityMap &entities) {
@@ -52,16 +46,18 @@ void RenderSystem::ProcessEntities(const EntityMap &entities) {
 		return;
 	}
 
+	
+
 	EntityMap::const_iterator it, ite;
 	ComponentPtr component;
 
-	shared_ptr<Mesh> mesh;
-	shared_ptr<Transform> transform;
+	MeshPtr mesh;
+	TransformPtr transform;
 
 	// todo: make initialize step so this doesn't have to happen every time
-	shared_ptr<Entity> camera = EntityManager::Find("Camera");
-	shared_ptr<Camera> camera_comp = EntityManager::GetComponent<Camera>(camera, "Camera");
-	shared_ptr<Transform> camera_transform = EntityManager::GetComponent<Transform>(camera, "Transform");
+	
+	CameraPtr camera_comp = camera_mapper_(camera_);
+	TransformPtr camera_transform = transform_mapper_(camera_);
 
 	mat4 model, model_view, mvp;
 	mat3 normal;
@@ -75,10 +71,9 @@ void RenderSystem::ProcessEntities(const EntityMap &entities) {
 	mat4 projection = camera_comp->Projection();
 	
 	for (it = entities.begin(), ite = entities.end(); it != ite; ++it) {
-		mesh = EntityManager::GetComponent<Mesh>(it->second, "Mesh");
+		mesh = mesh_mapper_(it->second);
 
-		component = EntityManager::GetComponent(it->second, transform_type_);
-		transform = dynamic_pointer_cast<Transform>(component);
+		transform = transform_mapper_(it->second);
 
 		model = transform->world();
 		model_view = view * model;

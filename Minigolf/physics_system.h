@@ -5,45 +5,55 @@
 #include <boost\unordered_map.hpp>
 
 #include "glm\glm.hpp"
-
 #include "entity_system.h"
-#include "volume.h"
+#include "component_mapper.h"
+
+#define LIP_ACCEL			60.0f
+#define CUP_LIP_RADIUS		0.3f
+#define MAX_CUP_ENTRY_SPEED	10.0f
+#define MADE_CUP_RADIUS		0.1f
 
 class Entity;
 class ComponentType;
-struct TileComponent;
 struct Transform;
-
-using glm::vec3;
-using boost::unordered_map;
-using std::vector;
-using boost::shared_ptr;
+struct TileComponent;
+struct Volume;
+struct Mesh;
+struct BallComponent;
 
 class PhysicsSystem : public EntitySystem {
 public:
+	PhysicsSystem(const int &layer);
+	~PhysicsSystem();
+
 	void Init();
 	void Resolve();
 	void Process();
-	void GetVolumes();
-	void ApplyFriction();
-	void ApplyGravity();
-
-	PhysicsSystem();
-	~PhysicsSystem();
 private:
 	float gravity_;
 	float friction_;
+
+	ComponentMapper<Transform> transform_mapper_;
+	ComponentMapper<Volume> volume_mapper_;
+	ComponentMapper<Mesh> mesh_mapper_;
+	ComponentMapper<BallComponent> ball_comp_mapper_;
+	ComponentMapper<TileComponent> tile_comp_mapper_;
+
 	boost::shared_ptr<Entity> ball_;
 	std::vector<boost::shared_ptr<Volume>> tile_vols_;
 	//std::vector<boost::shared_ptr<Volume>> wall_vols_;
-	unordered_map<shared_ptr<Volume>, shared_ptr<Entity>> wall_map_;
+	boost::unordered_map<boost::shared_ptr<Volume>, boost::shared_ptr<Entity>> wall_map_;
 	boost::shared_ptr<TileComponent> curr_tile;
 
 	void UpdateTile(const boost::shared_ptr<Transform> &ball_transform);
 	void CheckCup(const boost::shared_ptr<Transform> &ball_transform);
 
+	void GetVolumes();
+	void ApplyFriction();
+	void ApplyGravity();
+
 	void UpdateCollision(const boost::shared_ptr<Transform> &ball_transform);
-	bool Intersect(const vec3 &start, const vec3 &end, const shared_ptr<Volume> &wall, glm::vec3 &normal, glm::vec3 &penetration);
+	bool Intersect(const glm::vec3 &start, const glm::vec3 &end, const boost::shared_ptr<Volume> &wall, glm::vec3 &normal, glm::vec3 &penetration);
 	void ResolveCollision(const boost::shared_ptr<Transform> &ball_transform, const glm::vec3 &normal, const glm::vec3 &penetration);
 };
 
