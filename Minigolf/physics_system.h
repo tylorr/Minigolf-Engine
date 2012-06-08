@@ -45,7 +45,8 @@ private:
 	boost::unordered_map<boost::shared_ptr<Volume>, boost::shared_ptr<Entity>> wall_map_;
 	boost::shared_ptr<TileComponent> curr_tile;
 
-	void UpdateTile(const boost::shared_ptr<Transform> &ball_transform);
+	bool UpdateTile(const boost::shared_ptr<Transform> &ball_transform, const boost::shared_ptr<BallComponent> &ball_comp, const boost::shared_ptr<Entity> &tile, const int &depth);
+	void ProjectToSlope(const boost::shared_ptr<Transform> &ball_transform, const boost::shared_ptr<BallComponent> &ball_comp, const boost::shared_ptr<Entity> &tile);
 	void CheckCup(const boost::shared_ptr<Transform> &ball_transform);
 
 	void GetVolumes();
@@ -57,4 +58,4 @@ private:
 	void ResolveCollision(const boost::shared_ptr<Transform> &ball_transform, const glm::vec3 &normal, const glm::vec3 &penetration);
 };
 
-#endif
+#endif // PHYSICS_SYSTEM_H

@@ -1,3 +1,4 @@
 
-friction = 0.5
+-- Physics variables
+friction = 0.2
 gravity = 15

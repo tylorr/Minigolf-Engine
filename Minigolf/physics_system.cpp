@@ -17,10 +17,8 @@
 #include "basic_material.h"
 #include "volume.h"
 
-
 using boost::shared_ptr;
 using boost::unordered_map;
-
 using glm::vec3;
 
 PhysicsSystem::PhysicsSystem(const int &layer, const std::string &script) : EntitySystem(layer, script) { }
@@ -44,16 +42,14 @@ void PhysicsSystem::Process(){
 	TransformPtr ball_transform = transform_mapper_(ball_);
 	BallComponentPtr ball_comp = ball_comp_mapper_(ball_);
 
-	MeshPtr mesh = mesh_mapper_(ball_comp->current_tile);
-	shared_ptr<BasicMaterial> bm = boost::dynamic_pointer_cast<BasicMaterial>(mesh->material);
-	bm->Ld_ = vec3(1, 1, 0);
+	
 	
 	//shared_ptr<TileComponent> curr_tile = EntityManager::GetComponent<TileComponent>(ball_comp->current_tile, "TileComponent");
 	//shared_ptr<Volume> volume_comp = EntityManager::GetComponent<Volume>(ball_comp->current_tile, "Volume");
 	float delta = Time::GetDeltaTime();
 
 	GetVolumes();
-	UpdateTile(ball_transform);
+	UpdateTile(ball_transform, ball_comp, ball_comp->current_tile, 3);
 	UpdateCollision(ball_transform);
 	ApplyGravity();
 	ApplyFriction();
@@ -125,14 +121,82 @@ void PhysicsSystem::GetVolumes()
 	}
 }
 
-void PhysicsSystem::UpdateTile(const TransformPtr &ball_transform) {
+bool PhysicsSystem::UpdateTile(const TransformPtr &ball_transform, const BallComponentPtr &ball_comp, const EntityPtr &tile, const int &depth) {
 	using glm::vec2; 
 
+	TileComponentPtr tile_comp = tile_comp_mapper_(tile);
+	VolumePtr tile_volume = volume_mapper_(tile);
+
+	if (depth < 0) {
+		return false;
+	}
+
+	vec3 v;
+	vec2 p;
+	vector<vec2> projected_vertices;
+	for (int j = 0, sizej = tile_volume->vertices.size(); j < sizej; ++j) {
+		v = tile_volume->vertices[j];
+		p = vec2(v.x, v.z);
+
+		projected_vertices.push_back(p);
+	}
+
+	vec2 point(ball_transform->position().x, ball_transform->position().z);
+
+	MeshPtr mesh = mesh_mapper_(tile);
+	shared_ptr<BasicMaterial> bm = boost::dynamic_pointer_cast<BasicMaterial>(mesh->material);
+
+	// is ball in this tile?
+	if (PointInPolygon(point, projected_vertices)) {
+		// color tile yellow
+		bm->Ld_ = vec3(1, 1, 0);
+
+		ProjectToSlope(ball_transform, ball_comp, tile);
+
+		// set ball's current tile
+		ball_comp->current_tile = tile;
+
+		return true;
+	} else {
+		bm->Ld_ = vec3(0, 1, 0);
+
+		vector<EntityPtr>::iterator it, ite;
+
+		for (it = tile_comp->neighbors.begin(), ite = tile_comp->neighbors.end(); it != ite; ++it) {
+			if (UpdateTile(ball_transform, ball_comp, *it, depth - 1)) {
+				return true;
+			}
+		}
+
+		/*
+		// This hack is broken
+		ball_comp->velocity = vec3(0);
+		ball_comp->acceleration = vec3(0);
+
+		VolumePtr volume = volume_mapper_(ball_comp->current_tile);
+
+		int N = volume->vertices.size();
+		vec3 position(0);
+
+		vector<vec3>::iterator jt, jte;
+		for (jt = volume->vertices.begin(), jte = volume->vertices.end(); jt != jte; ++jt) {
+			position += (*jt);
+		}
+
+		position /= N;
+
+		ball_transform->set_position(position);
+
+		ProjectToSlope(ball_transform, ball_comp, ball_comp->current_tile);
+		*/
+
+		return false;
+	}
+
+	/*
 	float radius = 0.05f;
 
 	VolumePtr curr_volume = tile_vols_[0];
-
-	BallComponentPtr ball_comp = ball_comp_mapper_(ball_);
 
 	// move ball  up slopes using projections
 	vec3 proj = Project(ball_transform->position(), curr_volume->normal, curr_volume->vertices[0]);
@@ -165,11 +229,19 @@ void PhysicsSystem::UpdateTile(const TransformPtr &ball_transform) {
 			shared_ptr<BasicMaterial> bm = boost::dynamic_pointer_cast<BasicMaterial>(mesh->material);
 			bm->Ld_ = vec3(0, 1, 0);
 
-			ball_comp->current_tile = curr_tile->neighbors[i - 1];
+			//ball_comp->current_tile = curr_tile->neighbors[i - 1];
 		
 			break;
 		}
 	}
+	*/
+}
+
+void PhysicsSystem::ProjectToSlope(const boost::shared_ptr<Transform> &ball_transform, const boost::shared_ptr<BallComponent> &ball_comp, const boost::shared_ptr<Entity> &tile) {
+	VolumePtr tile_volume = volume_mapper_(tile);
+	vec3 proj = Project(ball_transform->position(), tile_volume->normal, tile_volume->vertices[0]);
+	ball_transform->set_position(proj);
+	ball_transform->Translate(tile_volume->normal * ball_comp->radius);
 }
 
 void PhysicsSystem::CheckCup(const TransformPtr &ball_transform){

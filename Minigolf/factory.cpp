@@ -311,7 +311,6 @@ EntityPtr CreateBall(const TeeCup &tee) {
 
 	TransformPtr transform(new Transform());
 	transform->set_position(tee.position);
-	transform->Translate(0, ball_radius, 0);
 
 	BallComponentPtr ball_comp(new BallComponent());
 	ball_comp->radius = ball_radius;
