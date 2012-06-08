@@ -85,14 +85,15 @@ vector<Hole> readData(char* file)
 		}
 		else if(line_data.at(0) == "name")
 		{
-			/*for( int i=0;i<line_data.size();i++)
+			h.name.clear();
+			for(unsigned int i=1;i<line_data.size();i++)
 			{
-				h.name += line_data.at(i);
-			}*/
+				h.name += line_data.at(i) + " ";
+			}
 		}
 		else if(line_data.at(0) == "par")
 		{
-			h.par = stringToInt(line_data.at(1));
+			h.par = line_data.at(1); //stringToInt(line_data.at(1));
 		}
 		else if(line_data.at(0) == "end_hole")
 		{

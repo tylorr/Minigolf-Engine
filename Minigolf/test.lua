@@ -8,5 +8,5 @@ function Resolve()
 end
 
 function Update()
-	print("Scripts Update")
+	--print("Scripts Update")
 end
