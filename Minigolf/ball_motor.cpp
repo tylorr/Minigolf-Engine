@@ -90,12 +90,12 @@ void BallMotor::Process() {
 
 		if (Input::GetKey("t")) {
 			if(increasing){
-				power += .025f;
+				power += 5.f * delta;
 				if(power > 10.5f){increasing = false;}
 			}
 			else{
 				//EntityManager::Remove(hud_power_elements[(int)power]);
-				power -= .025f;
+				power -= 5.f*delta;
 				if(power < 0){power = 0; increasing = true;}
 			}
 		}
