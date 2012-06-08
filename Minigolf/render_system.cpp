@@ -29,10 +29,6 @@ RenderSystem::RenderSystem(const int &layer) : EntitySystem(layer) {
 	TrackType<Mesh>();
 }
 
-void RenderSystem::Init() {
-	
-}
-
 void RenderSystem::OnChange(const EntityPtr &entity) {
 	EntitySystem::OnChange(entity);
 }

@@ -10,9 +10,6 @@ GuiTextRender::GuiTextRender(const int &layer) : EntitySystem(layer) {
 
 GuiTextRender::~GuiTextRender() { }
 
-void GuiTextRender::Init() { 
-}
-
 void GuiTextRender::ProcessEntities(const EntityMap &entities) {
 
 	if (entities.empty()) {

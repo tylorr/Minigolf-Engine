@@ -170,6 +170,7 @@
     <None Include="hole.00.db" />
     <None Include="hole.01.db" />
     <None Include="hole.02.db" />
+    <None Include="testconfig.lua" />
     <None Include="test.lua" />
     <None Include="texture.fragment.2.1.glsl" />
     <None Include="texture.vertex.2.1.glsl" />

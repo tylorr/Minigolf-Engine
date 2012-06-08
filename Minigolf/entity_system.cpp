@@ -7,11 +7,27 @@
 
 using std::string;
 using std::vector;
-
 using boost::shared_ptr;
+
+void EntitySystem::ReloadScript() {
+	if (L == NULL) {
+		L = luaL_newstate();
+		luaL_openlibs(L);
+	}
+
+	luabind::open(L);
+
+	luaL_dofile(L, script_.c_str());
+}
 
 void EntitySystem::AddTypeBit(const long &bit) {
 	type_bits_ |= bit;
+}
+
+void EntitySystem::Init() {
+	if (has_script_) {
+		ReloadScript();
+	}
 }
 
 void EntitySystem::Process() {

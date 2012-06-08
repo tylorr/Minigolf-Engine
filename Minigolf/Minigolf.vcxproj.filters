@@ -288,5 +288,8 @@
     <None Include="test.lua">
       <Filter>Scripts</Filter>
     </None>
+    <None Include="testconfig.lua">
+      <Filter>Scripts</Filter>
+    </None>
   </ItemGroup>
 </Project>

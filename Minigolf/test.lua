@@ -1,6 +1,9 @@
 
 function Init()
 	print("Script Init")
+	--e = EntityManager:Create()
+	local e = Create()
+	print (e:id)
 end
 
 function Resolve()
@@ -8,5 +11,5 @@ function Resolve()
 end
 
 function Update()
-	print("Scripts Update")
+	--print("Scripts Update")
 end

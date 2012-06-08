@@ -27,7 +27,7 @@
 #include <typeinfo.h>
 #include <signal.h>
 
-#include <vld.h>
+//#include <vld.h>
 #include <boost\shared_ptr.hpp>
 #include "glm\glm.hpp"
 #include "SOIL.h"
@@ -85,6 +85,11 @@ void MoveToHole(const unsigned int &index);
 
 extern "C" void HandleAbort(int signal_number) {
 	printf("Abort happened\n");
+}
+
+template <typename T>
+void Bind() {
+	T::Bind(L);
 }
 
 int main(int argc, char* argv[]) {
@@ -152,6 +157,8 @@ void Initialize(int argc, char* argv[]) {
 	luaL_openlibs(L);
 	luabind::open(L);
 
+	Bind<Entity>();
+
 	//---------------------------------------------------------------------
 	// Initialize systems
 
@@ -170,7 +177,7 @@ void Initialize(int argc, char* argv[]) {
 	shared_ptr<CameraController> controller(new CameraController(30));
 	SystemManager::AddSystem(controller);
 
-	shared_ptr<PhysicsSystem> physics_system(new PhysicsSystem(20));
+	shared_ptr<PhysicsSystem> physics_system(new PhysicsSystem(20, "testconfig.lua"));
 	SystemManager::AddSystem(physics_system);
 
 	shared_ptr<BallMotor> motor(new BallMotor(0));
@@ -185,21 +192,22 @@ void Initialize(int argc, char* argv[]) {
 	hole_index = 0;
 	MoveToHole(hole_index);
 
+	/*
+	// Example logic script
 	EntityPtr entity = EntityManager::Create();
-	ScriptPtr script(new Script());
-	script->file = "test.lua";
+	ScriptPtr script(new Script("test.lua"));
 	EntityManager::AddComponent(entity, script);
+	*/
 
 	/*
-	Example of adding text to the screen
-
-	EntityPtr entity = EntityManager::Create();
+	// Example of adding text to the screen
+	EntityPtr t = EntityManager::Create();
 	GUITextPtr text(new GuiText());
 	text->text = "Hello there";
 	text->position = glm::vec2(400.0f, 300.0f);
-	EntityManager::AddComponent(entity, text);
+	EntityManager::AddComponent(t, text);
 	*/
-
+	
 	//---------------------------------------------------------------------
 	// Finalize initialization
 

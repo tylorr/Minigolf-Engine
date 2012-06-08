@@ -13,6 +13,9 @@
 				of object resuse, this id is not always unique. Unique_id is 
 				used to represent the uniqueness of new Entities.
 */
+
+struct lua_State;
+
 class Entity {
 public:
 	std::string name;
@@ -50,6 +53,8 @@ public:
 	void set_enabled(const bool &enabled) {
 		enabled_ = enabled;
 	}
+
+	static void Bind(lua_State *L);
 
 private:
 	static unsigned int next_unique_id_;

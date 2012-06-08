@@ -10,6 +10,8 @@ ScriptSystem::ScriptSystem(lua_State *L, const int &layer)
 }
 
 void ScriptSystem::Init() {
+	EntitySystem::Init();
+
 	EntityMap::iterator it, ite;
 	ScriptPtr script;
 	EntityPtr entity;
@@ -20,7 +22,9 @@ void ScriptSystem::Init() {
 
 		luaL_dofile(L, script->file);
 
-		luabind::call_function<void>(L, "Init");
+		try {
+			luabind::call_function<void>(L, "Init");
+		} catch(...) { }
 	}
 }
 
@@ -35,7 +39,9 @@ void ScriptSystem::Resolve() {
 
 		luaL_dofile(L, script->file);
 
-		luabind::call_function<void>(L, "Resolve");
+		try {
+			luabind::call_function<void>(L, "Resolve");
+		} catch(...) { }
 	}
 }
 
@@ -50,6 +56,8 @@ void ScriptSystem::ProcessEntities(const EntityMap &entities) {
 
 		luaL_dofile(L, script->file);
 
-		luabind::call_function<void>(L, "Update");
+		try {
+			luabind::call_function<void>(L, "Update");
+		} catch(...) { }
 	}
 }

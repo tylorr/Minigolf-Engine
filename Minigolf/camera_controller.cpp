@@ -19,6 +19,8 @@ CameraController::~CameraController() {
 }
 
 void CameraController::Init() {
+	EntitySystem::Init();
+
 	third_person_.reference = vec3(0, 3.0f, 3.0f);
 	third_person_.up = vec3(0, 1, 0);
 
