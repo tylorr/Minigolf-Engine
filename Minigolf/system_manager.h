@@ -18,6 +18,7 @@ namespace SystemManager {
 	void Init();
 	void Resolve();
 	void Update();
+	void ReloadScript();
 }; // namespace SystemManager
 
 #endif // SYSTEM_MANAGER_H

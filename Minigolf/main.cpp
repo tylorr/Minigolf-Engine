@@ -177,7 +177,7 @@ void Initialize(int argc, char* argv[]) {
 	shared_ptr<CameraController> controller(new CameraController(30));
 	SystemManager::AddSystem(controller);
 
-	shared_ptr<PhysicsSystem> physics_system(new PhysicsSystem(20, "testconfig.lua"));
+	shared_ptr<PhysicsSystem> physics_system(new PhysicsSystem(20, "physics_config.lua"));
 	SystemManager::AddSystem(physics_system);
 
 	shared_ptr<BallMotor> motor(new BallMotor(0));
@@ -287,6 +287,10 @@ void RenderFunction(void)
 
 	
 	Time::Update();
+
+	if (Input::GetKeyDown("r")) {
+		SystemManager::ReloadScript();
+	}
 		
 	SystemManager::Update();
 

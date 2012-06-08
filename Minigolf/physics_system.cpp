@@ -27,14 +27,6 @@ PhysicsSystem::PhysicsSystem(const int &layer, const std::string &script) : Enti
 
 PhysicsSystem::~PhysicsSystem() { }
 
-void PhysicsSystem::Init(){
-	EntitySystem::Init();
-
-	ball_ = EntityManager::Find("Ball");
-	friction_ = 0.985f;
-	gravity_ = 15.f;
-}
-
 void PhysicsSystem::Resolve(){
 }
 
@@ -42,6 +34,7 @@ void PhysicsSystem::ReloadScript() {
 	EntitySystem::ReloadScript();
 	
 	friction_ = GetAttribute<float>("friction");
+	gravity_ = GetAttribute<float>("gravity");
 }
 
 void PhysicsSystem::Process(){
@@ -230,9 +223,9 @@ void PhysicsSystem::CheckCup(const TransformPtr &ball_transform){
 void PhysicsSystem::ApplyFriction(){
 	//grab ball component and dampen velocity based on coefficient of friction
 	BallComponentPtr ball_comp = ball_comp_mapper_(ball_);
-	//ball_comp->velocity *= friction_;
+
 	vec3 dir = -glm::normalize(ball_comp->velocity);
-	float force = glm::length(gravity_) * friction_;
+	float force = gravity_ * friction_;
 
 	if (glm::length(ball_comp->velocity) != 0) {
 		ball_comp->acceleration += force * dir;
@@ -252,7 +245,9 @@ void PhysicsSystem::ApplyGravity(){
 	r = glm::cross(x, tile_vols_[0]->normal);
 
 	float delta = Time::GetDeltaTime();
-	if(glm::length(r)>0){ glm::normalize(r); }
+	if (glm::length(r) > 0) { 
+		glm::normalize(r); 
+	}
 	//ball_comp->velocity += r * gravity_ * delta;
 	ball_comp->acceleration += (r * gravity_);
 }

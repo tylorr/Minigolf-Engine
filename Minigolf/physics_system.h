@@ -26,7 +26,6 @@ public:
 	PhysicsSystem(const int &layer, const std::string &script);
 	virtual ~PhysicsSystem();
 
-	void Init();
 	void Resolve();
 	void Process();
 

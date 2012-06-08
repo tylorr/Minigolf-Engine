@@ -16,6 +16,7 @@ class EntitySystem {
 public:
 	int layer_;
 	std::string script_;
+	bool has_script_;
 
 	/*
 		remarks:	Use the constructor to clear pointers and set default values
@@ -59,7 +60,7 @@ public:
 protected:
 	typedef boost::unordered_map<unsigned int, EntityPtr> EntityMap;
 
-	bool has_script_;
+	
 
 	EntityMap active_entities_;
 	lua_State *L; 
