@@ -1,2 +1,2 @@
 up = 1
-back = 2
+back = 1

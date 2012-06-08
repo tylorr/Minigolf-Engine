@@ -31,7 +31,7 @@ using boost::unordered_map;
 
 namespace {
 
-	float ball_radius = 0.1f;
+	float ball_radius = 0.08f;
 	float tee_radius = ball_radius * 0.85f;
 	float cup_radius = 2.0f * ball_radius;
 
@@ -311,7 +311,7 @@ EntityPtr CreateBall(const TeeCup &tee) {
 
 	TransformPtr transform(new Transform());
 	transform->set_position(tee.position);
-	transform->Translate(0, 0.02f, 0);
+	transform->Translate(0, ball_radius, 0);
 
 	BallComponentPtr ball_comp(new BallComponent());
 	ball_comp->radius = ball_radius;
