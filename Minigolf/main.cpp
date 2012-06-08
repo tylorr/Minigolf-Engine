@@ -55,6 +55,7 @@
 #include "gui_mesh_render.h"
 #include "script.h"
 #include "script_system.h"
+#include "ball_motor.h"
 
 using boost::shared_ptr;
 
@@ -82,6 +83,7 @@ void TimerFunction(int);
 void Destroy(void);
 
 void MoveToHole(const unsigned int &index);
+void MakeHUD(void);
 
 extern "C" void HandleAbort(int signal_number) {
 	printf("Abort happened\n");
@@ -207,7 +209,7 @@ void Initialize(int argc, char* argv[]) {
 	text->position = glm::vec2(400.0f, 300.0f);
 	EntityManager::AddComponent(t, text);
 	*/
-	
+
 	//---------------------------------------------------------------------
 	// Finalize initialization
 
@@ -339,6 +341,8 @@ void TimerFunction(int Value)
 }
 
 void MoveToHole(const unsigned int &index) {
+	shared_ptr<BallMotor> motor(new BallMotor(0));
+
 	if (index < 0 || index >= holes.size()) {
 		//fprintf(stderr, "Hole index out of bounds\n");
 		//exit(EXIT_FAILURE);
@@ -357,10 +361,86 @@ void MoveToHole(const unsigned int &index) {
 
 	Factory::CreateCamera(60.0f, (float)CurrentWidth / CurrentHeight, 0.1f, 1000.0f);
 	Factory::CreateLevel(holes[hole_index]);
+	MakeHUD();
+	motor->Init();
 }
 
 void Destroy() {
 	EntityManager::Destroy();
 	ShaderCache::Destroy();
 	lua_close(L);
+}
+
+void MakeHUD(){
+	EntityPtr hud_power = EntityManager::Create();
+	GUITextPtr text(new GuiText());
+	text->text = "POWER";
+	text->position = glm::vec2(700.0f, 385.0f);
+	EntityManager::AddComponent(hud_power, text);
+
+	EntityPtr hud_lower = EntityManager::Create();
+	GUITextPtr lower(new GuiText());
+	lower->text = "_____";
+	lower->position = glm::vec2(715.0f, 350.0f);
+	EntityManager::AddComponent(hud_lower, lower);
+
+	EntityPtr hud_upper = EntityManager::Create();
+	GUITextPtr upper(new GuiText());
+	upper->text = "_____";
+	upper->position = glm::vec2(715.0f, 100.0f);
+	EntityManager::AddComponent(hud_upper, upper);
+
+	EntityPtr hud_par_text = EntityManager::Create();
+	GUITextPtr par_text(new GuiText());
+	par_text->text = "PAR";
+	par_text->position = glm::vec2(100.0f, 500.0f);
+	EntityManager::AddComponent(hud_par_text, par_text);
+
+	EntityPtr hud_par_num = EntityManager::Create();
+	GUITextPtr par_num(new GuiText());
+	par_num->text = holes[hole_index].par;
+	par_num->position = glm::vec2(200.0f, 500.0f);
+	EntityManager::AddComponent(hud_par_num, par_num);
+
+	EntityPtr hud_strokes_text = EntityManager::Create();
+	GUITextPtr strokes_text(new GuiText());
+	strokes_text->text = "STROKES";
+	strokes_text->position = glm::vec2(50.0f, 450.0f);
+	EntityManager::AddComponent(hud_strokes_text, strokes_text);
+
+	EntityPtr hud_strokes_num = EntityManager::Create();
+	GUITextPtr strokes_num(new GuiText());
+	strokes_num->text = "0";
+	strokes_num->position = glm::vec2(200.0f, 450.0f);
+	EntityManager::AddComponent(hud_strokes_num, strokes_num);
+	EntityManager::Register(hud_strokes_num, "Strokes");
+
+	EntityPtr hud_power_bar = EntityManager::Create();
+	GUITextPtr power_bar(new GuiText());
+	power_bar->text = "==";
+	power_bar->position = glm::vec2(750.0f, 350.0f);
+	EntityManager::AddComponent(hud_power_bar, power_bar);
+	EntityManager::Register(hud_power_bar, "Power Bar");
+
+	EntityPtr hud_hole_name = EntityManager::Create();
+	GUITextPtr hole_name(new GuiText());
+	char buffer[65];
+	_itoa_s(hole_index + 1,buffer,65,10);
+	hole_name->text = "Hole " + (string)buffer +":  " + holes[hole_index].name;
+	hole_name->position = glm::vec2(50.0f, 50.0f);
+	EntityManager::AddComponent(hud_hole_name, hole_name);
+
+	EntityPtr hud_score = EntityManager::Create();
+	GUITextPtr score_text(new GuiText());
+	score_text->text = "Score";
+	score_text->position = glm::vec2(350.0f, 550.0f);
+	EntityManager::AddComponent(hud_score, score_text);
+	EntityManager::Register(hud_power_bar, "Power Bar");
+
+	EntityPtr hud_score_num = EntityManager::Create();
+	GUITextPtr score_num(new GuiText());
+	score_num->text = "0";
+	score_num->position = glm::vec2(450.0f, 550.0f);
+	EntityManager::AddComponent(hud_score_num, score_num);
+	EntityManager::Register(hud_score_num, "Score");
 }

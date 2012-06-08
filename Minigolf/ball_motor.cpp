@@ -5,13 +5,28 @@
 #include "time.h"
 #include "input.h"
 #include "ball_component.h"
+#include "gui_text_render.h"
+#include "gui_text.h"
 
 using boost::shared_ptr;
 
+float power = 0.0f;
+bool increasing = true;
+int num_strokes = 0;
+int total_score = 0;
+
+
+
 BallMotor::BallMotor(const int &layer) : EntitySystem(layer) { }
 
+void BallMotor::Init(){
+	num_strokes = 0;
+	power = 0.f;
+	increasing = true;
+}
 void BallMotor::Process() {
 	EntityPtr ball_ = EntityManager::Find("Ball");
+
 
 	if (!ball_) {
 		return;
@@ -29,6 +44,19 @@ void BallMotor::Process() {
 	
 	ball_comp->acceleration = vec3();
 
+	//Grab and set new values for the strokes and score HUD elements
+	EntityPtr hud_strokes = EntityManager::Find("Strokes");
+	GUITextPtr strokes = EntityManager::GetComponent<GuiText>(hud_strokes);
+	char buffer[65];
+	_itoa_s(num_strokes,buffer,65,10);
+	strokes->text = buffer;
+
+	EntityPtr hud_score = EntityManager::Find("Score");
+	GUITextPtr score = EntityManager::GetComponent<GuiText>(hud_score);
+	char buffer2[65];
+	_itoa_s(total_score,buffer2,65,10);
+	score->text = buffer2;
+
 	/*
 	if (Input::GetKey("up")) {
 		ball_comp->acceleration += vec3(0, 0, speed);
@@ -43,20 +71,40 @@ void BallMotor::Process() {
 		ball_comp->acceleration += vec3(-speed, 0, 0);
 	}
 	*/
-
+	
 	static const float epsilon = 0.01f;
 
 	if (glm::length(ball_comp->velocity) < epsilon) {
-	
+
+		EntityPtr power_bar = EntityManager::Find("Power Bar");
+		GUITextPtr bar = EntityManager::GetComponent<GuiText>(power_bar);
+		bar->position.y = 350.f-(power*22.f);
+
 		if (Input::GetKey("left")) {
 			ball_transform->Rotate(vec3(0, 1, 0), rot_speed * delta);
 		}
+
 		if (Input::GetKey("right")) {
 			ball_transform->Rotate(vec3(0, 1, 0), -rot_speed * delta);
 		}
 
+		if (Input::GetKey("t")) {
+			if(increasing){
+				power += .025f;
+				if(power > 10.5f){increasing = false;}
+			}
+			else{
+				//EntityManager::Remove(hud_power_elements[(int)power]);
+				power -= .025f;
+				if(power < 0){power = 0; increasing = true;}
+			}
+		}
+
 		if (Input::GetKeyUp("t")) {
-			ball_comp->velocity += ball_transform->forward() * speed;
+			ball_comp->velocity += ball_transform->forward() * (-power);
+			num_strokes++;
+			total_score++;
+			power = 0.f;
 		}
 	
 	}
