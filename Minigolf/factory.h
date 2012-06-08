@@ -25,7 +25,6 @@ EntityPtr CreateTee(const TeeCup &tee);
 EntityPtr CreateCup(const TeeCup &cup);
 
 boost::shared_ptr<Geometry> Planar(const GLuint &program, const vector<vec3> &vertex_list);
-boost::shared_ptr<Geometry> Cube(const GLuint &program);
 
 }; // namespace Factory
 

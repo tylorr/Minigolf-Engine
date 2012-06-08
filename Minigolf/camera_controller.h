@@ -12,9 +12,11 @@ class Entity;
 class CameraController : public EntitySystem {
 public:
 	CameraController(const int &layer);
+	CameraController(const int &layer, const std::string &script);
 	~CameraController();
 
 	virtual void Init();
+	virtual void ReloadScript();
 	virtual void Process();
 	
 
@@ -24,10 +26,8 @@ private:
 		glm::vec3 up;
 	};
 
-	
-
 	bool free_;
-	CameraProfile profile_;
+	CameraProfile *profile_;
 	CameraProfile third_person_;
 	CameraProfile top_down_;
 

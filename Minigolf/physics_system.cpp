@@ -27,9 +27,6 @@ PhysicsSystem::PhysicsSystem(const int &layer, const std::string &script) : Enti
 
 PhysicsSystem::~PhysicsSystem() { }
 
-void PhysicsSystem::Resolve(){
-}
-
 void PhysicsSystem::ReloadScript() {
 	EntitySystem::ReloadScript();
 	

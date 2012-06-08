@@ -160,6 +160,7 @@
   <ItemGroup>
     <None Include="..\.gitignore" />
     <None Include="..\README" />
+    <None Include="camera_config.lua" />
     <None Include="color.fragment.glsl" />
     <None Include="color.vertex.glsl" />
     <None Include="course.db" />

@@ -1,7 +1,8 @@
 #include <vector>
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 #include <boost\unordered_map.hpp>
-
 #include "glm\glm.hpp"
 #include "glm\gtc\matrix_transform.hpp"
 
@@ -18,6 +19,7 @@
 #include "tile_component.h"
 #include "ball_component.h"
 #include "gui_mesh.h"
+#include "component_mapper.h"
 
 namespace Factory {
 
@@ -28,6 +30,11 @@ using std::vector;
 using boost::unordered_map;
 
 namespace {
+
+	float ball_radius = 0.1f;
+	float tee_radius = ball_radius * 0.85f;
+	float cup_radius = 2.0f * ball_radius;
+
 	vector<vec3> Square(const float &width, const float &height) {
 		vector<vec3> vertex_list;
 		float hw = width / 2.0f;
@@ -39,6 +46,73 @@ namespace {
 		vertex_list.push_back(vec3(hw, 0, hh));	
 
 		return vertex_list;
+	}
+
+	shared_ptr<Geometry> Circle(const GLuint &program, const float &radius) {
+		/*
+		vector<vec3> vertex_list;
+
+		vertex_list.push_back(vec3(0, 0, 0));
+
+		unsigned int segments = 50;
+		float radian = 0;
+		float step = (float)(2 * M_PI / segments);
+
+		for (unsigned int i = 0; i < segments; ++i) {
+			vertex_list.push_back(vec3(radius * glm::sin(radian), 0, radius * glm::cos(radian)));
+			radian += step;
+		}
+		*/
+		Vertex *vertices;
+		GLuint *indices;
+
+		vec3 vertex;
+		GLsizei N;
+		int i;
+
+		N = 51;
+		float radian = 0;
+		float step = (float)(2 * M_PI / N);
+	
+		vertices = new Vertex[N];
+		indices = new GLuint[N + 1];
+
+		vec3 normal = vec3(0, 1, 0);
+
+		vertices[0].Position[0] = 0;
+		vertices[0].Position[1] = 0;
+		vertices[0].Position[2] = 0;
+
+		vertices[0].Normal[0] = normal.x;
+		vertices[0].Normal[1] = normal.y;
+		vertices[0].Normal[2] = normal.z;
+
+		indices[0] = 0;
+
+		// build the vertices
+		for (i = 1; i < N; ++i) {
+			vertices[i].Position[0] = radius * glm::sin(radian);
+			vertices[i].Position[1] = 0;
+			vertices[i].Position[2] = radius * glm::cos(radian);
+
+			vertices[i].Normal[0] = normal.x;
+			vertices[i].Normal[1] = normal.y;
+			vertices[i].Normal[2] = normal.z;
+
+			indices[i] = i;
+			radian += step;
+		}
+
+		indices[i] = 1;
+
+		// build the mesh
+		shared_ptr<Geometry> geometry(new Geometry());
+		geometry->Initialize(program, GL_TRIANGLE_FAN, POSITION_NORMAL, vertices, N, indices, N + 1);
+
+		delete [] vertices;
+		delete [] indices;
+
+		return geometry;
 	}
 
 	vector<vec3> VerticalSquare(const float &width, const float &height) {
@@ -58,114 +132,6 @@ namespace {
 		return glm::normalize(glm::cross(vertex_list[2] - vertex_list[1], vertex_list[0] - vertex_list[1]));
 	}
 
-	/*
-	shared_ptr<Geometry> Texture(const GLuint &program, const vector<vec3> &vertex_list) {
-		Vertex *vertices;
-		GLuint *indices;
-
-		vec3 vertex;
-		GLsizei N;
-		int i, index, count, vertex_index;
-
-		N = vertex_list.size();
-	
-		vertices = new Vertex[N];
-		indices = new GLuint[N];
-
-		vec3 normal = GetNormal(vertex_list);
-
-		// build the vertices
-		for (i = 0; i < N; ++i) {
-			vertex = vertex_list[i];
-
-			vertices[i].Position[0] = vertex.x;
-			vertices[i].Position[1] = vertex.y;
-			vertices[i].Position[2] = vertex.z;
-
-			vertices[i].Normal[0] = normal.x;
-			vertices[i].Normal[1] = normal.y;
-			vertices[i].Normal[2] = normal.z;
-
-			vertices[i].TexCoord[0] = 0;
-			vertices[i].TexCoord[1] = 0;
-		}
-
-		// build the indices
-		index = count = 0;
-		while (index < N)
-		{
-			switch (index % 2) {
-			case 0:
-				vertex_index = (N - count) % N;
-				break;
-			case 1:
-				count++;
-				vertex_index = count;
-				break;
-			}
-			indices[index] = vertex_index;
-			index++;
-		}
-
-		// build the mesh
-		shared_ptr<Geometry> geometry(new Geometry());
-		geometry->Initialize(program, GL_TRIANGLE_STRIP, POSITION_NORMAL_TEX, vertices, N, indices, N);
-
-		delete [] vertices;
-		delete [] indices;
-
-		return geometry;
-	}
-
-	shared_ptr<Geometry> Color(const GLuint &program, const vector<vec3> &vertex_list) {
-		Vertex *vertices;
-		GLuint *indices;
-
-		vec3 vertex;
-		GLsizei N;
-		int i, index, count, vertex_index;
-
-		N = vertex_list.size();
-	
-		vertices = new Vertex[N];
-		indices = new GLuint[N];
-
-		// build the vertices
-		for (i = 0; i < N; ++i) {
-			vertex = vertex_list[i];
-
-			vertices[i].Position[0] = vertex.x;
-			vertices[i].Position[1] = vertex.y;
-			vertices[i].Position[2] = vertex.z;
-		}
-
-		// build the indices
-		index = count = 0;
-		while (index < N)
-		{
-			switch (index % 2) {
-			case 0:
-				vertex_index = (N - count) % N;
-				break;
-			case 1:
-				count++;
-				vertex_index = count;
-				break;
-			}
-			indices[index] = vertex_index;
-			index++;
-		}
-
-		// build the mesh
-		shared_ptr<Geometry> geometry(new Geometry());
-		geometry->Initialize(program, GL_TRIANGLE_STRIP, POSITION, vertices, N, indices, N);
-
-		delete [] vertices;
-		delete [] indices;
-
-		return geometry;
-	}
-	*/
 }; // namespace
 
 // returns root entity, used to rotate entire scene
@@ -221,10 +187,10 @@ void CreateLevel(const Hole &hole) {
 		EntityManager::AddComponent(tiles[it->id], tile_comp);
 	}
 
-	// Attach starting tile to ball
-	BallComponentPtr ball_comp(new BallComponent());
+	ComponentMapper<BallComponent> ball_comp_mapper;
+	BallComponentPtr ball_comp = ball_comp_mapper(ball);
 	ball_comp->current_tile = tiles[hole.tee.id];
-	EntityManager::AddComponent(ball, ball_comp);
+	
 
 	
 	/* This also doesnt work
@@ -334,14 +300,10 @@ EntityPtr CreateWall(const vec3 &tile_normal, const vec3 &p1, const vec3 &p2) {
 }
 
 EntityPtr CreateBall(const TeeCup &tee) {
-	vector<vec3> vertex_list = Square(0.25f, 0.25f);
-
 	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(1.0f, 1.0f, 1.0f), vec3(0.8f, 0.8f, 0.8f)));
-	//shared_ptr<TextureMaterial> material(new TextureMaterial("texture", "img.png"));
-	//shared_ptr<ColorMaterial> material(new ColorMaterial("color", vec3(1, 1, 1)));
 	material->Initialize();
 
-	shared_ptr<Geometry> geometry = Planar(material->shader_program(), vertex_list);
+	shared_ptr<Geometry> geometry = Circle(material->shader_program(), ball_radius);
 
 	MeshPtr mesh(new Mesh());
 	mesh->geometry = geometry;
@@ -351,21 +313,25 @@ EntityPtr CreateBall(const TeeCup &tee) {
 	transform->set_position(tee.position);
 	transform->Translate(0, 0.02f, 0);
 
+	BallComponentPtr ball_comp(new BallComponent());
+	ball_comp->radius = ball_radius;
+
 	EntityPtr entity = EntityManager::Create();
 	EntityManager::AddComponent(entity, mesh);
 	EntityManager::AddComponent(entity, transform);
+	EntityManager::AddComponent(entity, ball_comp);
 	EntityManager::Register(entity, "Ball");
 
 	return entity;
 }
 
 EntityPtr CreateTee(const TeeCup &tee) {
-	vector<vec3> vertex_list = Square(0.25f, 0.25f);
+	//vector<vec3> vertex_list = Square(0.25f, 0.25f);
 
 	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(0.0f, 0.0f, 1.0f), vec3(0.8f, 0.8f, 0.8f)));
 	material->Initialize();
 
-	shared_ptr<Geometry> geometry = Planar(material->shader_program(), vertex_list);
+	shared_ptr<Geometry> geometry = Circle(material->shader_program(), tee_radius);//Planar(material->shader_program(), vertex_list);
 
 	MeshPtr mesh(new Mesh());
 	mesh->geometry = geometry;
@@ -383,12 +349,12 @@ EntityPtr CreateTee(const TeeCup &tee) {
 }
 
 EntityPtr CreateCup(const TeeCup &cup) {
-	vector<vec3> vertex_list = Square(0.5f, 0.5f);
+	//vector<vec3> vertex_list = Square(0.5f, 0.5f);
 
 	shared_ptr<BasicMaterial> material(new BasicMaterial("diffuse", vec4(0.0f, 5.0f, 0.0f, 1.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.8f, 0.8f, 0.8f)));
 	material->Initialize();
 
-	shared_ptr<Geometry> geometry = Planar(material->shader_program(), vertex_list);
+	shared_ptr<Geometry> geometry = Circle(material->shader_program(), cup_radius);//Planar(material->shader_program(), vertex_list);
 
 	MeshPtr mesh(new Mesh());
 	mesh->geometry = geometry;

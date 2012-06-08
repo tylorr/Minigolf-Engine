@@ -174,7 +174,7 @@ void Initialize(int argc, char* argv[]) {
 	shared_ptr<GuiTextRender> gui_text_render(new GuiTextRender(40));
 	SystemManager::AddSystem(gui_text_render);
 
-	shared_ptr<CameraController> controller(new CameraController(30));
+	shared_ptr<CameraController> controller(new CameraController(30, "camera_config.lua"));
 	SystemManager::AddSystem(controller);
 
 	shared_ptr<PhysicsSystem> physics_system(new PhysicsSystem(20, "physics_config.lua"));
@@ -213,6 +213,7 @@ void Initialize(int argc, char* argv[]) {
 
 	// These must be called after systems and entities created
 	SystemManager::Init();
+	SystemManager::ReloadScript();
 	SystemManager::Resolve();
 }
 

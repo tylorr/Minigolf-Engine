@@ -25,9 +25,6 @@ void EntitySystem::AddTypeBit(const long &bit) {
 }
 
 void EntitySystem::Init() {
-	if (has_script_) {
-		ReloadScript();
-	}
 }
 
 void EntitySystem::Process() {
