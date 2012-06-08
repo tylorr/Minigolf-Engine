@@ -1,6 +1,9 @@
 
 function Init()
 	print("Script Init")
+	--e = EntityManager:Create()
+	local e = Create()
+	print (e:id)
 end
 
 function Resolve()

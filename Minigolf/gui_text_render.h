@@ -11,7 +11,6 @@ public:
 	GuiTextRender(const int &layer);
 	~GuiTextRender();
 
-	virtual void Init();
 	virtual void ProcessEntities(const EntityMap &entities);
 	
 private:

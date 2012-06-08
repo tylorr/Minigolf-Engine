@@ -1,5 +1,7 @@
 #include "entity.h"
 #include "component.h"
+#include "lua.hpp"
+#include "luabind\luabind.hpp"
 
 unsigned int Entity::next_unique_id_ = 0;
 
@@ -34,4 +36,11 @@ void Entity::AddSystemBit(const long &bit) {
 
 void Entity::RemoveSystemBit(const long &bit) {
 	system_bits_ &= ~bit;
+}
+
+void Entity::Bind(lua_State *L) {
+	luabind::module(L) [
+		luabind::class_<Entity, boost::shared_ptr<Entity>>("Entity")
+			.property("id", (unsigned int(Entity::*)(void))&Entity::id)
+	];
 }

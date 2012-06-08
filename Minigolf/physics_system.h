@@ -23,12 +23,12 @@ struct BallComponent;
 
 class PhysicsSystem : public EntitySystem {
 public:
-	PhysicsSystem(const int &layer);
-	~PhysicsSystem();
+	PhysicsSystem(const int &layer, const std::string &script);
+	virtual ~PhysicsSystem();
 
-	void Init();
-	void Resolve();
 	void Process();
+
+	void ReloadScript();
 private:
 	float gravity_;
 	float friction_;

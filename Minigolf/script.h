@@ -9,6 +9,8 @@ struct Script : public Component {
 	const char *file;
 
 	Script() : file("") { }
+
+	Script(const char *file) : file(file) { }
 };
 
 typedef boost::shared_ptr<Script> ScriptPtr;

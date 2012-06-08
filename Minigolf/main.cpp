@@ -89,6 +89,11 @@ extern "C" void HandleAbort(int signal_number) {
 	printf("Abort happened\n");
 }
 
+template <typename T>
+void Bind() {
+	T::Bind(L);
+}
+
 int main(int argc, char* argv[]) {
 	signal(SIGABRT, &HandleAbort);
 	
@@ -154,6 +159,8 @@ void Initialize(int argc, char* argv[]) {
 	luaL_openlibs(L);
 	luabind::open(L);
 
+	Bind<Entity>();
+
 	//---------------------------------------------------------------------
 	// Initialize systems
 
@@ -169,10 +176,10 @@ void Initialize(int argc, char* argv[]) {
 	shared_ptr<GuiTextRender> gui_text_render(new GuiTextRender(40));
 	SystemManager::AddSystem(gui_text_render);
 
-	shared_ptr<CameraController> controller(new CameraController(30));
+	shared_ptr<CameraController> controller(new CameraController(30, "camera_config.lua"));
 	SystemManager::AddSystem(controller);
 
-	shared_ptr<PhysicsSystem> physics_system(new PhysicsSystem(20));
+	shared_ptr<PhysicsSystem> physics_system(new PhysicsSystem(20, "physics_config.lua"));
 	SystemManager::AddSystem(physics_system);
 
 	shared_ptr<BallMotor> motor(new BallMotor(0));
@@ -187,28 +194,28 @@ void Initialize(int argc, char* argv[]) {
 	hole_index = 0;
 	MoveToHole(hole_index);
 
+	/*
+	// Example logic script
 	EntityPtr entity = EntityManager::Create();
-	ScriptPtr script(new Script());
-	script->file = "test.lua";
+	ScriptPtr script(new Script("test.lua"));
 	EntityManager::AddComponent(entity, script);
+	*/
 
 	/*
-	Example of adding text to the screen
-
-	EntityPtr entity = EntityManager::Create();
+	// Example of adding text to the screen
+	EntityPtr t = EntityManager::Create();
 	GUITextPtr text(new GuiText());
 	text->text = "Hello there";
 	text->position = glm::vec2(400.0f, 300.0f);
-	EntityManager::AddComponent(entity, text);
+	EntityManager::AddComponent(t, text);
 	*/
-
-	
 
 	//---------------------------------------------------------------------
 	// Finalize initialization
 
 	// These must be called after systems and entities created
 	SystemManager::Init();
+	SystemManager::ReloadScript();
 	SystemManager::Resolve();
 }
 
@@ -283,6 +290,10 @@ void RenderFunction(void)
 
 	
 	Time::Update();
+
+	if (Input::GetKeyDown("r")) {
+		SystemManager::ReloadScript();
+	}
 		
 	SystemManager::Update();
 

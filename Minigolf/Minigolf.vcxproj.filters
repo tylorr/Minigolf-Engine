@@ -288,5 +288,11 @@
     <None Include="test.lua">
       <Filter>Scripts</Filter>
     </None>
+    <None Include="physics_config.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="camera_config.lua">
+      <Filter>Scripts</Filter>
+    </None>
   </ItemGroup>
 </Project>

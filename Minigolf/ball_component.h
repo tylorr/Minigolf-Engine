@@ -10,6 +10,9 @@ struct BallComponent : public Component {
 	EntityPtr current_tile;
 	glm::vec3 velocity;
 	glm::vec3 acceleration;
+	float radius;
+
+	BallComponent() : velocity(0), acceleration(0), radius(0) { }
 };
 
 typedef boost::shared_ptr<BallComponent> BallComponentPtr;

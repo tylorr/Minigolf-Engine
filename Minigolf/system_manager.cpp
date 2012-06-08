@@ -85,4 +85,14 @@ void Update() {
 	}
 }
 
+void ReloadScript() {
+	SystemList::iterator it, ite;
+
+	for (it = systems_.begin(), ite = systems_.end(); it != ite; ++it) {
+		if ((*it)->has_script_) {
+			(*it)->ReloadScript();
+		}
+	}
+}
+
 }; // namespace SystemManager
