@@ -44,7 +44,7 @@ void BallMotor::Process() {
 	
 	ball_comp->acceleration = vec3();
 
-	//Grab and set new values for the strokes and score HUD elements
+	//Grab and set new values for the strokes, score, and message HUD elements
 	EntityPtr hud_strokes = EntityManager::Find("Strokes");
 	GUITextPtr strokes = EntityManager::GetComponent<GuiText>(hud_strokes);
 	char buffer[65];
@@ -56,6 +56,10 @@ void BallMotor::Process() {
 	char buffer2[65];
 	_itoa_s(total_score,buffer2,65,10);
 	score->text = buffer2;
+
+	EntityPtr hud_message = EntityManager::Find("Message");
+	GUITextPtr message = EntityManager::GetComponent<GuiText>(hud_message);
+	
 
 	/*
 	if (Input::GetKey("up")) {
@@ -88,19 +92,18 @@ void BallMotor::Process() {
 			ball_transform->Rotate(vec3(0, 1, 0), -rot_speed * delta);
 		}
 
-		if (Input::GetKey("t")) {
+		if (Input::GetKey("t") && !ball_comp->in_cup) {
 			if(increasing){
 				power += 5.f * delta;
 				if(power > 10.5f){increasing = false;}
 			}
 			else{
-				//EntityManager::Remove(hud_power_elements[(int)power]);
-				power -= 5.f*delta;
+				power -= 5.f * delta;
 				if(power < 0){power = 0; increasing = true;}
 			}
 		}
 
-		if (Input::GetKeyUp("t")) {
+		if (Input::GetKeyUp("t") && !ball_comp->in_cup) {
 			ball_comp->velocity += ball_transform->forward() * (-power);
 			num_strokes++;
 			total_score++;
@@ -108,5 +111,8 @@ void BallMotor::Process() {
 		}
 	
 	}
-	
+	if(ball_comp->in_cup){
+		if(num_strokes == 1){message->text = "HOLE IN ONE! NICE!";}
+		else{ message->text = "YOU MADE IT!";}
+	}
 }

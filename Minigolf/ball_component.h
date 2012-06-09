@@ -11,8 +11,9 @@ struct BallComponent : public Component {
 	glm::vec3 velocity;
 	glm::vec3 acceleration;
 	float radius;
+	bool in_cup;
 
-	BallComponent() : velocity(0), acceleration(0), radius(0) { }
+	BallComponent() : velocity(0), acceleration(0), radius(0), in_cup(false) { }
 };
 
 typedef boost::shared_ptr<BallComponent> BallComponentPtr;

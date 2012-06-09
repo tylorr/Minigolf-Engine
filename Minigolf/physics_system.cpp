@@ -55,8 +55,9 @@ void PhysicsSystem::Process(){
 	ApplyFriction();
 
 	TileComponentPtr curr_tile = tile_comp_mapper_(ball_comp->current_tile);
+
+	//check if the ball is in the cup
 	if(curr_tile->cup){
-		//std::cout<<"dont break"<<std::endl;
 		CheckCup(ball_transform);
 	}
 
@@ -276,10 +277,11 @@ void PhysicsSystem::CheckCup(const TransformPtr &ball_transform){
 	if (inter) {
 		float dist_from_cup = glm::length(ball_transform->position() - cup_transform->position());
 
-		//if ball is close enough to go in hole and moving slow enough, stop ball
+		//if ball is close enough to go in hole and moving slow enough, ball went in cup (stop ball)
 		if(dist_from_cup < MADE_CUP_RADIUS && glm::length(ball_comp->velocity) < MAX_CUP_ENTRY_SPEED ) {
 			ball_comp->velocity = vec3();
 			ball_comp->acceleration = vec3();
+			ball_comp->in_cup = true;
 		}
 		//if ball is on lip, alter accel to go towards center
 		else if(dist_from_cup > MADE_CUP_RADIUS && dist_from_cup < CUP_LIP_RADIUS) {
