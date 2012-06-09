@@ -1,3 +1,3 @@
 
 max_speed = 10
-speed_step = 2
+speed_step = 1.5

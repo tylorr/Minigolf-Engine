@@ -1,4 +1,4 @@
 
 -- Camera distances for top down and third person
-up = 3
-back = 3
+up = 2
+back = 2
