@@ -183,7 +183,7 @@ void Initialize(int argc, char* argv[]) {
 	shared_ptr<PhysicsSystem> physics_system(new PhysicsSystem(20, "physics_config.lua"));
 	SystemManager::AddSystem(physics_system);
 
-	shared_ptr<BallMotor> motor(new BallMotor(0));
+	shared_ptr<BallMotor> motor(new BallMotor(0, "ball_motor_config.lua"));
 	SystemManager::AddSystem(motor);
 
 	//---------------------------------------------------------------------
@@ -384,12 +384,14 @@ void MakeHUD(){
 	lower->text = "_____";
 	lower->position = glm::vec2(715.0f, 350.0f);
 	EntityManager::AddComponent(hud_lower, lower);
+	EntityManager::Register(hud_lower, "Lower");
 
 	EntityPtr hud_upper = EntityManager::Create();
 	GUITextPtr upper(new GuiText());
 	upper->text = "_____";
 	upper->position = glm::vec2(715.0f, 100.0f);
 	EntityManager::AddComponent(hud_upper, upper);
+	EntityManager::Register(hud_upper, "Upper");
 
 	EntityPtr hud_par_text = EntityManager::Create();
 	GUITextPtr par_text(new GuiText());
