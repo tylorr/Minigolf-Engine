@@ -290,5 +290,8 @@
     <None Include="camera_config.lua">
       <Filter>Scripts</Filter>
     </None>
+    <None Include="ball_motor_config.lua">
+      <Filter>Scripts</Filter>
+    </None>
   </ItemGroup>
 </Project>

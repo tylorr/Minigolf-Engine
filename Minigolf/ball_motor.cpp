@@ -18,15 +18,23 @@ int total_score = 0;
 
 
 BallMotor::BallMotor(const int &layer) : EntitySystem(layer) { }
+BallMotor::BallMotor(const int &layer, const std::string &script) : EntitySystem(layer, script) { }
 
 void BallMotor::Init(){
 	num_strokes = 0;
 	power = 0.f;
 	increasing = true;
 }
+
+void BallMotor::ReloadScript() {
+	EntitySystem::ReloadScript();
+
+	max_speed_ = GetAttribute<float>("max_speed");
+	speed_step_ = GetAttribute<float>("speed_step");
+}
+
 void BallMotor::Process() {
 	EntityPtr ball_ = EntityManager::Find("Ball");
-
 
 	if (!ball_) {
 		return;
@@ -77,8 +85,21 @@ void BallMotor::Process() {
 	if (glm::length(ball_comp->velocity) < epsilon) {
 
 		EntityPtr power_bar = EntityManager::Find("Power Bar");
-		GUITextPtr bar = EntityManager::GetComponent<GuiText>(power_bar);
-		bar->position.y = 350.f-(power*22.f);
+		GUITextPtr bar = gui_text_mapper_(power_bar);
+
+		EntityPtr upper = EntityManager::Find("Upper");
+		GUITextPtr upper_text = gui_text_mapper_(upper);
+
+		EntityPtr lower = EntityManager::Find("Lower");
+		GUITextPtr lower_text = gui_text_mapper_(lower);
+
+		float l = lower_text->position.y;
+		float u = upper_text->position.y + 19;
+
+		float diff = l - u;
+		
+		//bar->position.y = 350.f - (power * 22.f);
+		bar->position.y = l - (diff * power);
 
 		if (Input::GetKey("left")) {
 			ball_transform->Rotate(vec3(0, 1, 0), rot_speed * delta);
@@ -90,18 +111,24 @@ void BallMotor::Process() {
 
 		if (Input::GetKey("t")) {
 			if(increasing){
-				power += 5.f * delta;
-				if(power > 10.5f){increasing = false;}
+				power += speed_step_ * delta;
+				if (power > 1.0f) { 
+					power = 1.0f;
+					increasing = false; 
+				}
 			}
 			else{
 				//EntityManager::Remove(hud_power_elements[(int)power]);
-				power -= 5.f*delta;
-				if(power < 0){power = 0; increasing = true;}
+				power -= speed_step_ * delta;
+				if (power < 0) { 
+					power = 0; 
+					increasing = true;
+				}
 			}
 		}
 
 		if (Input::GetKeyUp("t")) {
-			ball_comp->velocity += ball_transform->forward() * (-power);
+			ball_comp->velocity += ball_transform->forward() * (-power * max_speed_);
 			num_strokes++;
 			total_score++;
 			power = 0.f;

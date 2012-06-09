@@ -171,6 +171,7 @@
     <None Include="hole.00.db" />
     <None Include="hole.01.db" />
     <None Include="hole.02.db" />
+    <None Include="ball_motor_config.lua" />
     <None Include="physics_config.lua" />
     <None Include="test.lua" />
     <None Include="texture.fragment.2.1.glsl" />
