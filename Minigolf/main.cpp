@@ -56,7 +56,6 @@
 #include "script.h"
 #include "script_system.h"
 #include "ball_motor.h"
-#include "ball_component.h"
 
 using boost::shared_ptr;
 
@@ -446,12 +445,4 @@ void MakeHUD(){
 	score_num->position = glm::vec2(450.0f, 550.0f);
 	EntityManager::AddComponent(hud_score_num, score_num);
 	EntityManager::Register(hud_score_num, "Score");
-
-	EntityPtr hud_message = EntityManager::Create();
-	GUITextPtr message(new GuiText());
-	message->text = " ";
-	message->position = glm::vec2(325.0f, 150.0f);
-	EntityManager::AddComponent(hud_message, message);
-	EntityManager::Register(hud_message, "Message");
-
 }
