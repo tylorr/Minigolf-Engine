@@ -49,7 +49,7 @@ void GuiTextRender::ProcessEntities(const EntityMap &entities) {
 		x /= hw;
 		y /= hh;
 
-		glColor3f(1.0f, 1.0f, 1.0f);
+		glColor3f(0.0f, 0.0f, 0.0f);
 		glRasterPos2f(x, y);
 		glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, text);
 	}

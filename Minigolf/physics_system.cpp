@@ -384,17 +384,17 @@ bool PhysicsSystem::Intersect(const vec3 &start, const vec3 &end, const VolumePt
 	}
 	*/
 
-	MeshPtr mesh;// = EntityManager::GetComponent<Mesh>(wall_map_[wall], "Mesh");
-	shared_ptr<BasicMaterial> bm;// = boost::dynamic_pointer_cast<BasicMaterial>(mesh->material);
+	//MeshPtr mesh;// = EntityManager::GetComponent<Mesh>(wall_map_[wall], "Mesh");
+	//shared_ptr<BasicMaterial> bm;// = boost::dynamic_pointer_cast<BasicMaterial>(mesh->material);
 	//bm->Ld_ = vec3(1, 0, 0);
 
 	if (start_loc == end_loc) {
 		return false;
 	}
 
-	mesh = mesh_mapper_(wall_map_[wall]);
-	bm = boost::dynamic_pointer_cast<BasicMaterial>(mesh->material);
-	bm->Ld_ = vec3(1, 0, 1);
+	//mesh = mesh_mapper_(wall_map_[wall]);
+	//bm = boost::dynamic_pointer_cast<BasicMaterial>(mesh->material);
+	//bm->Ld_ = vec3(1, 0, 1);
 
 	vec3 ray = end - start;
 	ray = glm::normalize(ray);
@@ -436,11 +436,11 @@ bool PhysicsSystem::Intersect(const vec3 &start, const vec3 &end, const VolumePt
 	penetration = intersect;
 	bool result = PointInPolygon(pos, vertices);
 
-	if (result) {
-		mesh = mesh_mapper_(wall_map_[wall]);
-		bm = boost::dynamic_pointer_cast<BasicMaterial>(mesh->material);
-		bm->Ld_ = vec3(1, 1, 1);
-	}
+	//if (result) {
+		//mesh = mesh_mapper_(wall_map_[wall]);
+		//bm = boost::dynamic_pointer_cast<BasicMaterial>(mesh->material);
+		//bm->Ld_ = vec3(1, 1, 1);
+	//}
 
 	return result;
 }

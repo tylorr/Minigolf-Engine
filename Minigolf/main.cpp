@@ -131,7 +131,7 @@ void InitOpenGL(int argc, char* argv[]) {
 
 	glGetError();
 
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearColor(0.529f, 0.808f, 0.98f, 1.0f);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
