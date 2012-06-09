@@ -51,6 +51,6 @@ void GuiTextRender::ProcessEntities(const EntityMap &entities) {
 
 		glColor3f(0.0f, 0.0f, 0.0f);
 		glRasterPos2f(x, y);
-		glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, text);
+		glutBitmapString(GLUT_BITMAP_HELVETICA_18, text);
 	}
 }

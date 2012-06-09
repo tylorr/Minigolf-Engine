@@ -357,7 +357,7 @@ void MoveToHole(const unsigned int &index) {
 
 	
 	hole_index = index;
-	
+
 	EntityManager::RemoveAll();
 
 	Factory::CreateCamera(60.0f, (float)CurrentWidth / CurrentHeight, 0.1f, 1000.0f);
@@ -421,7 +421,7 @@ void MakeHUD(){
 	EntityPtr hud_power_bar = EntityManager::Create();
 	GUITextPtr power_bar(new GuiText());
 	power_bar->text = "==";
-	power_bar->position = glm::vec2(750.0f, 350.0f);
+	power_bar->position = glm::vec2(730.0f, 350.0f);
 	EntityManager::AddComponent(hud_power_bar, power_bar);
 	EntityManager::Register(hud_power_bar, "Power Bar");
 
