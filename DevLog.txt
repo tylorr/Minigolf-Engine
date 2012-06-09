@@ -1,14 +1,10 @@
-Entire new component engine based on Artemis http://gamadu.com/artemis/ https://github.com/thelinuxlich/artemis_CSharp
+Refer to github for more information:
+https://github.com/nwjones/Minigolf-Engine/commits/master
 
+Entire new component engine based on Artemis http://gamadu.com/artemis/ https://github.com/thelinuxlich/artemis_CSharp
 PHYSICS!!!!
 
-Controls:
-
-t to launch ball
-
-left - right steer
-
-Number keys for view:
-1 - third person
-2 - top down
-3 - free (wasd + ijkl)
+June 8, 2012
+- HUD implemented with score, power, par, etc.
+- Lua config scripting with dynamic reload
+- Fixed physics jumping over corners
